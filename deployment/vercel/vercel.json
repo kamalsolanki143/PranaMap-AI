@@ -1,0 +1,46 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "name": "PranaMap-AI-Frontend",
+  "framework": "nextjs",
+  "buildCommand": "cd ../frontend && npm run build",
+  "outputDirectory": "../frontend/.next",
+  "installCommand": "cd ../frontend && npm install",
+  "regions": ["sin1"],
+  "env": {
+    "NEXT_PUBLIC_API_URL": "@api-url",
+    "NEXT_PUBLIC_MAPBOX_TOKEN": "@mapbox-token",
+    "NEXT_PUBLIC_WS_URL": "@ws-url"
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=(self)" }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/backend/:path*",
+      "destination": "@backend-url/:path*"
+    }
+  ],
+  "functions": {
+    "pages/**/*.js": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  },
+  "crons": []
+}
