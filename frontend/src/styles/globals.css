@@ -1,3 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-text-primary antialiased;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-surface border border-border rounded-xl shadow-panel;
+  }
+  
+  .panel-header {
+    @apply px-4 py-3 border-b border-border text-sm font-semibold tracking-wide text-text-primary uppercase flex items-center justify-between;
+  }
+  
+  .glass-panel {
+    @apply bg-surface/80 backdrop-blur-md border border-border/50 rounded-xl shadow-panel;
+  }
+  
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom Scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-text-muted;
+}
