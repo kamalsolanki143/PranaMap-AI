@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PranaMap AI | City Command Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Theme Config Verbatim -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#b3b8c8",
+                    "background": "#0B0F14",
+                    "secondary-fixed-dim": "#c1c6d7",
+                    "tertiary-fixed-dim": "#e7c427",
+                    "primary": "#e9feff",
+                    "on-surface": "#e0e2ea",
+                    "surface-variant": "#31353b",
+                    "surface-container-low": "#181c21",
+                    "primary-container": "#00f5ff",
+                    "on-surface-variant": "#b9caca",
+                    "secondary-container": "#434957",
+                    "on-primary-fixed": "#002021",
+                    "primary-fixed-dim": "#00dce5",
+                    "surface-tint": "#00dce5",
+                    "surface-container-high": "#262a30",
+                    "surface-container-highest": "#31353b",
+                    "on-secondary-fixed": "#161c27",
+                    "on-tertiary-fixed": "#221b00",
+                    "on-tertiary": "#3a3000",
+                    "surface-container": "#1c2025",
+                    "on-primary-fixed-variant": "#004f53",
+                    "tertiary-container": "#ffdb3f",
+                    "surface-dim": "#0B0F14",
+                    "on-tertiary-container": "#736000",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#ffe16c",
+                    "on-primary": "#003739",
+                    "on-error": "#690005",
+                    "surface-bright": "#36393f",
+                    "inverse-surface": "#e0e2ea",
+                    "primary-fixed": "#63f7ff",
+                    "inverse-primary": "#00696e",
+                    "surface-container-lowest": "#0a0e13",
+                    "error-container": "#93000a",
+                    "on-background": "#e0e2ea",
+                    "secondary": "#c1c6d7",
+                    "secondary-fixed": "#dde2f3",
+                    "on-secondary": "#2a303d",
+                    "inverse-on-surface": "#2d3136",
+                    "on-tertiary-fixed-variant": "#544600",
+                    "tertiary": "#fff9f0",
+                    "outline": "#849495",
+                    "outline-variant": "#3a494a",
+                    "surface": "#0B0F14",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#414754",
+                    "on-primary-container": "#006c71"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "container-padding": "32px",
+                    "gutter": "24px",
+                    "unit": "4px",
+                    "sidebar-width": "360px",
+                    "control-height": "40px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Geist"],
+                    "label-caps": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "display-xl": ["Geist"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "700"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "display-xl": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0B0F14;
+            color: #e0e2ea;
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.15);
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+        }
+
+        .pulse-ai {
+            animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .timeline-track {
+            background: linear-gradient(90deg, #00f5ff 0%, #ffdb3f 50%, #ffb4ab 100%);
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .map-container {
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCC1cxvG3VU-pfe7v_ImVIm59vSp3y-3N47z-gpiu8yVLMKx-hty0x6H977rWdU8mem9vu6TGvZhvE18wlIM6P6hlOtfDRpElUznIaUzYQCVAidUstMCT0OBhKouA41FSnNIBLaxXei5WiMy4Tq_edK2MAgavavokVDluIvq9LneT3m0x5r51az7bSi-zTVhMxSXSME1DFNY2BHdKBKCJ5i4OZA3Rmji8sD17PXKYBpGixKnmUmPjrmuQ');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex flex-row overflow-hidden bg-background">
+<!-- SIDEBAR NAVIGATION (Left) -->
+<nav class="flex flex-col py-8 px-6 gap-unit w-sidebar-width bg-surface-container-lowest border-r border-white/5 z-50">
+<div class="mb-10">
+<h1 class="font-headline-lg text-primary-container tracking-tighter">PranaMap AI</h1>
+<p class="font-label-caps text-on-surface-variant/50 text-[10px] mt-1">DELHI NCR DIVISION</p>
+</div>
+<div class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-4 py-3 px-4 rounded transition-all bg-primary-container/10 text-primary-container border-r-4 border-primary-container" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-label-caps text-label-caps uppercase">Command Center</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 rounded text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">timeline</span>
+<span class="font-label-caps text-label-caps uppercase">Forecast Explorer</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 rounded text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-caps text-label-caps uppercase">Source Attribution</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 rounded text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">edit_notifications</span>
+<span class="font-label-caps text-label-caps uppercase">Enforcement Planner</span>
+</a>
+<a class="flex items-center gap-4 py-3 px-4 rounded text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined">campaign</span>
+<span class="font-label-caps text-label-caps uppercase">Citizen Advisory</span>
+</a>
+</div>
+<div class="mt-auto border-t border-white/5 pt-6 flex flex-col gap-2">
+<div class="flex items-center gap-3 px-4 mb-4">
+<div class="w-10 h-10 rounded-full bg-surface-container-high border border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Female city administrator portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDti7jYUNV4pnM5GQmWGyWvtymxj_eFaiZOmSDPZvWXq8RQGOfPudyS-HuOx6lmIZoIAbjaJXWlQzTQ_37MqfeIQJ1pGvuwLyfcx1srA6V56Ox1S13aoZ7IHFYBSmzVqIdOQq0ta5BcaB0d4DcONAwk6eknEknd0wWXl3BAZJGrv0GcsOsswl5-MLgdqMPv0bQIT1cfWlC5p9Ms48wlT52ZI-nwfjawgGZvKbulOU1iZkq99avTf_i0sw"/>
+</div>
+<div>
+<p class="font-label-caps text-on-surface text-[11px]">Administrator</p>
+<p class="font-data-mono text-[10px] text-primary-container/60">ID: CN-8291</p>
+</div>
+</div>
+<a class="flex items-center gap-4 py-2 px-4 rounded text-on-surface-variant/70 hover:bg-white/5 transition-all text-xs" href="#">
+<span class="material-symbols-outlined text-sm">settings_heart</span>
+<span class="font-label-caps">System Status</span>
+</a>
+<a class="flex items-center gap-4 py-2 px-4 rounded text-on-surface-variant/70 hover:bg-white/5 transition-all text-xs" href="#">
+<span class="material-symbols-outlined text-sm">settings</span>
+<span class="font-label-caps">Settings</span>
+</a>
+<button class="mt-4 w-full py-3 bg-primary-container text-background font-label-caps uppercase tracking-widest text-[11px] rounded active:scale-95 transition-transform">
+                Trigger Intervention
+            </button>
+</div>
+</nav>
+<!-- MAIN DASHBOARD AREA -->
+<div class="flex-grow flex flex-col min-w-0">
+<!-- SINGLE UNIFIED HEADER -->
+<header class="h-20 flex justify-between items-center px-container-padding border-b border-white/5 bg-background z-40">
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<div class="flex items-center gap-2 text-on-surface-variant/70 text-xs font-label-caps">
+<span class="material-symbols-outlined text-xs">location_on</span>
+<span>REGION</span>
+</div>
+<div class="flex items-center gap-2 cursor-pointer group">
+<span class="font-headline-lg-mobile text-primary-container">Delhi NCR / Rohini</span>
+<span class="material-symbols-outlined group-hover:translate-y-1 transition-transform">expand_more</span>
+</div>
+</div>
+<div class="h-8 w-px bg-white/10"></div>
+<div class="flex items-center gap-3 glass-panel px-4 py-2 rounded-full border-primary-container/20">
+<div class="w-2 h-2 rounded-full bg-error animate-pulse"></div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[10px] text-on-surface-variant/50">LIVE AQI</span>
+<span class="font-data-mono text-error font-bold">184 - Poor</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-full glass-panel hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-full glass-panel hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant">cloud_done</span>
+</button>
+<div class="w-10 h-10 rounded-full border border-primary-container/30 p-0.5">
+<img class="w-full h-full rounded-full object-cover" data-alt="Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8WBv4WqlsxqrajA0KuHV8BA8ePHtjG9A5c7BtCjvS9ytM2YXQJVT6af9ackpnMJXD8rg5jtky8ftVXuH6prhxhhCC1h12T7G9idLSSIfWguj_CMTPe2rScasZqB2hcU9gRabFsRKootx5qAzPZfiLGtgXnA4OjJcwkKHUCDSQJGevnHPQUw7i6cSPpsJ53bpAMZJ8nOc1DYIEbAXRjzC9rueZKlwwHhrpAnDboPYc_NOAzuypICnJHg"/>
+</div>
+</div>
+</header>
+<!-- DASHBOARD CONTENT: MAP + SIDE PANEL -->
+<div class="flex-grow flex min-h-0 relative">
+<!-- FULL-BLEED MAP AREA -->
+<div class="flex-grow relative overflow-hidden bg-surface-container-lowest map-container">
+<!-- Map Greyscale Overlay -->
+<div class="absolute inset-0 bg-black/40 grayscale"></div>
+<!-- Single Unified Heatmap -->
+<svg class="absolute inset-0 w-full h-full opacity-40 mix-blend-color-dodge pointer-events-none">
+<circle cx="40%" cy="35%" fill="url(#heat-red)" r="300"></circle>
+<circle cx="55%" cy="50%" fill="url(#heat-orange)" r="250"></circle>
+<circle cx="30%" cy="60%" fill="url(#heat-red)" r="200"></circle>
+<defs>
+<radialgradient id="heat-red">
+<stop offset="0%" stop-color="#93000a" stop-opacity="0.9"></stop>
+<stop offset="100%" stop-color="#93000a" stop-opacity="0"></stop>
+</radialgradient>
+<radialgradient id="heat-orange">
+<stop offset="0%" stop-color="#ffdb3f" stop-opacity="0.9"></stop>
+<stop offset="100%" stop-color="#ffdb3f" stop-opacity="0"></stop>
+</radialgradient>
+</defs>
+</svg>
+<!-- Map Controls (Minimalist) -->
+<div class="absolute top-8 left-8 flex flex-col gap-3 z-10">
+<div class="glass-panel p-1 rounded-xl flex flex-col gap-1 w-12">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary-container text-background shadow-lg shadow-primary-container/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">layers</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant/70 hover:bg-white/5">
+<span class="material-symbols-outlined">thermostat</span>
+</button>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-on-surface-variant/70 hover:bg-white/5">
+<span class="material-symbols-outlined">air</span>
+</button>
+</div>
+</div>
+</div>
+<!-- CONTINUOUS SIDE PANEL (Right) -->
+<aside class="w-[400px] bg-surface-container-low/80 backdrop-blur-3xl border-l border-white/5 flex flex-col z-30">
+<div class="p-6 flex flex-col gap-6 h-full min-h-0">
+<!-- AI Predictive Insight -->
+<div class="bg-surface-container-highest/50 border border-white/10 rounded-xl overflow-hidden shrink-0">
+<div class="h-1 w-full bg-gradient-to-r from-primary-container via-tertiary-container to-error"></div>
+<div class="p-5">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary-container pulse-ai">auto_awesome</span>
+<span class="font-label-caps text-primary-container tracking-[0.2em] text-[10px]">AI PREDICTIVE INSIGHT</span>
+</div>
+<p class="font-body-md text-on-surface text-sm leading-relaxed">
+                                3 wards expected to cross <span class="text-error font-bold">'Poor'</span> AQI by 6 PM — Source: <span class="text-primary-container">Construction</span> + <span class="text-primary-container">Traffic</span>
+</p>
+<div class="mt-4 flex items-center justify-between border-t border-white/5 pt-3">
+<span class="font-data-mono text-[10px] text-on-surface-variant/50">CONFIDENCE: 92%</span>
+<button class="text-primary-container font-label-caps text-[10px] flex items-center gap-1 hover:underline">
+                                    PLAN RESPONSE <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Ward Status Scrollable List -->
+<div class="flex flex-col gap-3 min-h-0">
+<div class="font-label-caps text-on-surface-variant/40 text-[9px] px-1 uppercase tracking-widest">Ward Status Readout</div>
+<div class="flex flex-col gap-2 overflow-y-auto pr-2 custom-scrollbar">
+<!-- Ward Item 1 -->
+<div class="glass-panel p-4 rounded-lg flex items-center justify-between group cursor-pointer hover:border-error/40 transition-colors">
+<div class="flex flex-col">
+<span class="font-label-caps text-[11px] text-on-surface group-hover:text-error transition-colors">ROHINI SECTOR 7</span>
+<span class="font-data-mono text-[9px] text-on-surface-variant/40">SENSOR ID: 4122-A</span>
+</div>
+<div class="text-right">
+<span class="font-display-xl text-2xl font-data-mono text-error">214</span>
+<p class="font-label-caps text-[8px] text-error uppercase">Very Poor</p>
+</div>
+</div>
+<!-- Ward Item 2 -->
+<div class="glass-panel p-4 rounded-lg flex items-center justify-between group cursor-pointer hover:border-tertiary-container/40 transition-colors">
+<div class="flex flex-col">
+<span class="font-label-caps text-[11px] text-on-surface">PITAMPURA WEST</span>
+<span class="font-data-mono text-[9px] text-on-surface-variant/40">SENSOR ID: 9021-B</span>
+</div>
+<div class="text-right">
+<span class="font-display-xl text-2xl font-data-mono text-tertiary-container">162</span>
+<p class="font-label-caps text-[8px] text-tertiary-container uppercase">Poor</p>
+</div>
+</div>
+<!-- Ward Item 3 -->
+<div class="glass-panel p-4 rounded-lg flex items-center justify-between group cursor-pointer hover:border-primary-container/40 transition-colors">
+<div class="flex flex-col">
+<span class="font-label-caps text-[11px] text-on-surface">DWARKA SEC-10</span>
+<span class="font-data-mono text-[9px] text-on-surface-variant/40">SENSOR ID: 1255-K</span>
+</div>
+<div class="text-right">
+<span class="font-display-xl text-2xl font-data-mono text-primary-container">84</span>
+<p class="font-label-caps text-[8px] text-primary-container uppercase">Satisfactory</p>
+</div>
+</div>
+<!-- Ward Item 4 -->
+<div class="glass-panel p-4 rounded-lg flex items-center justify-between group cursor-pointer hover:border-error-container/40 transition-colors">
+<div class="flex flex-col">
+<span class="font-label-caps text-[11px] text-on-surface">ANAND VIHAR</span>
+<span class="font-data-mono text-[9px] text-on-surface-variant/40">SENSOR ID: 8821-X</span>
+</div>
+<div class="text-right">
+<span class="font-display-xl text-2xl font-data-mono text-error-container">392</span>
+<p class="font-label-caps text-[8px] text-error-container uppercase">Severe</p>
+</div>
+</div>
+<!-- Ward Item 5 -->
+<div class="glass-panel p-4 rounded-lg flex items-center justify-between group cursor-pointer hover:border-error/40 transition-colors">
+<div class="flex flex-col">
+<span class="font-label-caps text-[11px] text-on-surface">OKHLA PH-3</span>
+<span class="font-data-mono text-[9px] text-on-surface-variant/40">SENSOR ID: 1044-M</span>
+</div>
+<div class="text-right">
+<span class="font-display-xl text-2xl font-data-mono text-error">245</span>
+<p class="font-label-caps text-[8px] text-error uppercase">Very Poor</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<!-- UNIFIED TIMELINE SLIDER (Bottom, Full Width) -->
+<div class="h-32 bg-surface-container border-t border-white/5 px-container-padding flex items-center z-40">
+<div class="flex-grow glass-panel px-8 py-4 rounded-xl flex items-center gap-10">
+<div class="flex items-center gap-4 shrink-0">
+<button class="w-10 h-10 rounded-full bg-primary-container text-background flex items-center justify-center shadow-lg shadow-primary-container/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div>
+<h3 class="font-label-caps text-[10px] text-on-surface-variant/50">AQI FORECAST TIMELINE</h3>
+<p class="font-data-mono text-xs text-primary-container">CURRENT: 14:30 PM</p>
+</div>
+</div>
+<div class="flex-grow relative h-12 flex items-center">
+<div class="absolute -top-1 left-0 text-[10px] font-data-mono text-on-surface-variant/40">00:00</div>
+<div class="absolute -top-1 left-1/4 text-[10px] font-data-mono text-on-surface-variant/40">06:00</div>
+<div class="absolute -top-1 left-1/2 text-[10px] font-data-mono text-primary-container">12:00</div>
+<div class="absolute -top-1 left-3/4 text-[10px] font-data-mono text-on-surface-variant/40">18:00</div>
+<div class="absolute -top-1 right-0 text-[10px] font-data-mono text-on-surface-variant/40">23:59</div>
+<div class="w-full timeline-track relative">
+<!-- Future mask -->
+<div class="absolute top-0 right-0 h-full w-[38%] bg-black/40 rounded-r"></div>
+<!-- Slider Thumb -->
+<div class="absolute top-1/2 left-[62%] -translate-y-1/2 w-4 h-4 bg-white border-4 border-primary-container rounded-full shadow-[0_0_10px_rgba(0,245,255,0.5)] cursor-pointer z-10"></div>
+</div>
+</div>
+<div class="flex gap-8 shrink-0">
+<div class="flex flex-col items-end">
+<span class="font-label-caps text-[9px] text-on-surface-variant/40">PEAK FORECAST</span>
+<span class="font-data-mono text-error text-xs">18:00 PM</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="font-label-caps text-[9px] text-on-surface-variant/40">AVG WIND</span>
+<span class="font-data-mono text-xs">12km/h NNW</span>
+</div>
+</div>
+</div>
+</div>
+<!-- STATUS BAR (Very Bottom) -->
+<footer class="h-10 bg-surface-container-lowest border-t border-white/5 flex items-center justify-between px-container-padding z-50">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+<span class="font-data-mono text-[10px] text-on-surface-variant/60 uppercase">System Integrity: Nominal</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-data-mono text-[10px] text-on-surface-variant/60 uppercase">Nodes Active: 1,482</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-label-caps text-[9px] text-on-surface-variant/40">© 2024 PranaMap AI. Urban Intervention Systems.</span>
+<div class="flex gap-3">
+<a class="font-label-caps text-[9px] text-primary-container/60 hover:text-primary-container" href="#">API ACCESS</a>
+<a class="font-label-caps text-[9px] text-primary-container/60 hover:text-primary-container" href="#">SECURITY PROTOCOL</a>
+</div>
+</div>
+</footer>
+</div>
+<!-- Ambient Visual Effects Layer -->
+<div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+<div class="absolute -top-40 -left-40 w-[600px] h-[600px] bg-primary-container/5 rounded-full blur-[100px]"></div>
+</div>
+<script>
+        document.querySelectorAll('.glass-panel').forEach(panel => {
+            panel.addEventListener('mouseenter', () => {
+                panel.classList.add('glow-cyan');
+                panel.style.transition = 'all 0.3s ease';
+            });
+            panel.addEventListener('mouseleave', () => {
+                panel.classList.remove('glow-cyan');
+            });
+        });
+    </script>
+</body></html>
