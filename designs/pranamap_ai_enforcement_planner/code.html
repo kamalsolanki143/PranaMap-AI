@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Enforcement Planner | PranaMap AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card-header {
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
+        }
+        .glow-cyan-active:active {
+            box-shadow: 0 0 25px rgba(0, 245, 255, 0.4);
+        }
+        .hard-edge {
+            box-shadow: 1px 1px 0px 0px rgba(255, 255, 255, 0.1);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a0e13;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #31353b;
+            border-radius: 10px;
+        }
+        .intervention-pulse {
+            animation: pulse-cyan 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-cyan {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 8px rgba(0, 245, 255, 0.6)); }
+            50% { opacity: 0.7; filter: drop-shadow(0 0 2px rgba(0, 245, 255, 0.2)); }
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#b3b8c8",
+                        "background": "#101419",
+                        "secondary-fixed-dim": "#c1c6d7",
+                        "tertiary-fixed-dim": "#e7c427",
+                        "primary": "#e9feff",
+                        "on-surface": "#e0e2ea",
+                        "surface-variant": "#31353b",
+                        "surface-container-low": "#181c21",
+                        "primary-container": "#00f5ff",
+                        "on-surface-variant": "#b9caca",
+                        "secondary-container": "#434957",
+                        "on-primary-fixed": "#002021",
+                        "primary-fixed-dim": "#00dce5",
+                        "surface-tint": "#00dce5",
+                        "surface-container-high": "#262a30",
+                        "surface-container-highest": "#31353b",
+                        "on-secondary-fixed": "#161c27",
+                        "on-tertiary-fixed": "#221b00",
+                        "on-tertiary": "#3a3000",
+                        "surface-container": "#1c2025",
+                        "on-primary-fixed-variant": "#004f53",
+                        "tertiary-container": "#ffdb3f",
+                        "surface-dim": "#101419",
+                        "on-tertiary-container": "#736000",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#ffe16c",
+                        "on-primary": "#003739",
+                        "on-error": "#690005",
+                        "surface-bright": "#36393f",
+                        "inverse-surface": "#e0e2ea",
+                        "primary-fixed": "#63f7ff",
+                        "inverse-primary": "#00696e",
+                        "surface-container-lowest": "#0a0e13",
+                        "error-container": "#93000a",
+                        "on-background": "#e0e2ea",
+                        "secondary": "#c1c6d7",
+                        "secondary-fixed": "#dde2f3",
+                        "on-secondary": "#2a303d",
+                        "inverse-on-surface": "#2d3136",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "tertiary": "#fff9f0",
+                        "outline": "#849495",
+                        "outline-variant": "#3a494a",
+                        "surface": "#101419",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#414754",
+                        "on-primary-container": "#006c71"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-padding": "32px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "sidebar-width": "360px",
+                        "control-height": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Geist"],
+                        "label-caps": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "display-xl": ["Geist"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "700"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "display-xl": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-hidden">
+<!-- Global Layout -->
+<div class="flex h-screen w-screen relative overflow-hidden">
+<!-- SideNavBar Anchor -->
+<nav class="flex flex-col py-8 px-6 gap-unit fixed left-0 top-0 h-screen w-sidebar-width bg-surface-container-lowest/60 backdrop-blur-2xl border-r border-white/5 shadow-[1px_0_0_0_rgba(255,255,255,0.1)] z-50">
+<div class="flex items-center gap-3 mb-10">
+<div class="w-10 h-10 bg-primary-container rounded flex items-center justify-center glow-sm">
+<span class="material-symbols-outlined text-background font-bold">eco</span>
+</div>
+<div>
+<h1 class="font-headline-lg text-primary-container glow-sm leading-none">PranaMap AI</h1>
+<p class="font-label-caps text-[10px] text-on-surface-variant/50 tracking-widest mt-1">DELHI NCR DIVISION</p>
+</div>
+</div>
+<div class="space-y-2 flex-1">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps">Command Center</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="timeline">timeline</span>
+<span class="font-label-caps">Forecast Explorer</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-caps">Source Attribution</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-primary-container/10 text-primary-container border-r-4 border-primary-container shadow-[0_0_15px_rgba(0,245,255,0.2)] translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="edit_notifications">edit_notifications</span>
+<span class="font-label-caps">Enforcement Planner</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+<span class="font-label-caps">Citizen Advisory</span>
+</a>
+</div>
+<div class="pt-6 border-t border-white/5 space-y-2">
+<a class="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant/70 hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings_heart">settings_heart</span>
+<span class="font-label-caps">System Status</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-2 rounded-lg text-on-surface-variant/70 hover:bg-white/5 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-caps">Settings</span>
+</a>
+<div class="mt-6 p-4 rounded-xl glass-panel">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full border border-primary-container/30" data-alt="Close-up portrait of a professional city administrator in a high-tech dark control room environment, with soft cyan lighting reflecting on their face. The image should have a professional, serious, and cinematic feel, matching the dark mission-control aesthetic of PranaMap AI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKMZwBIhkWA511hXktPbxogqx5bD9UYB_mQnGpYxuyyuhbo4SYH0A-x5Bf66i8EPk_jH3eIgtrUdLvErVh8T4Ctq2B9oRSVoPKNePFiYFs1rtYS0VFHLspKx4zyjcuT9BNXAJe2ayl2aX17PSEdXtLzva79EwJnKTZE3OE7QjyrKyVKsY7r3stwMofw-eOVfH2D5tCrO9Ms1PrYZAX3cgfgWQoeW4mh3QkvLknuzDk974qI743dR2DMw"/>
+<div class="overflow-hidden">
+<p class="font-label-caps text-xs truncate">Admin_D_Sanjay</p>
+<p class="text-[10px] text-on-surface-variant">Tier-1 Access</p>
+</div>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 ml-sidebar-width relative h-screen overflow-hidden flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-control-height px-container-padding w-full bg-background/40 backdrop-blur-md sticky top-0 z-40 border-b border-white/5">
+<div class="flex items-center gap-6">
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant" data-icon="search">search</span>
+<input class="bg-surface-container-lowest border-none rounded-full pl-10 pr-4 py-1 text-sm focus:ring-1 focus:ring-primary-container w-64 text-on-surface placeholder:text-on-surface-variant/40" placeholder="Search Wards or Zones..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex gap-1">
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary-container transition-opacity"><span class="material-symbols-outlined" data-icon="notifications">notifications</span></button>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary-container transition-opacity"><span class="material-symbols-outlined" data-icon="cloud_done">cloud_done</span></button>
+<button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary-container transition-opacity"><span class="material-symbols-outlined" data-icon="account_circle">account_circle</span></button>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="flex-1 overflow-y-auto p-8 space-y-8 pb-20">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-on-surface">Enforcement Planner</h2>
+<p class="text-on-surface-variant max-w-2xl">AI-prioritized intervention protocol for regional AQI management. Deploy resources based on predictive source attribution and real-time monitoring.</p>
+</div>
+<button class="bg-primary-container text-background font-label-caps px-6 py-3 rounded-lg flex items-center gap-2 glow-cyan hover:brightness-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                        SIMULATE INTERVENTION
+                    </button>
+</div>
+<!-- Filters & Stats Row -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between">
+<div>
+<p class="font-label-caps text-on-surface-variant text-[10px]">TOTAL WARDS</p>
+<p class="font-data-mono text-2xl font-bold text-on-surface">272</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container" data-icon="map">map</span>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between">
+<div>
+<p class="font-label-caps text-on-surface-variant text-[10px]">CRITICAL ZONES</p>
+<p class="font-data-mono text-2xl font-bold text-error">12</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-error-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between">
+<div>
+<p class="font-label-caps text-on-surface-variant text-[10px]">ACTIVE MISSIONS</p>
+<p class="font-data-mono text-2xl font-bold text-tertiary-container">48</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-tertiary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-tertiary-container" data-icon="assignment_ind">assignment_ind</span>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-xl flex items-center justify-between">
+<div>
+<p class="font-label-caps text-on-surface-variant text-[10px]">PROJECTED IMPACT</p>
+<p class="font-data-mono text-2xl font-bold text-primary-container">-18.4%</p>
+</div>
+<div class="w-10 h-10 rounded-full bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container" data-icon="trending_down">trending_down</span>
+</div>
+</div>
+</div>
+<!-- Main Enforcement Table -->
+<div class="glass-panel rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
+<!-- Table Toolbar -->
+<div class="glass-card-header p-5 border-b border-white/5 flex flex-wrap justify-between items-center gap-4">
+<h3 class="font-label-caps text-on-surface tracking-wider">PRIORITIZED WARD ENFORCEMENT PROTOCOL</h3>
+<div class="flex items-center gap-3">
+<div class="flex bg-surface-container-lowest p-1 rounded-lg border border-white/5">
+<button class="px-3 py-1 rounded text-xs font-label-caps bg-primary-container text-background">ALL</button>
+<button class="px-3 py-1 rounded text-xs font-label-caps text-on-surface-variant hover:text-on-surface transition-colors">CRITICAL</button>
+<button class="px-3 py-1 rounded text-xs font-label-caps text-on-surface-variant hover:text-on-surface transition-colors">HIGH</button>
+</div>
+<button class="glass-panel px-4 py-1.5 rounded-lg text-xs font-label-caps flex items-center gap-2 hover:bg-white/10 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                                SORT BY AQI
+                            </button>
+</div>
+</div>
+<!-- Table Structure -->
+<div class="w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-white/[0.02] border-b border-white/5">
+<th class="px-6 py-4 font-label-caps text-[10px] text-on-surface-variant">PRIORITY</th>
+<th class="px-6 py-4 font-label-caps text-[10px] text-on-surface-variant">WARD IDENTITY</th>
+<th class="px-6 py-4 font-label-caps text-[10px] text-on-surface-variant">CURRENT AQI</th>
+<th class="px-6 py-4 font-label-caps text-[10px] text-on-surface-variant">PRIMARY SOURCE</th>
+<th class="px-6 py-4 font-label-caps text-[10px] text-on-surface-variant">PROJECTED DROP</th>
+<th class="px-6 py-4 font-label-caps text-[10px] text-on-surface-variant text-center">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<!-- Row 1 (Critical) -->
+<tr class="hover:bg-white/5 transition-colors cursor-pointer group" onclick="toggleRow('row-1')">
+<td class="px-6 py-5">
+<span class="bg-error/10 text-error border border-error/20 px-2 py-1 rounded text-[10px] font-bold tracking-widest">CRITICAL</span>
+</td>
+<td class="px-6 py-5">
+<p class="font-bold text-on-surface">Anand Vihar (Zone 4)</p>
+<p class="text-[10px] text-on-surface-variant/60 font-data-mono">UID: ND-AV-402</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error animate-pulse"></div>
+<span class="font-data-mono text-lg text-error">428</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-on-surface-variant" data-icon="factory">factory</span>
+<span class="text-sm">Industrial Exhaust</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="font-data-mono text-on-surface">428</span>
+<span class="material-symbols-outlined text-primary-container text-sm" data-icon="arrow_right_alt">arrow_right_alt</span>
+<span class="font-data-mono text-primary-container font-bold">312</span>
+</div>
+</td>
+<td class="px-6 py-5 text-center">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-container transition-transform" data-icon="expand_more" id="icon-row-1">expand_more</span>
+</td>
+</tr>
+<!-- Expanded Details for Row 1 -->
+<tr class="hidden bg-white/[0.03] border-l-2 border-primary-container" id="row-1">
+<td class="px-12 py-8" colspan="6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="space-y-4">
+<h4 class="font-label-caps text-primary-container text-xs">ROOT CAUSE ANALYSIS</h4>
+<div class="p-4 rounded-xl bg-surface-container-low border border-white/5">
+<p class="text-sm text-on-surface leading-relaxed">Cluster identified: Illegal waste incineration at Site B-12 combined with high heavy-vehicle traffic density between 02:00-05:00.</p>
+<div class="mt-4 flex flex-wrap gap-2">
+<span class="bg-surface-variant px-2 py-1 rounded text-[10px] text-on-surface-variant">Waste Burning</span>
+<span class="bg-surface-variant px-2 py-1 rounded text-[10px] text-on-surface-variant">Heavy Transport</span>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="font-label-caps text-primary-container text-xs">RECOMMENDED ACTIONS</h4>
+<div class="space-y-2">
+<label class="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg cursor-pointer">
+<input class="rounded bg-background border-white/20 text-primary-container focus:ring-0" type="checkbox"/>
+<span class="text-sm text-on-surface">Deploy Site Inspection Team (B-12)</span>
+</label>
+<label class="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg cursor-pointer">
+<input class="rounded bg-background border-white/20 text-primary-container focus:ring-0" type="checkbox"/>
+<span class="text-sm text-on-surface">Activate 2x Mist Cannons (Ghazipur Rd)</span>
+</label>
+<label class="flex items-center gap-3 p-2 hover:bg-white/5 rounded-lg cursor-pointer">
+<input class="rounded bg-background border-white/20 text-primary-container focus:ring-0" type="checkbox"/>
+<span class="text-sm text-on-surface">Traffic Diversion (Entry Point 4)</span>
+</label>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="font-label-caps text-primary-container text-xs">ASSIGNED DEPARTMENT</h4>
+<div class="flex items-center gap-4 p-4 rounded-xl bg-surface-container-low border border-white/5">
+<div class="w-10 h-10 rounded bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container" data-icon="security">security</span>
+</div>
+<div>
+<p class="font-bold text-sm">NDMC Enforcement Wing</p>
+<p class="text-xs text-on-surface-variant">Lead: Inspector R. Khanna</p>
+</div>
+</div>
+<button class="w-full py-2.5 rounded-lg border border-primary-container/30 text-primary-container text-xs font-label-caps hover:bg-primary-container hover:text-background transition-all">
+                                                    DISPATCH PROTOCOL
+                                                </button>
+</div>
+</div>
+</td>
+</tr>
+<!-- Row 2 (High) -->
+<tr class="hover:bg-white/5 transition-colors cursor-pointer group" onclick="toggleRow('row-2')">
+<td class="px-6 py-5">
+<span class="bg-orange-500/10 text-orange-500 border border-orange-500/20 px-2 py-1 rounded text-[10px] font-bold tracking-widest">HIGH</span>
+</td>
+<td class="px-6 py-5">
+<p class="font-bold text-on-surface">Punjabi Bagh (Zone 1)</p>
+<p class="text-[10px] text-on-surface-variant/60 font-data-mono">UID: ND-PB-115</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-orange-500"></div>
+<span class="font-data-mono text-lg text-orange-500">312</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-on-surface-variant" data-icon="construction">construction</span>
+<span class="text-sm">Construction Dust</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="font-data-mono text-on-surface">312</span>
+<span class="material-symbols-outlined text-primary-container text-sm" data-icon="arrow_right_alt">arrow_right_alt</span>
+<span class="font-data-mono text-primary-container font-bold">245</span>
+</div>
+</td>
+<td class="px-6 py-5 text-center">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-container" data-icon="expand_more" id="icon-row-2">expand_more</span>
+</td>
+</tr>
+<!-- Row 3 (Medium) -->
+<tr class="hover:bg-white/5 transition-colors cursor-pointer group" onclick="toggleRow('row-3')">
+<td class="px-6 py-5">
+<span class="bg-yellow-500/10 text-yellow-500 border border-yellow-500/20 px-2 py-1 rounded text-[10px] font-bold tracking-widest">MEDIUM</span>
+</td>
+<td class="px-6 py-5">
+<p class="font-bold text-on-surface">Dwarka Sector 8</p>
+<p class="text-[10px] text-on-surface-variant/60 font-data-mono">UID: ND-DW-801</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-yellow-500"></div>
+<span class="font-data-mono text-lg text-yellow-500">188</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-on-surface-variant" data-icon="directions_car">directions_car</span>
+<span class="text-sm">Vehicular Idling</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="font-data-mono text-on-surface">188</span>
+<span class="material-symbols-outlined text-primary-container text-sm" data-icon="arrow_right_alt">arrow_right_alt</span>
+<span class="font-data-mono text-primary-container font-bold">142</span>
+</div>
+</td>
+<td class="px-6 py-5 text-center">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-container" data-icon="expand_more" id="icon-row-3">expand_more</span>
+</td>
+</tr>
+<!-- Row 4 (Low) -->
+<tr class="hover:bg-white/5 transition-colors cursor-pointer group" onclick="toggleRow('row-4')">
+<td class="px-6 py-5">
+<span class="bg-green-500/10 text-green-500 border border-green-500/20 px-2 py-1 rounded text-[10px] font-bold tracking-widest">LOW</span>
+</td>
+<td class="px-6 py-5">
+<p class="font-bold text-on-surface">Lodhi Garden Area</p>
+<p class="text-[10px] text-on-surface-variant/60 font-data-mono">UID: ND-LG-100</p>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-green-500"></div>
+<span class="font-data-mono text-lg text-green-500">62</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-on-surface-variant" data-icon="park">park</span>
+<span class="text-sm">Leaf Burning (Local)</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<span class="font-data-mono text-on-surface">62</span>
+<span class="material-symbols-outlined text-primary-container text-sm" data-icon="arrow_right_alt">arrow_right_alt</span>
+<span class="font-data-mono text-primary-container font-bold">54</span>
+</div>
+</td>
+<td class="px-6 py-5 text-center">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary-container" data-icon="expand_more" id="icon-row-4">expand_more</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Footer Stats -->
+<footer class="max-w-7xl mx-auto px-container-padding flex flex-col md:flex-row justify-between items-center py-12 border-t border-surface-variant w-full opacity-60">
+<p class="text-body-md font-body-md text-on-surface-variant">© 2024 PranaMap AI. Urban Intervention Systems for Indian Smart Cities.</p>
+<div class="flex gap-8 mt-4 md:mt-0">
+<a class="font-label-caps text-on-surface-variant hover:text-primary-fixed-dim transition-colors" href="#">Privacy Protocol</a>
+<a class="font-label-caps text-on-surface-variant hover:text-primary-fixed-dim transition-colors" href="#">API Access</a>
+<a class="font-label-caps text-on-surface-variant hover:text-primary-fixed-dim transition-colors" href="#">Research Lab</a>
+</div>
+</footer>
+</div>
+<!-- Floating Simulation Overlay (Active when Simulate Button is clicked - Mocked State) -->
+<div class="fixed inset-0 bg-background/80 backdrop-blur-xl z-[60] flex items-center justify-center hidden" id="simulation-overlay">
+<div class="glass-panel p-12 rounded-3xl max-w-xl text-center space-y-8 intervention-pulse">
+
+<div class="space-y-4">
+<h2 class="font-headline-lg text-primary-container uppercase tracking-widest">Calculating Optimal Interventions</h2>
+<p class="text-on-surface-variant font-data-mono">Processing 4.2M data points across 12 monitoring stations...</p>
+</div>
+<div class="w-full bg-white/5 h-1 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full w-[65%]" id="sim-progress"></div>
+</div>
+<button class="px-8 py-3 rounded-full border border-primary-container/30 text-primary-container font-label-caps hover:bg-primary-container hover:text-background transition-all" onclick="closeSimulation()">ABORT SIMULATION</button>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        function toggleRow(rowId) {
+            const row = document.getElementById(rowId);
+            const icon = document.getElementById('icon-' + rowId);
+            const isHidden = row.classList.contains('hidden');
+            
+            // Close all other expanded rows first for clarity (Accordion style)
+            document.querySelectorAll('tr[id^="row-"]').forEach(r => {
+                if(r.id !== rowId) r.classList.add('hidden');
+            });
+            document.querySelectorAll('span[id^="icon-row-"]').forEach(i => {
+                if(i.id !== 'icon-' + rowId) i.textContent = 'expand_more';
+            });
+
+            if (isHidden) {
+                row.classList.remove('hidden');
+                icon.textContent = 'expand_less';
+            } else {
+                row.classList.add('hidden');
+                icon.textContent = 'expand_more';
+            }
+        }
+
+        // Simulate Intervention Logic
+        const simBtn = document.querySelector('button:contains("SIMULATE INTERVENTION")') || document.querySelectorAll('button')[1]; 
+        simBtn.addEventListener('click', () => {
+            const overlay = document.getElementById('simulation-overlay');
+            overlay.classList.remove('hidden');
+            
+            let progress = 0;
+            const bar = document.getElementById('sim-progress');
+            const interval = setInterval(() => {
+                progress += 1;
+                bar.style.width = progress + '%';
+                if(progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => closeSimulation(), 1000);
+                }
+            }, 30);
+        });
+
+        function closeSimulation() {
+            document.getElementById('simulation-overlay').classList.add('hidden');
+            document.getElementById('sim-progress').style.width = '0%';
+        }
+    </script>
+</body></html>

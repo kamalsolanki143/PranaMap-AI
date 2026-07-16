@@ -1,48 +1,37 @@
 # Dependencies
 node_modules/
-__pycache__/
-*.pyc
-venv/
-.venv/
+.npm
 
-# Environment
+# Build outputs
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/.turbo/
+
+# Environment files
 .env
 .env.local
-.env.production
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Build
-.next/
-out/
-build/
-dist/
-*.egg-info/
+# OS files
+.DS_Store
+Thumbs.db
+*.DS_Store
 
-# IDE
+# Editor
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
-.DS_Store
-Thumbs.db
-
-# ML artifacts
-ml/models/*.pkl
-ml/datasets/raw/
-ml/datasets/processed/
-
-# Geospatial data
-geospatial/**/*.tif
-geospatial/**/*.shp
-geospatial/**/*.shx
-geospatial/**/*.dbf
-
 # Logs
-*.log
 logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
+# Type coverage
+*.tsbuildinfo

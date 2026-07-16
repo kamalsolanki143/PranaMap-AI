@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PranaMap AI | Urban Intervention Intelligence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#b3b8c8",
+                        "background": "#101419",
+                        "secondary-fixed-dim": "#c1c6d7",
+                        "tertiary-fixed-dim": "#e7c427",
+                        "primary": "#e9feff",
+                        "on-surface": "#e0e2ea",
+                        "surface-variant": "#31353b",
+                        "surface-container-low": "#181c21",
+                        "primary-container": "#00f5ff",
+                        "on-surface-variant": "#b9caca",
+                        "secondary-container": "#434957",
+                        "on-primary-fixed": "#002021",
+                        "primary-fixed-dim": "#00dce5",
+                        "surface-tint": "#00dce5",
+                        "surface-container-high": "#262a30",
+                        "surface-container-highest": "#31353b",
+                        "on-secondary-fixed": "#161c27",
+                        "on-tertiary-fixed": "#221b00",
+                        "on-tertiary": "#3a3000",
+                        "surface-container": "#1c2025",
+                        "on-primary-fixed-variant": "#004f53",
+                        "tertiary-container": "#ffdb3f",
+                        "surface-dim": "#101419",
+                        "on-tertiary-container": "#736000",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#ffe16c",
+                        "on-primary": "#003739",
+                        "on-error": "#690005",
+                        "surface-bright": "#36393f",
+                        "inverse-surface": "#e0e2ea",
+                        "primary-fixed": "#63f7ff",
+                        "inverse-primary": "#00696e",
+                        "surface-container-lowest": "#0a0e13",
+                        "error-container": "#93000a",
+                        "on-background": "#e0e2ea",
+                        "secondary": "#c1c6d7",
+                        "secondary-fixed": "#dde2f3",
+                        "on-secondary": "#2a303d",
+                        "inverse-on-surface": "#2d3136",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "tertiary": "#fff9f0",
+                        "outline": "#849495",
+                        "outline-variant": "#3a494a",
+                        "surface": "#101419",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#414754",
+                        "on-primary-container": "#006c71"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-padding": "32px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "sidebar-width": "360px",
+                        "control-height": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Geist"],
+                        "label-caps": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "display-xl": ["Geist"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "700"}],
+                        "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "display-xl": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #101419;
+            color: #e0e2ea;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 245, 255, 0.4);
+        }
+        .scanline {
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 245, 255, 0.05) 50%);
+            background-size: 100% 4px;
+        }
+        @keyframes pulse-cyan {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+        .animate-pulse-cyan {
+            animation: pulse-cyan 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="selection:bg-primary-container selection:text-on-primary-container">
+<!-- Navbar -->
+<nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-container-padding h-20">
+<div class="flex items-center gap-2">
+<span class="font-headline-lg text-headline-lg-mobile font-bold text-primary-container tracking-tighter glow-text">PranaMap AI</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-body-md text-body-md text-primary-container border-b-2 border-primary-container pb-1 transition-colors duration-300" href="#">Platform</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Solutions</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Cities</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Advisory</a>
+</div>
+<button class="bg-primary-container text-on-primary-container font-label-caps text-label-caps px-6 py-3 rounded-DEFAULT hover:glow-cyan transition-all duration-200 active:scale-95">
+            Launch Command Center
+        </button>
+</nav>
+<!-- Hero Section -->
+<main class="relative pt-32 pb-20 min-h-screen flex flex-col items-center justify-center overflow-hidden">
+
+<div class="relative z-10 max-w-5xl mx-auto px-container-padding text-center">
+<div class="inline-flex items-center gap-2 px-3 py-1 glass rounded-full mb-6 border border-primary-container/20">
+<span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+<span class="font-label-caps text-[10px] text-primary-container uppercase tracking-widest">Active Intelligence: Delhi NCR Unit</span>
+</div>
+<h1 class="font-display-xl text-display-xl md:text-[80px] leading-[1.1] mb-8 bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+                We don't just measure pollution. <br/>
+<span class="text-primary-container glow-text">We prevent the crisis.</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mx-auto mb-10 text-lg">
+                The first AI-driven urban intervention platform for Indian megacities. We predict atmospheric stagnation, attribute sources in real-time, and simulate policy impact before deployment.
+            </p>
+<div class="flex flex-col md:flex-row gap-4 justify-center">
+<button class="bg-primary-container text-on-primary-container font-label-caps text-label-caps px-8 py-4 rounded-DEFAULT flex items-center gap-2 hover:glow-cyan transition-all group">
+                    View Live Dashboard 
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<button class="glass text-primary-container border-primary-container/30 font-label-caps text-label-caps px-8 py-4 rounded-DEFAULT flex items-center gap-2 hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined text-sm">play_circle</span>
+                    Watch Demo
+                </button>
+</div>
+</div>
+<!-- Dashboard Mockup -->
+<div class="relative mt-20 w-full max-w-6xl px-container-padding perspective-[2000px]">
+<div class="glass-card rounded-xl p-4 transform rotate-x-[15deg] shadow-2xl border border-white/10 relative group overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-tr from-primary-container/5 to-transparent pointer-events-none"></div>
+<div class="flex items-center justify-between mb-4 border-b border-white/5 pb-4">
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-red-500/50"></div>
+<div class="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+<div class="w-3 h-3 rounded-full bg-green-500/50"></div>
+</div>
+<div class="font-data-mono text-data-mono text-primary-container/60">SIMULATION_MODE: PREDICTIVE_FALLBACK_V4</div>
+</div>
+<div class="grid grid-cols-12 gap-4 h-[400px]">
+<div class="col-span-8 relative rounded-lg overflow-hidden border border-white/5 bg-surface-container-lowest">
+<div class="absolute inset-0 opacity-40 scanline"></div>
+<div class="w-full h-full bg-cover bg-center" data-alt="A dark high-fidelity digital map of Delhi NCR featuring glowing neon heat maps in oranges and reds indicating AQI hotspots, with data overlays of wind vectors and sensor nodes in electric cyan, cinematic lighting, 8k resolution, technical visualization style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBjUQ2lniwICCBvvNDkJ5T-66HoQ716M5Thb3Pbc-po2QJmP7pl7aGl_jv_IZMyJbzs6kK7hq72aJi8WY98rQzt9ujXOWCXPtWI0maiEr5eIwo6qlha8FbX9PeYSx69OtN-8lEKqXAzI4YYWdhBExOsC29TuTG2USHC6GVeHEwCVHGuDIgaNAuremeC0ygKHkpy21bXIHlPvP9Ppa-QHgEpJarQbQf2iCiw2kWPwXX-uxj-1pl6WA-4IA')"></div>
+<!-- Floating Data Overlays -->
+<div class="absolute top-4 right-4 flex flex-col gap-2">
+<div class="glass px-3 py-2 rounded border border-primary-container/30">
+<div class="font-label-caps text-[10px] text-primary-container">PREDICTED PEAK</div>
+<div class="font-data-mono text-xl">412 AQI</div>
+</div>
+<div class="glass px-3 py-2 rounded border border-white/10">
+<div class="font-label-caps text-[10px] text-on-surface-variant">CONFIDENCE</div>
+<div class="font-data-mono text-xl text-on-surface">94.2%</div>
+</div>
+</div>
+</div>
+<div class="col-span-4 flex flex-col gap-4">
+<div class="flex-1 glass p-4 rounded-lg flex flex-col justify-between">
+<div class="font-label-caps text-label-caps text-on-surface-variant border-b border-white/10 pb-2">RECOMMENDED INTERVENTION</div>
+<div class="py-4">
+<h4 class="font-headline-lg-mobile text-primary-container leading-tight mb-2">Zone-4 Traffic Diversion</h4>
+<p class="text-xs text-on-surface-variant">AI predicts a 12% reduction in NO2 levels within 4 hours if active by 06:00 AM.</p>
+</div>
+<button class="w-full py-2 bg-primary-container/10 border border-primary-container/50 text-primary-container font-label-caps text-[10px] tracking-widest hover:bg-primary-container/20 transition-all">EXECUTE SIMULATION</button>
+</div>
+<div class="flex-1 glass p-4 rounded-lg overflow-hidden">
+<div class="font-label-caps text-label-caps text-on-surface-variant mb-4">SOURCE ATTRIBUTION</div>
+
+</div>
+</div>
+</div>
+</div>
+<!-- Decorative Elements -->
+<div class="absolute -z-10 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-primary-container/5 blur-[120px] rounded-full"></div>
+</div>
+</main>
+<!-- Problem/Solution Section -->
+<section class="py-24 relative px-container-padding bg-surface-container-lowest">
+<div class="max-w-7xl mx-auto">
+<div class="grid md:grid-cols-2 gap-12 items-center mb-20">
+<div>
+<h2 class="font-headline-lg text-headline-lg mb-6">Breaking the Cycle of Reactive Management</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Current systems are designed to report on the past. PranaMap AI is designed to engineer the future.</p>
+</div>
+<div class="flex justify-end">
+<div class="glass p-1 rounded-full flex gap-1">
+<button class="px-6 py-2 rounded-full text-sm font-medium glass border-primary-container/30 text-primary-container">Legacy Approach</button>
+<button class="px-6 py-2 rounded-full text-sm font-medium text-on-surface-variant">PranaMap Method</button>
+</div>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-8">
+<!-- Legacy Card -->
+<div class="glass-card p-10 rounded-xl border-white/5 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 font-data-mono text-[10px] text-error opacity-50">LEGACY_V2.0</div>
+<div class="mb-8">
+<span class="material-symbols-outlined text-4xl text-on-surface-variant mb-4">history</span>
+<h3 class="font-headline-lg text-headline-lg-mobile mb-4">Reactive Monitoring</h3>
+<p class="text-on-surface-variant">Static stations report bad air after people have already breathed it. Decision-makers operate with a 24-hour information lag.</p>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4 text-on-surface-variant/50">
+<span class="material-symbols-outlined">analytics</span>
+<span>Monitor Data</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+<span class="material-symbols-outlined">dashboard</span>
+<span>Report Past</span>
+</div>
+<div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-error w-1/3"></div>
+</div>
+</div>
+</div>
+<!-- AI Card -->
+<div class="glass-card p-10 rounded-xl border-primary-container/20 glow-cyan relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 font-data-mono text-[10px] text-primary-container">AI_ORCHESTRATOR_ACTIVE</div>
+<div class="mb-8">
+<span class="material-symbols-outlined text-4xl text-primary-container mb-4" data-weight="fill">bolt</span>
+<h3 class="font-headline-lg text-headline-lg-mobile mb-4">Predictive Intervention</h3>
+<p class="text-on-surface-variant">Anticipate pollution surges 72 hours in advance. Automate micro-level policy responses and alert specific ward stakeholders instantly.</p>
+</div>
+<div class="space-y-4">
+<div class="flex items-center gap-4 text-primary-container">
+<span class="material-symbols-outlined">psychology</span>
+<span>Predict</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+<span class="material-symbols-outlined">precision_manufacturing</span>
+<span>Intervene</span>
+</div>
+<div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-full shadow-[0_0_10px_rgba(0,245,255,1)]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Multi-Agent Architecture -->
+<section class="py-24 px-container-padding relative overflow-hidden">
+<div class="max-w-7xl mx-auto text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg mb-4">Multi-Agent Intelligence Network</h2>
+<p class="text-on-surface-variant max-w-2xl mx-auto">Six specialized AI agents working in synchronization to manage urban air quality.</p>
+</div>
+<div class="max-w-6xl mx-auto relative">
+<!-- Connection Lines (SVG) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-20" preserveaspectratio="none">
+<path d="M 200 200 L 400 200 M 600 200 L 800 200 M 500 100 L 500 300" fill="none" stroke="url(#cyan-grad)" stroke-dasharray="4 4" stroke-width="1"></path>
+<defs>
+<lineargradient id="cyan-grad" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" style="stop-color:#00f5ff;stop-opacity:0"></stop>
+<stop offset="50%" style="stop-color:#00f5ff;stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:#00f5ff;stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="grid md:grid-cols-3 gap-6 relative z-10">
+<!-- Agent 1 -->
+<div class="glass-card p-6 rounded-lg hover:border-primary-container/40 transition-all duration-300">
+<div class="w-10 h-10 rounded-DEFAULT bg-primary-container/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary-container">cloud_download</span>
+</div>
+<h4 class="font-label-caps text-label-caps text-primary-container mb-2">Data Ingestion</h4>
+<p class="text-xs text-on-surface-variant">Real-time fusion of satellite, ground station, and mobile sensor feeds.</p>
+</div>
+<!-- Agent 2 -->
+<div class="glass-card p-6 rounded-lg hover:border-primary-container/40 transition-all duration-300">
+<div class="w-10 h-10 rounded-DEFAULT bg-primary-container/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary-container">timeline</span>
+</div>
+<h4 class="font-label-caps text-label-caps text-primary-container mb-2">AQI Forecast</h4>
+<p class="text-xs text-on-surface-variant">Deep learning models for 72-hour hyperlocal forecasting with 92%+ accuracy.</p>
+</div>
+<!-- Agent 3 -->
+<div class="glass-card p-6 rounded-lg hover:border-primary-container/40 transition-all duration-300">
+<div class="w-10 h-10 rounded-DEFAULT bg-primary-container/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary-container">analytics</span>
+</div>
+<h4 class="font-label-caps text-label-caps text-primary-container mb-2">Source Attribution</h4>
+<p class="text-xs text-on-surface-variant">Identifies specific polluters from industrial, traffic, or biomass sources.</p>
+</div>
+<!-- Agent 4 -->
+<div class="glass-card p-6 rounded-lg hover:border-primary-container/40 transition-all duration-300">
+<div class="w-10 h-10 rounded-DEFAULT bg-primary-container/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary-container">edit_notifications</span>
+</div>
+<h4 class="font-label-caps text-label-caps text-primary-container mb-2">Enforcement Intel</h4>
+<p class="text-xs text-on-surface-variant">Optimizes field officer routes for rapid GRAP compliance enforcement.</p>
+</div>
+<!-- Agent 5 -->
+<div class="glass-card p-6 rounded-lg hover:border-primary-container/40 transition-all duration-300">
+<div class="w-10 h-10 rounded-DEFAULT bg-primary-container/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary-container">campaign</span>
+</div>
+<h4 class="font-label-caps text-label-caps text-primary-container mb-2">Citizen Advisory</h4>
+<p class="text-xs text-on-surface-variant">Hyperlocal multilingual health alerts delivered via WhatsApp and SMS.</p>
+</div>
+<!-- Agent 6 -->
+<div class="glass-card p-6 rounded-lg hover:border-primary-container/40 transition-all duration-300">
+<div class="w-10 h-10 rounded-DEFAULT bg-primary-container/10 flex items-center justify-center mb-4">
+<span class="material-symbols-outlined text-primary-container">model_training</span>
+</div>
+<h4 class="font-label-caps text-label-caps text-primary-container mb-2">Impact Simulator</h4>
+<p class="text-xs text-on-surface-variant">Tests policy 'what-if' scenarios in a digital twin city environment.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Key Features Grid -->
+<section class="py-24 bg-surface-container-low px-container-padding">
+<div class="max-w-7xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-center mb-16 underline decoration-primary-container underline-offset-8">Mission Critical Features</h2>
+<div class="grid md:grid-cols-3 gap-1">
+<!-- Bento Item 1 -->
+<div class="md:col-span-2 glass-card p-12 flex flex-col justify-between min-h-[320px] group">
+<div>
+<span class="font-data-mono text-[10px] text-primary-container tracking-widest mb-4 block">MODULE_01</span>
+<h3 class="font-headline-lg text-headline-lg mb-4">Hyperlocal Forecasting</h3>
+<p class="text-on-surface-variant max-w-md">Our models operate at 100m grid resolution, allowing ward-specific interventions that blanket policies often miss.</p>
+</div>
+<div class="flex items-center gap-4 mt-8">
+<div class="h-[2px] flex-1 bg-white/10 overflow-hidden">
+<div class="h-full bg-primary-container w-0 group-hover:w-3/4 transition-all duration-1000"></div>
+</div>
+<span class="font-data-mono text-xs">PRECISION 94.2%</span>
+</div>
+</div>
+<!-- Bento Item 2 -->
+<div class="glass-card p-12 bg-primary-container/5">
+<span class="material-symbols-outlined text-primary-container text-4xl mb-6">psychology_alt</span>
+<h3 class="font-headline-lg text-headline-lg-mobile mb-4">Explainable AI</h3>
+<p class="text-sm text-on-surface-variant">We provide the 'Why' behind every recommendation, detailing meteorological and emission factors for trust-based governance.</p>
+</div>
+<!-- Bento Item 3 -->
+<div class="glass-card p-12">
+<h3 class="font-headline-lg text-headline-lg-mobile mb-4">Multilingual Advisories</h3>
+<p class="text-sm text-on-surface-variant">Automated alerts in Hindi, Punjabi, Bengali, and English tailored to the specific health risks of the local AQI composition.</p>
+</div>
+<!-- Bento Item 4 -->
+<div class="md:col-span-2 glass-card p-12 flex items-center gap-8">
+<div class="w-1/3">
+<h3 class="font-headline-lg text-headline-lg-mobile mb-4">Intervention Impact Simulation</h3>
+<p class="text-sm text-on-surface-variant">Simulate the effect of odd-even, construction bans, or cloud seeding before committing public resources.</p>
+</div>
+<div class="w-2/3 h-40 glass rounded border border-white/5 overflow-hidden">
+
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works -->
+<section class="py-24 px-container-padding overflow-hidden">
+<div class="max-w-7xl mx-auto text-center mb-20">
+<h2 class="font-headline-lg text-headline-lg">System Intelligence Flow</h2>
+</div>
+<div class="max-w-5xl mx-auto">
+<div class="flex flex-col md:flex-row items-center gap-4 md:gap-0">
+<!-- Step 1 -->
+<div class="flex-1 text-center group">
+<div class="w-16 h-16 rounded-full glass border-white/20 flex items-center justify-center mx-auto mb-6 group-hover:glow-cyan transition-all duration-500 bg-surface-container-highest">
+<span class="material-symbols-outlined text-primary-container">sensors</span>
+</div>
+<h4 class="font-label-caps text-label-caps mb-2">Ingest</h4>
+<p class="text-[10px] text-on-surface-variant px-4">Satellite + IoT Fusion</p>
+</div>
+<div class="hidden md:block w-12 h-[1px] bg-white/20"></div>
+<!-- Step 2 -->
+<div class="flex-1 text-center group">
+<div class="w-16 h-16 rounded-full glass border-white/20 flex items-center justify-center mx-auto mb-6 group-hover:glow-cyan transition-all duration-500 bg-surface-container-highest">
+<span class="material-symbols-outlined text-primary-container">model_training</span>
+</div>
+<h4 class="font-label-caps text-label-caps mb-2">Predict</h4>
+<p class="text-[10px] text-on-surface-variant px-4">Multi-Model Ensemble</p>
+</div>
+<div class="hidden md:block w-12 h-[1px] bg-white/20"></div>
+<!-- Step 3 -->
+<div class="flex-1 text-center group">
+<div class="w-16 h-16 rounded-full glass border-white/20 flex items-center justify-center mx-auto mb-6 group-hover:glow-cyan transition-all duration-500 bg-surface-container-highest">
+<span class="material-symbols-outlined text-primary-container">assignment_turned_in</span>
+</div>
+<h4 class="font-label-caps text-label-caps mb-2">Attribute</h4>
+<p class="text-[10px] text-on-surface-variant px-4">Emission Source ID</p>
+</div>
+<div class="hidden md:block w-12 h-[1px] bg-white/20"></div>
+<!-- Step 4 -->
+<div class="flex-1 text-center group">
+<div class="w-16 h-16 rounded-full glass border-white/20 flex items-center justify-center mx-auto mb-6 group-hover:glow-cyan transition-all duration-500 bg-surface-container-highest">
+<span class="material-symbols-outlined text-primary-container">smart_toy</span>
+</div>
+<h4 class="font-label-caps text-label-caps mb-2">Recommend</h4>
+<p class="text-[10px] text-on-surface-variant px-4">Actionable Playbooks</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-dim border-t border-surface-variant">
+<div class="max-w-7xl mx-auto px-container-padding py-16">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
+<div class="max-w-sm">
+<span class="font-headline-lg text-headline-lg-mobile font-bold text-on-surface mb-4 block">PranaMap AI</span>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                        Empowering Indian smart cities with predictive environmental intelligence to ensure a breathable future for all citizens.
+                    </p>
+<div class="flex gap-4">
+<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+<a class="text-on-surface-variant hover:text-primary-container transition-colors" href="#"><span class="material-symbols-outlined">description</span></a>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-12">
+<div class="flex flex-col gap-4">
+<h5 class="font-label-caps text-label-caps text-primary-container">Platform</h5>
+<a class="text-on-surface-variant hover:text-primary-fixed-dim text-sm" href="#">Privacy Protocol</a>
+<a class="text-on-surface-variant hover:text-primary-fixed-dim text-sm" href="#">API Access</a>
+<a class="text-on-surface-variant hover:text-primary-fixed-dim text-sm" href="#">Case Studies</a>
+</div>
+<div class="flex flex-col gap-4">
+<h5 class="font-label-caps text-label-caps text-primary-container">Connect</h5>
+<a class="text-on-surface-variant hover:text-primary-fixed-dim text-sm" href="#">City Onboarding</a>
+<a class="text-on-surface-variant hover:text-primary-fixed-dim text-sm" href="#">Research Lab</a>
+<a class="text-on-surface-variant hover:text-primary-fixed-dim text-sm" href="#">Contact Support</a>
+</div>
+</div>
+</div>
+<div class="mt-16 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">
+                    © 2024 PranaMap AI. Urban Intervention Systems for Indian Smart Cities.
+                </p>
+<div class="font-data-mono text-[10px] text-primary-container/40">
+                    LAT: 28.6139° N, LONG: 77.2090° E | SYSTEM_STABLE_GREEN
+                </div>
+</div>
+</div>
+</footer>
+<script>
+        // Micro-interaction: Smooth scrolling and parallax-like fade-in for elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const observerOptions = {
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-10');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.glass-card, h2, p').forEach(el => {
+                el.classList.add('transition-all', 'duration-700', 'opacity-0', 'translate-y-10');
+                observer.observe(el);
+            });
+        });
+    </script>
+</body></html>
