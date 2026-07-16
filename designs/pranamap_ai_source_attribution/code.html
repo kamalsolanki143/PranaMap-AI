@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Source Attribution | PranaMap AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=JetBrains+Mono:wght@500&amp;family=Geist:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
+        }
+        .hard-edge {
+            box-shadow: 1px 1px 0px 0px rgba(255, 255, 255, 0.1);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #101419;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #31353b;
+            border-radius: 2px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-container": "#b3b8c8",
+                        "background": "#101419",
+                        "secondary-fixed-dim": "#c1c6d7",
+                        "tertiary-fixed-dim": "#e7c427",
+                        "primary": "#e9feff",
+                        "on-surface": "#e0e2ea",
+                        "surface-variant": "#31353b",
+                        "surface-container-low": "#181c21",
+                        "primary-container": "#00f5ff",
+                        "on-surface-variant": "#b9caca",
+                        "secondary-container": "#434957",
+                        "on-primary-fixed": "#002021",
+                        "primary-fixed-dim": "#00dce5",
+                        "surface-tint": "#00dce5",
+                        "surface-container-high": "#262a30",
+                        "surface-container-highest": "#31353b",
+                        "on-secondary-fixed": "#161c27",
+                        "on-tertiary-fixed": "#221b00",
+                        "on-tertiary": "#3a3000",
+                        "surface-container": "#1c2025",
+                        "on-primary-fixed-variant": "#004f53",
+                        "tertiary-container": "#ffdb3f",
+                        "surface-dim": "#101419",
+                        "on-tertiary-container": "#736000",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed": "#ffe16c",
+                        "on-primary": "#003739",
+                        "on-error": "#690005",
+                        "surface-bright": "#36393f",
+                        "inverse-surface": "#e0e2ea",
+                        "primary-fixed": "#63f7ff",
+                        "inverse-primary": "#00696e",
+                        "surface-container-lowest": "#0a0e13",
+                        "error-container": "#93000a",
+                        "on-background": "#e0e2ea",
+                        "secondary": "#c1c6d7",
+                        "secondary-fixed": "#dde2f3",
+                        "on-secondary": "#2a303d",
+                        "inverse-on-surface": "#2d3136",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "tertiary": "#fff9f0",
+                        "outline": "#849495",
+                        "outline-variant": "#3a494a",
+                        "surface": "#101419",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#414754",
+                        "on-primary-container": "#006c71"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-padding": "32px",
+                        "gutter": "24px",
+                        "unit": "4px",
+                        "sidebar-width": "360px",
+                        "control-height": "40px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Geist"],
+                        "label-caps": ["Inter"],
+                        "data-mono": ["JetBrains Mono"],
+                        "display-xl": ["Geist"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Geist"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "700" }],
+                        "data-mono": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+                        "display-xl": ["64px", { "lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex">
+<!-- SideNavBar (Shared Component) -->
+<nav class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-container-lowest/60 backdrop-blur-2xl flex flex-col py-8 px-6 gap-unit border-r border-white/5 shadow-[1px_0_0_0_rgba(255,255,255,0.1)] z-50">
+<div class="mb-10">
+<h1 class="font-headline-lg text-primary-container glow-sm tracking-tighter">PranaMap AI</h1>
+<p class="font-label-caps text-on-surface-variant/60 mt-1">Delhi NCR Division</p>
+</div>
+<div class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary-container transition-colors" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps uppercase">Command Center</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary-container transition-colors" data-icon="timeline">timeline</span>
+<span class="font-label-caps uppercase">Forecast Explorer</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 bg-primary-container/10 text-primary-container border-r-4 border-primary-container shadow-[0_0_15px_rgba(0,245,255,0.2)] rounded-lg translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-caps uppercase">Source Attribution</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary-container transition-colors" data-icon="edit_notifications">edit_notifications</span>
+<span class="font-label-caps uppercase">Enforcement Planner</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all rounded-lg group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary-container transition-colors" data-icon="campaign">campaign</span>
+<span class="font-label-caps uppercase">Citizen Advisory</span>
+</a>
+</div>
+<button class="mt-auto mb-8 bg-primary-container text-on-primary py-3 px-4 font-label-caps uppercase tracking-widest flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(0,245,255,0.4)] transition-all active:scale-95">
+<span class="material-symbols-outlined text-[20px]" data-icon="bolt">bolt</span>
+            Trigger Intervention
+        </button>
+<div class="flex flex-col gap-2 pt-6 border-t border-white/10">
+<a class="flex items-center gap-4 px-4 py-2 text-on-surface-variant/70 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings_heart">settings_heart</span>
+<span class="font-label-caps uppercase">System Status</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-2 text-on-surface-variant/70 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="font-label-caps uppercase">Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-sidebar-width flex-grow min-h-screen relative overflow-x-hidden">
+<!-- Background Visualization Placeholder -->
+<div class="fixed inset-0 z-0 pointer-events-none opacity-20">
+
+</div>
+<!-- TopAppBar (Shared Component) -->
+<header class="sticky top-0 w-full h-control-height px-container-padding flex justify-between items-center bg-background/40 backdrop-blur-md z-40">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary-container" data-icon="search">search</span>
+<span class="font-data-mono text-on-surface-variant/50 text-[12px] uppercase tracking-wider">Search Spatial Coordinates...</span>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary-container cursor-pointer transition-colors" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary-container cursor-pointer transition-colors" data-icon="cloud_done">cloud_done</span>
+<div class="flex items-center gap-3 pl-4 border-l border-white/10">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-white/20 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a professional urban city administrator in a dark, high-tech setting, with blue glowing monitors reflecting in their glasses. The aesthetic is clean, cinematic, and professional, utilizing a deep navy and electric cyan color palette to match the mission-critical UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZ73VgPbfTVJKnvBYZLRCefNb_-GlE-XVAtqrkvDBQGQ7z_NPsiKQvaN5vQU4QgcwCBIyXgjERQCEvzzNbEZvWoBQSj5g5AifilqRF7Ujrb0Gy-Kq-k2sPvKqNQgY4Fy3s2WMUBvJL46SnwJ6289WbsaVxUZGOxU0QrTM5RjWO6UVkMgjR-d3NEHSxI4P-xFkuAIub_frEHHoO0j7IN_L2E0jKGWSaHuF55ilSZu8AaX7mpX64ILZtxA"/>
+</div>
+<span class="font-data-mono text-[12px] text-on-surface">Admin_Alpha_9</span>
+</div>
+</div>
+</header>
+<!-- Canvas Container -->
+<div class="relative z-10 px-container-padding py-8 max-w-[1400px] mx-auto">
+<!-- Page Header -->
+<div class="mb-10 flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-primary uppercase tracking-tight">Source Attribution Analysis</h2>
+<p class="font-data-mono text-primary-container/80 mt-1">Real-time Telemetry: Station DL-422 [RK Puram Sector 7]</p>
+</div>
+<div class="glass-panel px-4 py-2 hard-edge flex items-center gap-4">
+<div class="flex flex-col">
+<span class="font-label-caps text-on-surface-variant/60 text-[10px]">CURRENT AQI</span>
+<span class="font-headline-lg text-[#FFB4AB] -mt-1">342</span>
+</div>
+<div class="w-[1px] h-8 bg-white/10"></div>
+<div class="flex flex-col">
+<span class="font-label-caps text-on-surface-variant/60 text-[10px]">ANALYSIS CONFIDENCE</span>
+<span class="font-headline-lg text-primary-container -mt-1">94%</span>
+</div>
+</div>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- AI Summary Banner -->
+<div class="col-span-12 glass-panel p-6 border-l-4 border-primary-container glow-cyan flex items-start gap-6">
+<div class="w-12 h-12 rounded bg-primary-container/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary-container" data-icon="psychology">psychology</span>
+</div>
+<div>
+<h3 class="font-label-caps text-primary-container mb-2 uppercase">AI Synthesis Report</h3>
+<p class="text-on-surface leading-relaxed font-body-md italic">
+                            "High confidence due to wind direction analysis and 3 active construction sites within 2km. Secondary spikes in Biomass Burning observed in upwind trajectories from neighboring sectors. Immediate localized suppression is recommended for Construction Lot-B and traffic rerouting at the Inner Ring Road junction."
+                        </p>
+</div>
+</div>
+<!-- Main Source Cards Section -->
+<div class="col-span-12 lg:col-span-8 space-y-gutter">
+<!-- Source Breakdown Bar Chart -->
+<div class="glass-panel p-6">
+<div class="flex justify-between items-center mb-8">
+<h3 class="font-label-caps text-on-surface-variant uppercase tracking-widest">Global Sector Impact</h3>
+<span class="font-data-mono text-primary-container text-[12px]">Source Contribution (Normalized)</span>
+</div>
+<div class="space-y-6">
+<!-- Traffic -->
+<div class="space-y-2">
+<div class="flex justify-between text-[14px] font-data-mono">
+<span class="text-on-surface">Vehicular Emissions (Primary Traffic)</span>
+<span class="text-primary-container">84%</span>
+</div>
+<div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container glow-cyan transition-all duration-1000" style="width: 84%;"></div>
+</div>
+</div>
+<!-- Biomass -->
+<div class="space-y-2">
+<div class="flex justify-between text-[14px] font-data-mono">
+<span class="text-on-surface">Biomass Burning (Agricultural &amp; Waste)</span>
+<span class="text-tertiary-container">91%</span>
+</div>
+<div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container transition-all duration-1000" style="width: 91%;"></div>
+</div>
+</div>
+<!-- Construction -->
+<div class="space-y-2">
+<div class="flex justify-between text-[14px] font-data-mono">
+<span class="text-on-surface">Fugitive Dust (Construction &amp; Demolition)</span>
+<span class="text-secondary-fixed-dim">72%</span>
+</div>
+<div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary-fixed-dim transition-all duration-1000" style="width: 72%;"></div>
+</div>
+</div>
+<!-- Industrial -->
+<div class="space-y-2">
+<div class="flex justify-between text-[14px] font-data-mono">
+<span class="text-on-surface">Industrial Stack Emissions</span>
+<span class="text-outline">38%</span>
+</div>
+<div class="h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-outline transition-all duration-1000" style="width: 38%;"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Source Detailed Evidence Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Card 1: Traffic -->
+<div class="glass-panel group hover:border-primary-container/30 transition-all cursor-pointer">
+<div class="p-5 flex items-start gap-4">
+<div class="w-10 h-10 rounded bg-white/5 flex items-center justify-center shrink-0 border border-white/10 group-hover:bg-primary-container/10 group-hover:border-primary-container/30 transition-all">
+<span class="material-symbols-outlined text-primary-container" data-icon="car_tag">car_tag</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-label-caps text-on-surface uppercase text-[13px]">Traffic Patterns</h4>
+<span class="font-data-mono text-[12px] text-primary-container">84.2% Impact</span>
+</div>
+<div class="mt-3 space-y-1">
+<div class="flex justify-between text-[10px] font-label-caps text-on-surface-variant/50">
+<span>ATTRIBUTION CONFIDENCE</span>
+<span>96%</span>
+</div>
+<div class="h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container" style="width: 96%;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="px-5 pb-5 pt-2 border-t border-white/5">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-data-mono rounded-sm border border-white/10">Wind: NW</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-data-mono rounded-sm border border-white/10">Peak: 08:30 AM</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-data-mono rounded-sm border border-white/10">Heavy Diesel: 62%</span>
+</div>
+<details class="group/evidence">
+<summary class="list-none flex items-center gap-1 font-label-caps text-[11px] text-primary-container/80 cursor-pointer select-none hover:text-primary-container">
+<span class="material-symbols-outlined text-[16px] group-open/evidence:rotate-180 transition-transform" data-icon="expand_more">expand_more</span>
+                                        VIEW EVIDENCE LOGS
+                                    </summary>
+<div class="mt-3 pl-4 border-l border-primary-container/20 space-y-2 text-[12px] text-on-surface-variant/80 font-data-mono">
+<p>+ Real-time congestion data from Google Traffic API (Lvl 4)</p>
+<p>+ Satellite CO detection matches road corridor geometry</p>
+<p>+ Historic baseline comparison: +12% vs. Last Mon</p>
+</div>
+</details>
+</div>
+</div>
+<!-- Card 2: Biomass -->
+<div class="glass-panel group hover:border-tertiary-container/30 transition-all cursor-pointer">
+<div class="p-5 flex items-start gap-4">
+<div class="w-10 h-10 rounded bg-white/5 flex items-center justify-center shrink-0 border border-white/10 group-hover:bg-tertiary-container/10 group-hover:border-tertiary-container/30 transition-all">
+<span class="material-symbols-outlined text-tertiary-container" data-icon="local_fire_department">local_fire_department</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-label-caps text-on-surface uppercase text-[13px]">Biomass Burning</h4>
+<span class="font-data-mono text-[12px] text-tertiary-container">91.8% Impact</span>
+</div>
+<div class="mt-3 space-y-1">
+<div class="flex justify-between text-[10px] font-label-caps text-on-surface-variant/50">
+<span>ATTRIBUTION CONFIDENCE</span>
+<span>88%</span>
+</div>
+<div class="h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-container" style="width: 88%;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="px-5 pb-5 pt-2 border-t border-white/5">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-data-mono rounded-sm border border-white/10">Sentinel-5P Overlay</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-data-mono rounded-sm border border-white/10">Thermal Anomalies: 12</span>
+</div>
+<details class="group/evidence">
+<summary class="list-none flex items-center gap-1 font-label-caps text-[11px] text-tertiary-container/80 cursor-pointer select-none hover:text-tertiary-container">
+<span class="material-symbols-outlined text-[16px] group-open/evidence:rotate-180 transition-transform" data-icon="expand_more">expand_more</span>
+                                        VIEW EVIDENCE LOGS
+                                    </summary>
+<div class="mt-3 pl-4 border-l border-tertiary-container/20 space-y-2 text-[12px] text-on-surface-variant/80 font-data-mono">
+<p>+ High Potassium trace levels detected at DL-422</p>
+<p>+ Plume dispersal modeling identifies Panipat cluster</p>
+</div>
+</details>
+</div>
+</div>
+<!-- Card 3: Construction -->
+<div class="glass-panel group hover:border-secondary-fixed-dim/30 transition-all cursor-pointer">
+<div class="p-5 flex items-start gap-4">
+<div class="w-10 h-10 rounded bg-white/5 flex items-center justify-center shrink-0 border border-white/10 group-hover:bg-secondary-fixed-dim/10 group-hover:border-secondary-fixed-dim/30 transition-all">
+<span class="material-symbols-outlined text-secondary-fixed-dim" data-icon="construction">construction</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-label-caps text-on-surface uppercase text-[13px]">Construction Dust</h4>
+<span class="font-data-mono text-[12px] text-secondary-fixed-dim">72.1% Impact</span>
+</div>
+<div class="mt-3 space-y-1">
+<div class="flex justify-between text-[10px] font-label-caps text-on-surface-variant/50">
+<span>ATTRIBUTION CONFIDENCE</span>
+<span>92%</span>
+</div>
+<div class="h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary-fixed-dim" style="width: 92%;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="px-5 pb-5 pt-2 border-t border-white/5">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-data-mono rounded-sm border border-white/10">3 Active Sites</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-data-mono rounded-sm border border-white/10">High Density</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-data-mono rounded-sm border border-white/10">PM10/PM2.5 Ratio: 1.8</span>
+</div>
+<details class="group/evidence">
+<summary class="list-none flex items-center gap-1 font-label-caps text-[11px] text-secondary-fixed-dim/80 cursor-pointer select-none hover:text-secondary-fixed-dim">
+<span class="material-symbols-outlined text-[16px] group-open/evidence:rotate-180 transition-transform" data-icon="expand_more">expand_more</span>
+                                        VIEW EVIDENCE LOGS
+                                    </summary>
+<div class="mt-3 pl-4 border-l border-secondary-fixed-dim/20 space-y-2 text-[12px] text-on-surface-variant/80 font-data-mono">
+<p>+ AI Vision identified un-covered soil at Sites A &amp; B</p>
+<p>+ IoT sensors on cranes report 24h continuous operation</p>
+</div>
+</details>
+</div>
+</div>
+<!-- Card 4: Industrial -->
+<div class="glass-panel group hover:border-outline/30 transition-all cursor-pointer">
+<div class="p-5 flex items-start gap-4">
+<div class="w-10 h-10 rounded bg-white/5 flex items-center justify-center shrink-0 border border-white/10 group-hover:bg-outline/10 group-hover:border-outline/30 transition-all">
+<span class="material-symbols-outlined text-outline" data-icon="factory">factory</span>
+</div>
+<div class="flex-grow">
+<div class="flex justify-between items-start">
+<h4 class="font-label-caps text-on-surface uppercase text-[13px]">Industrial Stacks</h4>
+<span class="font-data-mono text-[12px] text-outline">38.5% Impact</span>
+</div>
+<div class="mt-3 space-y-1">
+<div class="flex justify-between text-[10px] font-label-caps text-on-surface-variant/50">
+<span>ATTRIBUTION CONFIDENCE</span>
+<span>64%</span>
+</div>
+<div class="h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-outline" style="width: 64%;"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="px-5 pb-5 pt-2 border-t border-white/5">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-data-mono rounded-sm border border-white/10">SO2 Signal: Low</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-[10px] font-data-mono rounded-sm border border-white/10">Downwind Pos</span>
+</div>
+<details class="group/evidence">
+<summary class="list-none flex items-center gap-1 font-label-caps text-[11px] text-outline/80 cursor-pointer select-none hover:text-outline">
+<span class="material-symbols-outlined text-[16px] group-open/evidence:rotate-180 transition-transform" data-icon="expand_more">expand_more</span>
+                                        VIEW EVIDENCE LOGS
+                                    </summary>
+<div class="mt-3 pl-4 border-l border-outline/20 space-y-2 text-[12px] text-on-surface-variant/80 font-data-mono">
+<p>+ No thermal anomaly at Wazirpur Industrial Area</p>
+<p>+ CPCB Stack monitoring data indicates within-limit ops</p>
+</div>
+</details>
+</div>
+</div>
+</div>
+</div>
+<!-- Secondary Analytical Sidebar -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Spatial Context Card -->
+<div class="glass-panel overflow-hidden h-[300px] relative">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover" data-alt="A top-down satellite view of a city grid in India at night, with streets illuminated by neon amber lights. Overlaid is a digital cyan heat map showing air pollution intensity flowing with the wind direction. High-tech UI markers highlight points of interest like factories and main intersections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWOtWuvqM5xxF5eertAUWlpB4a0wmifztnLjUczW-sOsgm9dIjibrm_8GCZgd94-jGkwtRkTQZFL3XoyT8eAmozI2hkGagfGj2N8EYgyriM5_7MHs4AIKVvUzCd6PDfYlrXy-XKoZnmgLSZ1LNhf_RdX7Hsm_DwXaVZ9GSMsTCv8G39sDgdtPaWSp8RFJG_eqlcTJRnl4JUiKK8dQG6OEB0B9wahFCE1BGHYLnNWJPxQR8NbE--mXPQg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
+</div>
+<div class="relative z-10 p-6 flex flex-col h-full justify-between">
+<div class="flex justify-between items-start">
+<div class="bg-background/80 backdrop-blur-md px-3 py-1 rounded hard-edge">
+<span class="font-data-mono text-primary-container text-[12px]">LATTICE VIEW [2.0]</span>
+</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded bg-background/80 border border-white/10 flex items-center justify-center text-on-surface hover:text-primary-container transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="layers">layers</span>
+</button>
+<button class="w-8 h-8 rounded bg-background/80 border border-white/10 flex items-center justify-center text-on-surface hover:text-primary-container transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="near_me">near_me</span>
+</button>
+</div>
+</div>
+<div>
+<h4 class="font-label-caps text-on-surface mb-2 uppercase text-[12px]">Wind Dynamics: North-West</h4>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></div>
+<span class="font-data-mono text-[14px] text-on-surface-variant">Velocity: 14.2 km/h</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Intervention Priority List -->
+<div class="glass-panel p-6">
+<h3 class="font-label-caps text-on-surface-variant mb-6 uppercase tracking-widest">Recommended Actions</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-3 bg-white/5 border border-white/10 rounded group hover:bg-primary-container/10 transition-all">
+<div class="w-8 h-8 bg-primary-container/20 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-primary-container text-[18px]" data-icon="task_alt">task_alt</span>
+</div>
+<div class="flex-grow">
+<p class="text-[12px] font-body-md text-on-surface">Deploy Water Sprinklers at Lot-B</p>
+<div class="flex justify-between mt-1">
+<span class="text-[10px] text-on-surface-variant font-data-mono">Estimated Reduc: -40 PM</span>
+<span class="text-[10px] text-primary-container font-data-mono">PRIORITY 1</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 bg-white/5 border border-white/10 rounded group hover:bg-primary-container/10 transition-all">
+<div class="w-8 h-8 bg-surface-container-high flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="traffic">traffic</span>
+</div>
+<div class="flex-grow">
+<p class="text-[12px] font-body-md text-on-surface">Reroute Heavy Duty Vehicles</p>
+<div class="flex justify-between mt-1">
+<span class="text-[10px] text-on-surface-variant font-data-mono">Estimated Reduc: -12 PM</span>
+<span class="text-[10px] text-on-surface-variant font-data-mono uppercase">Standard</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 p-3 bg-white/5 border border-white/10 rounded group hover:bg-primary-container/10 transition-all">
+<div class="w-8 h-8 bg-surface-container-high flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]" data-icon="policy">policy</span>
+</div>
+<div class="flex-grow">
+<p class="text-[12px] font-body-md text-on-surface">Field Audit: Sector 4 Paving</p>
+<div class="flex justify-between mt-1">
+<span class="text-[10px] text-on-surface-variant font-data-mono">Estimated Reduc: -5 PM</span>
+<span class="text-[10px] text-on-surface-variant font-data-mono uppercase">Audit Only</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Telemetry Health Glass Card -->
+<div class="glass-panel p-6 bg-surface-container-low/40">
+<div class="flex justify-between items-center mb-4">
+<span class="font-label-caps text-[11px] text-on-surface-variant/70 uppercase">Sensor Network Health</span>
+<span class="flex h-2 w-2 rounded-full bg-primary-container glow-cyan"></span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-background/50 p-3 rounded border border-white/5">
+<span class="font-data-mono text-[18px] text-on-surface">1,242</span>
+<p class="text-[10px] font-label-caps text-on-surface-variant/60 uppercase">Nodes Active</p>
+</div>
+<div class="bg-background/50 p-3 rounded border border-white/5">
+<span class="font-data-mono text-[18px] text-on-surface">4ms</span>
+<p class="text-[10px] font-label-caps text-on-surface-variant/60 uppercase">Network Latency</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer (Shared Component) -->
+<footer class="relative w-full py-12 bg-surface-dim border-t border-surface-variant z-10 mt-20">
+<div class="max-w-7xl mx-auto px-container-padding flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-headline-lg-mobile text-on-surface tracking-tighter mb-2">PranaMap AI</span>
+<p class="font-body-md text-on-surface-variant text-[14px] max-w-sm text-center md:text-left">© 2024 PranaMap AI. Urban Intervention Systems for Indian Smart Cities. Engineered for real-time mission-critical environmental governance.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-10">
+<div class="flex flex-col gap-3">
+<span class="font-label-caps text-primary-container text-[11px] uppercase tracking-widest">Protocol</span>
+<a class="font-body-md text-on-surface-variant hover:text-primary-fixed-dim transition-colors text-[14px]" href="#">Privacy Protocol</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary-fixed-dim transition-colors text-[14px]" href="#">API Access</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="font-label-caps text-primary-container text-[11px] uppercase tracking-widest">Expansion</span>
+<a class="font-body-md text-on-surface-variant hover:text-primary-fixed-dim transition-colors text-[14px]" href="#">City Onboarding</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary-fixed-dim transition-colors text-[14px]" href="#">Research Lab</a>
+</div>
+</div>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interactions and subtle glow effects
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.glass-panel');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-2px)';
+                    card.style.transition = 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)';
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Smooth reveal of bar charts
+            const bars = document.querySelectorAll('.h-full.transition-all');
+            bars.forEach(bar => {
+                const targetWidth = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = targetWidth;
+                }, 400);
+            });
+        });
+    </script>
+</body></html>

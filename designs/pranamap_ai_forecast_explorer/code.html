@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Forecast Explorer | PranaMap AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;family=JetBrains+Mono:wght@500&amp;family=Geist:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config Verbatim -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#b3b8c8",
+                    "background": "#101419",
+                    "secondary-fixed-dim": "#c1c6d7",
+                    "tertiary-fixed-dim": "#e7c427",
+                    "primary": "#e9feff",
+                    "on-surface": "#e0e2ea",
+                    "surface-variant": "#31353b",
+                    "surface-container-low": "#181c21",
+                    "primary-container": "#00f5ff",
+                    "on-surface-variant": "#b9caca",
+                    "secondary-container": "#434957",
+                    "on-primary-fixed": "#002021",
+                    "primary-fixed-dim": "#00dce5",
+                    "surface-tint": "#00dce5",
+                    "surface-container-high": "#262a30",
+                    "surface-container-highest": "#31353b",
+                    "on-secondary-fixed": "#161c27",
+                    "on-tertiary-fixed": "#221b00",
+                    "on-tertiary": "#3a3000",
+                    "surface-container": "#1c2025",
+                    "on-primary-fixed-variant": "#004f53",
+                    "tertiary-container": "#ffdb3f",
+                    "surface-dim": "#101419",
+                    "on-tertiary-container": "#736000",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed": "#ffe16c",
+                    "on-primary": "#003739",
+                    "on-error": "#690005",
+                    "surface-bright": "#36393f",
+                    "inverse-surface": "#e0e2ea",
+                    "primary-fixed": "#63f7ff",
+                    "inverse-primary": "#00696e",
+                    "surface-container-lowest": "#0a0e13",
+                    "error-container": "#93000a",
+                    "on-background": "#e0e2ea",
+                    "secondary": "#c1c6d7",
+                    "secondary-fixed": "#dde2f3",
+                    "on-secondary": "#2a303d",
+                    "inverse-on-surface": "#2d3136",
+                    "on-tertiary-fixed-variant": "#544600",
+                    "tertiary": "#fff9f0",
+                    "outline": "#849495",
+                    "outline-variant": "#3a494a",
+                    "surface": "#101419",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#414754",
+                    "on-primary-container": "#006c71"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "container-padding": "32px",
+                    "gutter": "24px",
+                    "unit": "4px",
+                    "sidebar-width": "360px",
+                    "control-height": "40px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Geist"],
+                    "label-caps": ["Inter"],
+                    "data-mono": ["JetBrains Mono"],
+                    "display-xl": ["Geist"],
+                    "body-md": ["Inter"],
+                    "headline-lg-mobile": ["Geist"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "700"}],
+                    "data-mono": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "display-xl": ["64px", {"lineHeight": "72px", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #101419;
+            color: #e0e2ea;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-panel-gradient {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .primary-glow {
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
+        }
+
+        .active-glow {
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.15);
+            border-color: rgba(0, 245, 255, 0.3);
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .chart-container {
+            mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+        
+        .pulse-cyan {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar Anchor -->
+<aside class="fixed left-0 top-0 h-screen w-sidebar-width bg-surface-container-lowest/60 backdrop-blur-2xl flex flex-col py-8 px-6 gap-unit border-r border-white/5 shadow-[1px_0_0_0_rgba(255,255,255,0.1)] z-50">
+<div class="mb-10">
+<h1 class="font-headline-lg text-primary-container glow-sm tracking-tighter">PranaMap AI</h1>
+<p class="font-label-caps text-on-surface-variant/60 mt-1 uppercase tracking-widest text-[10px]">Delhi NCR Division</p>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary-container transition-colors" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps uppercase text-[11px]">Command Center</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded bg-primary-container/10 text-primary-container border-r-4 border-primary-container shadow-[0_0_15px_rgba(0,245,255,0.2)] translate-x-1 duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="timeline">timeline</span>
+<span class="font-label-caps uppercase text-[11px]">Forecast Explorer</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary-container transition-colors" data-icon="analytics">analytics</span>
+<span class="font-label-caps uppercase text-[11px]">Source Attribution</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary-container transition-colors" data-icon="edit_notifications">edit_notifications</span>
+<span class="font-label-caps uppercase text-[11px]">Enforcement Planner</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded text-on-surface-variant/70 hover:bg-white/5 hover:text-on-surface transition-all group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary-container transition-colors" data-icon="campaign">campaign</span>
+<span class="font-label-caps uppercase text-[11px]">Citizen Advisory</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-2 pt-6 border-t border-white/5">
+<button class="bg-primary-container text-on-primary-container font-label-caps py-3 px-4 rounded-sm flex items-center justify-center gap-2 mb-4 hover:shadow-[0_0_20px_rgba(0,245,255,0.4)] transition-all">
+                TRIGGER INTERVENTION
+            </button>
+<a class="flex items-center gap-4 px-4 py-2 text-on-surface-variant/70 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings_heart">settings_heart</span>
+<span class="font-label-caps text-[10px] uppercase">System Status</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-2 text-on-surface-variant/70 hover:text-on-surface transition-all" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+<span class="font-label-caps text-[10px] uppercase">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-sidebar-width min-h-screen relative flex flex-col">
+<!-- TopAppBar Anchor -->
+<header class="sticky top-0 z-40 bg-background/40 backdrop-blur-md flex justify-between items-center h-control-height px-container-padding w-full">
+<div class="flex items-center gap-6">
+<div class="flex items-center bg-surface-container-lowest/80 border border-white/10 rounded px-3 py-1 gap-3">
+<span class="material-symbols-outlined text-primary-container text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-data-mono font-data-mono text-[12px] w-64 placeholder:text-on-surface-variant/30" placeholder="Search ward data..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary-container/80 cursor-pointer transition-opacity" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant hover:text-primary-container/80 cursor-pointer transition-opacity" data-icon="cloud_done">cloud_done</span>
+</div>
+<div class="h-6 w-[1px] bg-white/10"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="font-data-mono text-[10px] text-on-surface leading-none">ADMIN_NODE_01</p>
+<p class="font-data-mono text-[9px] text-primary-container/60">ACTIVE_SESSION</p>
+</div>
+<img class="w-8 h-8 rounded-full border border-primary-container/30 object-cover" data-alt="Close up professional portrait of a tech-savvy urban administrator with high-tech glasses reflecting digital screens, set against a dark architectural background with glowing cyan and teal accents, photography style, cinematic lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4iTifSLFnBka-h9MX8ETJaUbYNSvkurnJreNrT-It71Y4T3JXnIeBJkOj3EA1GSf9wqOl6mtEehsuZyrfuVQ11CDTV417zQ2SO4_bJ7Kd3yNb1xX4dJwPJpiQ2IyqE6oCtqNbTKXJsvS6hITYsa-0TMv36ZJ_WrgdtPr1RYXfvc-xGDFbDrqg96G231PiUyzgoFQUC9sliDjh3eXrB-jkzPfNtHnwwcY7ffAIB7YLEdkwEyXR_zMo5g"/>
+</div>
+</div>
+</header>
+<!-- Canvas Area -->
+<section class="flex-1 p-container-padding relative">
+<!-- Background Visualization Overlay -->
+<div class="absolute inset-0 z-0 pointer-events-none opacity-20 overflow-hidden">
+
+</div>
+<div class="relative z-10 space-y-6">
+<!-- Page Header & Ward Selector -->
+<div class="flex flex-col md:flex-row justify-between items-end gap-6">
+<div>
+<h2 class="font-headline-lg text-on-surface tracking-tight">Forecast Explorer</h2>
+<div class="flex items-center gap-2 mt-2">
+<span class="h-2 w-2 rounded-full bg-primary-container shadow-[0_0_8px_#00f5ff]"></span>
+<span class="font-data-mono text-data-mono text-primary-container/80">LIVE_PREDICTION_ENGINE_RUNNING</span>
+</div>
+</div>
+<div class="glass-panel px-4 py-2 rounded-lg flex items-center gap-4 min-w-[240px]">
+<div class="flex-1">
+<p class="font-label-caps text-[10px] text-on-surface-variant/60 uppercase">Selected Jurisdiction</p>
+<select class="bg-transparent border-none focus:ring-0 p-0 font-headline-lg-mobile text-on-surface w-full cursor-pointer">
+<option>Dwarka Ward 34</option>
+<option>Connaught Place</option>
+<option>Rohini Zone 4</option>
+<option>South Ex II</option>
+</select>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="location_on">location_on</span>
+</div>
+</div>
+<!-- Main Analysis Grid -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Primary Chart Area -->
+<div class="col-span-12 lg:col-span-8 glass-panel rounded-xl p-6 relative overflow-hidden">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="font-label-caps text-on-surface tracking-wider">24-HOUR AIR QUALITY PROJECTION</h3>
+<p class="font-data-mono text-[12px] text-on-surface-variant/60">Unit: PM2.5 (μg/m³)</p>
+</div>
+<div class="flex gap-4">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary-container"></span>
+<span class="font-data-mono text-[10px] text-on-surface-variant">PREDICTED</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-white/20"></span>
+<span class="font-data-mono text-[10px] text-on-surface-variant">CONFIDENCE BAND</span>
+</div>
+</div>
+</div>
+<!-- Main Visualization: Chart Placeholder with Data -->
+<div class="h-[400px] w-full relative chart-container flex items-end justify-between pb-8 border-b border-white/5">
+<!-- Visualizing the chart with SVG line and area -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 100">
+<!-- Confidence Band -->
+<path d="M0,80 Q100,70 200,85 T400,60 T600,75 T800,40 T1000,55 L1000,100 L0,100 Z" fill="rgba(0, 245, 255, 0.05)"></path>
+<!-- Forecast Line -->
+<path d="M0,85 Q100,75 200,90 T400,65 T600,80 T800,45 T1000,60" fill="none" stroke="#00f5ff" stroke-width="2" vector-effect="non-scaling-stroke"></path>
+<!-- Highlighting Peaks -->
+<circle class="pulse-cyan" cx="800" cy="45" fill="#00f5ff" r="4"></circle>
+</svg>
+<!-- Vertical Axis -->
+<div class="absolute left-0 top-0 h-full flex flex-col justify-between text-[10px] font-data-mono text-on-surface-variant/40 pr-2 border-r border-white/5">
+<span>300</span><span>200</span><span>100</span><span>0</span>
+</div>
+<!-- Time markers -->
+<div class="w-full flex justify-between pt-4">
+<span class="font-data-mono text-[10px] text-on-surface-variant/40">21:00</span>
+<span class="font-data-mono text-[10px] text-on-surface-variant/40">00:00</span>
+<span class="font-data-mono text-[10px] text-on-surface-variant/40">03:00</span>
+<span class="font-data-mono text-[10px] text-on-surface-variant/40">06:00</span>
+<span class="font-data-mono text-[10px] text-on-surface-variant/40">09:00</span>
+<span class="font-data-mono text-[10px] text-on-surface-variant/40">12:00</span>
+<span class="font-data-mono text-[10px] text-on-surface-variant/40">15:00</span>
+<span class="font-data-mono text-[10px] text-on-surface-variant/40">18:00</span>
+</div>
+</div>
+</div>
+<!-- Side Stats Cluster -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-gutter">
+<!-- Confidence Gauge -->
+<div class="glass-panel-gradient rounded-xl p-6 flex items-center justify-between overflow-hidden">
+<div class="relative w-24 h-24">
+<svg class="w-full h-full transform -rotate-90">
+<circle cx="48" cy="48" fill="transparent" r="40" stroke="rgba(255,255,255,0.1)" stroke-width="6"></circle>
+<circle class="transition-all duration-1000 ease-out" cx="48" cy="48" fill="transparent" r="40" stroke="#00f5ff" stroke-dasharray="251.2" stroke-dashoffset="15" stroke-width="6"></circle>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="font-headline-lg-mobile text-primary-container">94%</span>
+</div>
+</div>
+<div class="flex-1 pl-6">
+<p class="font-label-caps text-[10px] text-on-surface-variant/60 uppercase">Model Reliability</p>
+<h4 class="font-headline-lg-mobile text-on-surface">High Confidence</h4>
+<p class="text-[12px] text-on-surface-variant mt-1">Satellite + Ground Sensor fusion verified.</p>
+</div>
+</div>
+<!-- Trend Indicator -->
+<div class="glass-panel-gradient rounded-xl p-6">
+<p class="font-label-caps text-[10px] text-on-surface-variant/60 uppercase mb-4">Pollutant Trend (2h Window)</p>
+<div class="flex items-center gap-6">
+<div class="flex flex-col">
+<span class="font-display-xl text-error leading-tight tracking-tighter">Rising</span>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-error" data-icon="trending_up">trending_up</span>
+<span class="font-data-mono text-error/80">+12% / HR</span>
+</div>
+</div>
+<div class="flex-1 h-20 opacity-50 grayscale contrast-125">
+
+</div>
+</div>
+</div>
+<!-- Today vs Tomorrow Cards -->
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-panel-gradient rounded-xl p-4 flex flex-col gap-2">
+<p class="font-label-caps text-[10px] text-on-surface-variant/60 uppercase">Today Avg</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg-mobile text-on-surface">142</span>
+<span class="font-data-mono text-[10px] text-on-surface-variant/40">AQI</span>
+</div>
+<div class="h-1 w-full bg-tertiary-container rounded-full opacity-50"></div>
+</div>
+<div class="glass-panel-gradient rounded-xl p-4 flex flex-col gap-2 border-primary-container/20 border">
+<p class="font-label-caps text-[10px] text-primary-container/60 uppercase">Predicted Tomorrow</p>
+<div class="flex items-baseline gap-2">
+<span class="font-headline-lg-mobile text-primary-container">168</span>
+<span class="font-data-mono text-[10px] text-primary-container/40">AQI</span>
+</div>
+<div class="h-1 w-full bg-error rounded-full opacity-70 shadow-[0_0_5px_#ffb4ab]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Timeline Scrubber -->
+<div class="glass-panel rounded-xl p-6 mt-6">
+<div class="flex justify-between items-center mb-4">
+<div class="flex gap-4">
+<button class="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center hover:bg-white/5">
+<span class="material-symbols-outlined text-sm" data-icon="play_arrow">play_arrow</span>
+</button>
+<div class="flex flex-col justify-center">
+<span class="font-label-caps text-[10px] text-on-surface">Simulated Time</span>
+<span class="font-data-mono text-[12px] text-primary-container">TODAY, 14:00 (REAL-TIME)</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-white/5 border border-white/10 rounded font-data-mono text-[10px] text-on-surface-variant">1H</button>
+<button class="px-3 py-1 bg-primary-container text-on-primary-container rounded font-data-mono text-[10px]">24H</button>
+<button class="px-3 py-1 bg-white/5 border border-white/10 rounded font-data-mono text-[10px] text-on-surface-variant">7D</button>
+</div>
+</div>
+<div class="relative h-12 flex items-center">
+<div class="absolute inset-0 flex justify-between items-center pointer-events-none px-1">
+<div class="h-6 w-[1px] bg-white/10"></div>
+<div class="h-3 w-[1px] bg-white/5"></div>
+<div class="h-3 w-[1px] bg-white/5"></div>
+<div class="h-6 w-[1px] bg-white/10"></div>
+<div class="h-3 w-[1px] bg-white/5"></div>
+<div class="h-3 w-[1px] bg-white/5"></div>
+<div class="h-6 w-[1px] bg-white/10"></div>
+<div class="h-3 w-[1px] bg-white/5"></div>
+<div class="h-3 w-[1px] bg-white/5"></div>
+<div class="h-6 w-[1px] bg-white/10"></div>
+</div>
+<input class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-primary-container" max="100" min="0" type="range" value="30"/>
+<!-- Custom Thumb Indicator would normally be CSS, but standard range works for core UX -->
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="mt-auto py-8 px-container-padding bg-surface-dim border-t border-surface-variant z-10">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="text-center md:text-left">
+<h5 class="font-headline-lg-mobile text-on-surface">PranaMap AI</h5>
+<p class="font-body-md text-on-surface-variant text-[12px] mt-1">© 2024 PranaMap AI. Urban Intervention Systems for Indian Smart Cities.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-6">
+<a class="font-label-caps text-[10px] text-on-surface-variant hover:text-primary-fixed-dim transition-colors uppercase" href="#">Privacy Protocol</a>
+<a class="font-label-caps text-[10px] text-on-surface-variant hover:text-primary-fixed-dim transition-colors uppercase" href="#">API Access</a>
+<a class="font-label-caps text-[10px] text-on-surface-variant hover:text-primary-fixed-dim transition-colors uppercase" href="#">City Onboarding</a>
+<a class="font-label-caps text-[10px] text-on-surface-variant hover:text-primary-fixed-dim transition-colors uppercase" href="#">Research Lab</a>
+</div>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interaction for the timeline scrubber
+        const range = document.querySelector('input[type="range"]');
+        const timeDisplay = document.querySelector('.font-data-mono.text-primary-container');
+        
+        range?.addEventListener('input', (e) => {
+            const hour = Math.floor((e.target.value / 100) * 24);
+            const timeStr = hour.toString().padStart(2, '0') + ':00';
+            timeDisplay.textContent = `TODAY, ${timeStr} (SIMULATED)`;
+        });
+
+        // Hover effects for the side nav
+        const navLinks = document.querySelectorAll('aside nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                if(!link.classList.contains('bg-primary-container/10')) {
+                    link.style.transform = 'translateX(4px)';
+                }
+            });
+            link.addEventListener('mouseleave', () => {
+                link.style.transform = 'translateX(0)';
+            });
+        });
+    </script>
+</body></html>
