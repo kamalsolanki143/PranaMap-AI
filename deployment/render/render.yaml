@@ -1,0 +1,93 @@
+# PranaMap AI - Render Deployment Configuration
+# https://render.com/docs/infra-as-yaml
+
+services:
+  # ---- Backend API ----
+  - type: web
+    name: pranamap-api
+    runtime: python
+    plan: starter
+    buildCommand: |
+      pip install -r requirements.txt
+    startCommand: |
+      uvicorn backend.app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pranamap-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: pranamap-redis
+          property: connectionString
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: OPENWEATHER_API_KEY
+        sync: false
+      - key: NASA_FIRMS_API_KEY
+        sync: false
+      - key: WAQI_API_KEY
+        sync: false
+    autoDeploy: true
+    branch: main
+
+  # ---- Celery Worker (data pipeline) ----
+  - type: worker
+    name: pranamap-worker
+    runtime: python
+    plan: starter
+    buildCommand: |
+      pip install -r requirements.txt
+    startCommand: |
+      celery -A backend.celery_app worker --loglevel=info --concurrency=2
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pranamap-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: pranamap-redis
+          property: connectionString
+    autoDeploy: true
+    branch: main
+
+  # ---- Celery Beat (scheduler) ----
+  - type: worker
+    name: pranamap-scheduler
+    runtime: python
+    plan: starter
+    buildCommand: |
+      pip install -r requirements.txt
+    startCommand: |
+      celery -A backend.celery_app beat --loglevel=info
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: pranamap-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: pranamap-redis
+          property: connectionString
+    autoDeploy: true
+    branch: main
+
+# ---- Databases ----
+databases:
+  - name: pranamap-db
+    plan: starter
+    databaseName: pranamap
+    postgresMajorVersion: "15"
+    ipAllowList: []
+
+  - name: pranamap-redis
+    plan: starter
+    ipAllowList: []
+    maxmemoryPolicy: allkeys-lru
+
+# ---- Environment Groups ----
+# Shared env vars defined in Render dashboard under Environment Groups

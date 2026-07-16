@@ -1,0 +1,1 @@
+"""PranaMap AI - Frontend Tests"""
