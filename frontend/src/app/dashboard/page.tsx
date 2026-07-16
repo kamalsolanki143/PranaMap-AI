@@ -1,168 +1,126 @@
-import TopBar from "@/components/Common/TopBar";
-import AQIBadge, { getAQIColor } from "@/components/Common/AQIBadge";
-import AIInsightBanner from "@/components/Common/AIInsightBanner";
-import MapPlaceholder from "@/components/Map/MapPlaceholder";
-import { fetchCommandCenter } from "@/services/api";
-import Link from "next/link";
+import React from 'react';
+import Header from '@/components/Navbar/Header';
+import KPICard from '@/components/Common/KPICard';
+import AQIMap from '@/components/Map/AQIMap';
+import ForecastChart from '@/components/Charts/ForecastChart';
+import AlertBanner from '@/components/Alerts/AlertBanner';
+import { Wind, Thermometer, Factory, Users } from 'lucide-react';
 
-const statusColors: Record<string, string> = {
-  Good: "#4ade80", Satisfactory: "#00f5ff", Moderate: "#eab308",
-  Poor: "#ffdb3f", "Very Poor": "#ffb4ab", Severe: "#ef4444",
-};
-
-export default async function CommandCenterPage() {
-  const data = await fetchCommandCenter();
-
+export default function DashboardPage() {
   return (
-    <>
-      <TopBar title="Command Center" />
-      <div className="flex-1 flex overflow-hidden" style={{ minHeight: 0 }}>
+    <div className="flex flex-col h-full w-full">
+      <Header />
+      
+      <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        {/* Alerts Strip */}
+        <AlertBanner />
 
-        {/* ── LEFT PANEL ── */}
-        <aside
-          className="flex flex-col gap-5 p-6 overflow-y-auto"
-          style={{ width: "380px", minWidth: "380px", borderRight: "1px solid rgba(255,255,255,0.06)" }}
-        >
-          {/* Current AQI */}
-          <div
-            className="p-6 rounded-xl relative overflow-hidden"
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              backdropFilter: "blur(20px)",
-              border: "1px solid rgba(255,255,255,0.1)",
-            }}
-          >
-            <div className="h-1 absolute top-0 left-0 right-0" style={{ background: "linear-gradient(90deg, #00f5ff 0%, #ffdb3f 50%, #ffb4ab 100%)" }} />
-            <p className="font-inter font-bold uppercase mb-3" style={{ fontSize: "10px", color: "rgba(185,202,202,0.5)", letterSpacing: "0.08em" }}>
-              CURRENT AQI — {data.region}
-            </p>
-            <div className="flex items-end gap-4">
-              <div>
-                <span
-                  className="font-mono font-bold leading-none block"
-                  style={{ fontSize: "72px", color: getAQIColor(data.live_status), fontFamily: "'JetBrains Mono', monospace", textShadow: `0 0 30px ${getAQIColor(data.live_status)}60` }}
-                >
-                  {data.live_aqi}
-                </span>
-                <span
-                  className="font-inter font-bold uppercase tracking-widest"
-                  style={{ fontSize: "12px", color: getAQIColor(data.live_status) }}
-                >
-                  {data.live_status}
-                </span>
-              </div>
-            </div>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="p-3 rounded" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <p style={{ fontSize: "9px", color: "rgba(185,202,202,0.4)", fontFamily: "'Inter', sans-serif" }}>FORECAST PEAK</p>
-                <p style={{ fontSize: "14px", color: "#e0e2ea", fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>{data.forecast_peak_time}</p>
-              </div>
-              <div className="p-3 rounded" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <p style={{ fontSize: "9px", color: "rgba(185,202,202,0.4)", fontFamily: "'Inter', sans-serif" }}>AVG WIND</p>
-                <p style={{ fontSize: "14px", color: "#e0e2ea", fontFamily: "'JetBrains Mono', monospace", fontWeight: 700 }}>{data.avg_wind}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* AI Insight */}
-          <AIInsightBanner
-            text={data.ai_insight}
-            confidence={data.ai_confidence}
-            actionLabel="View Enforcement"
+        {/* Top Row: KPIs */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <KPICard 
+            title="City Avg AQI" 
+            value="164" 
+            trend="up" 
+            trendValue="+12%" 
+            icon={Wind} 
+            severity="unhealthy" 
           />
-
-          {/* Ward Rankings */}
-          <div>
-            <div className="flex justify-between items-center mb-3">
-              <h3 className="font-inter font-bold uppercase" style={{ fontSize: "11px", color: "rgba(185,202,202,0.7)", letterSpacing: "0.06em" }}>Top Critical Wards</h3>
-              <Link href="/enforcement" className="font-inter font-bold uppercase hover:text-[#00f5ff] transition-colors" style={{ fontSize: "10px", color: "rgba(185,202,202,0.4)" }}>
-                SEE ALL
-              </Link>
-            </div>
-            <div className="flex flex-col gap-2">
-              {data.wards.slice(0, 7).map((ward, i) => (
-                <div
-                  key={ward.sensor_id}
-                  className="flex items-center justify-between px-4 py-3 rounded-lg transition-all hover:bg-white/5 cursor-pointer"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}
-                >
-                  <div className="flex items-center gap-3">
-                    <span
-                      className="font-mono font-bold"
-                      style={{ fontSize: "11px", color: "rgba(185,202,202,0.35)", width: "16px", fontFamily: "'JetBrains Mono', monospace" }}
-                    >
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <div>
-                      <p className="font-inter font-semibold" style={{ fontSize: "12px" }}>{ward.name}</p>
-                      <p className="font-mono" style={{ fontSize: "10px", color: "rgba(185,202,202,0.4)", fontFamily: "'JetBrains Mono', monospace" }}>
-                        {ward.sensor_id}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <AQIBadge aqi={ward.aqi} status={ward.status} size="sm" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </aside>
-
-        {/* ── MAIN MAP ── */}
-        <main className="flex-1 relative">
-          <MapPlaceholder />
-
-          {/* Floating quick links */}
-          <div className="absolute bottom-6 left-6 flex gap-3 z-10">
-            {[
-              { href: "/forecast", icon: "timeline", label: "Forecast" },
-              { href: "/attribution", icon: "analytics", label: "Attribution" },
-              { href: "/enforcement", icon: "edit_notifications", label: "Enforce" },
-              { href: "/advisory", icon: "campaign", label: "Advisory" },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="flex items-center gap-2 px-4 py-2 rounded-full font-inter font-bold uppercase text-xs transition-all hover:brightness-110"
-                style={{
-                  background: "rgba(10,14,19,0.85)",
-                  backdropFilter: "blur(12px)",
-                  border: "1px solid rgba(0,245,255,0.3)",
-                  color: "#00f5ff",
-                  fontSize: "10px",
-                  letterSpacing: "0.06em",
-                }}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: "14px" }}>{item.icon}</span>
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </main>
-      </div>
-
-      {/* ── STATUS BAR ── */}
-      <footer
-        className="flex items-center justify-between px-6 h-10 flex-shrink-0"
-        style={{
-          background: "#0a0e13",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
-        }}
-      >
-        <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-green-500" style={{ boxShadow: "0 0 6px rgba(74,222,128,0.8)" }} />
-          <span className="font-mono" style={{ fontSize: "10px", color: "rgba(185,202,202,0.5)", fontFamily: "'JetBrains Mono', monospace" }}>
-            ALL SYSTEMS OPERATIONAL
-          </span>
+          <KPICard 
+            title="Hotspots Identified" 
+            value="8" 
+            trend="up" 
+            trendValue="+2" 
+            icon={Factory} 
+            severity="sensitive" 
+          />
+          <KPICard 
+            title="Vulnerable Pop." 
+            value="1.2" 
+            unit="M"
+            trend="neutral" 
+            trendValue="Stable" 
+            icon={Users} 
+            severity="neutral" 
+          />
+          <KPICard 
+            title="Forecast Risk (72h)" 
+            value="High" 
+            trend="up" 
+            trendValue="Severe Expected" 
+            icon={Thermometer} 
+            severity="veryUnhealthy" 
+          />
         </div>
-        <span className="font-mono" style={{ fontSize: "10px", color: "rgba(185,202,202,0.3)", fontFamily: "'JetBrains Mono', monospace" }}>
-          1,242 ACTIVE NODES | LATENCY: 4ms
-        </span>
-        <span className="font-mono" style={{ fontSize: "10px", color: "rgba(185,202,202,0.3)", fontFamily: "'JetBrains Mono', monospace" }}>
-          © 2024 PRANAMAP AI
-        </span>
-      </footer>
-    </>
+
+        {/* Middle Section: Map and Intelligence Panel */}
+        <div className="flex flex-col lg:flex-row gap-6 h-[600px] xl:h-[700px]">
+          {/* Dominant Map Container */}
+          <div className="flex-1 min-w-0 panel overflow-hidden flex flex-col relative group">
+             <div className="panel-header absolute top-0 w-full z-20 bg-surface/80 backdrop-blur-md border-b-0">
+               <div>
+                  <h2 className="text-text-primary">Live Geospatial Intelligence</h2>
+                  <p className="text-xs text-text-muted normal-case font-normal mt-0.5">High-resolution PM2.5 & PM10 dispersion</p>
+               </div>
+               <div className="flex gap-2">
+                 {/* Map controls placeholder */}
+                 <span className="bg-surfaceHover border border-border px-2 py-1 rounded text-xs text-text-secondary cursor-pointer hover:text-text-primary">3D Terrain</span>
+               </div>
+             </div>
+             
+             {/* Actual Map Component */}
+             <div className="flex-1 w-full h-full">
+               <AQIMap />
+             </div>
+          </div>
+
+          {/* Right side Intelligence Panel */}
+          <div className="w-full lg:w-96 flex flex-col gap-6 shrink-0">
+            {/* Forecast Chart Panel */}
+            <div className="panel flex flex-col h-1/2">
+              <div className="panel-header">
+                <h2>Predictive Forecast (72h)</h2>
+              </div>
+              <div className="flex-1 p-4">
+                <ForecastChart />
+              </div>
+            </div>
+
+            {/* Source Attribution Panel */}
+            <div className="panel flex flex-col h-1/2">
+              <div className="panel-header">
+                <h2>Primary Sources</h2>
+              </div>
+              <div className="flex-1 p-4 overflow-y-auto">
+                 {/* SourceCard/AttributionList placeholder */}
+                 <div className="space-y-3">
+                   <div className="bg-surfaceHover border border-border p-3 rounded-lg flex justify-between items-center">
+                     <div>
+                       <p className="text-sm font-semibold text-text-primary">Vehicular Emissions</p>
+                       <p className="text-xs text-text-muted mt-1">Major arterial roads congestion</p>
+                     </div>
+                     <span className="text-aqi-unhealthy font-bold tabular-nums">42%</span>
+                   </div>
+                   <div className="bg-surfaceHover border border-border p-3 rounded-lg flex justify-between items-center">
+                     <div>
+                       <p className="text-sm font-semibold text-text-primary">Industrial (Chem)</p>
+                       <p className="text-xs text-text-muted mt-1">Zone B operations active</p>
+                     </div>
+                     <span className="text-aqi-sensitive font-bold tabular-nums">28%</span>
+                   </div>
+                   <div className="bg-surfaceHover border border-border p-3 rounded-lg flex justify-between items-center">
+                     <div>
+                       <p className="text-sm font-semibold text-text-primary">Construction Dust</p>
+                       <p className="text-xs text-text-muted mt-1">Metro Phase 3 sites</p>
+                     </div>
+                     <span className="text-aqi-moderate font-bold tabular-nums">15%</span>
+                   </div>
+                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   );
 }

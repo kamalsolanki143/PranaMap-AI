@@ -1,122 +1,35 @@
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --color-background: #101419;
-  --color-primary-container: #00f5ff;
-  --sidebar-width: 360px;
+@layer base {
+  body {
+    @apply bg-background text-text-primary antialiased;
+  }
 }
 
-* {
-  box-sizing: border-box;
+@layer components {
+  .panel {
+    @apply bg-surface border border-border rounded-xl shadow-panel;
+  }
+  
+  .panel-header {
+    @apply px-4 py-3 border-b border-border text-sm font-semibold tracking-wide text-text-primary uppercase flex items-center justify-between;
+  }
+  
+  .glass-panel {
+    @apply bg-surface/80 backdrop-blur-md border border-border/50 rounded-xl shadow-panel;
+  }
+  
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background-color: #101419;
-  color: #e0e2ea;
-  font-family: 'Inter', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* ─────────────────────────────────────────────
-   GLASS MORPHISM COMPONENTS
-───────────────────────────────────────────── */
-.glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.glass-panel {
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.glass-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  border-right: 1px solid rgba(255, 255, 255, 0.05);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-/* ─────────────────────────────────────────────
-   GLOW EFFECTS
-───────────────────────────────────────────── */
-.glow-cyan {
-  box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
-}
-
-.glow-cyan-md {
-  box-shadow: 0 0 25px rgba(0, 245, 255, 0.35);
-}
-
-.glow-cyan-lg {
-  box-shadow: 0 0 40px rgba(0, 245, 255, 0.5);
-}
-
-.glow-text {
-  text-shadow: 0 0 12px rgba(0, 245, 255, 0.5);
-}
-
-/* ─────────────────────────────────────────────
-   SIDEBAR NAVIGATION ACTIVE STATE
-───────────────────────────────────────────── */
-.nav-active {
-  background: rgba(0, 245, 255, 0.1);
-  color: #00f5ff;
-  border-right: 4px solid #00f5ff;
-  box-shadow: 0 0 15px rgba(0, 245, 255, 0.2);
-  transform: translateX(4px);
-}
-
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 12px 16px;
-  border-radius: 4px;
-  color: rgba(185, 202, 202, 0.7);
-  transition: all 0.2s ease;
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.nav-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #e0e2ea;
-  transform: translateX(2px);
-}
-
-/* ─────────────────────────────────────────────
-   MATERIAL SYMBOLS
-───────────────────────────────────────────── */
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-  vertical-align: middle;
-  line-height: 1;
-}
-
-/* ─────────────────────────────────────────────
-   CUSTOM SCROLLBAR
-───────────────────────────────────────────── */
+/* Custom Scrollbar for dark theme */
 ::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -124,118 +37,9 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 2px;
+  @apply bg-border rounded-full;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 245, 255, 0.3);
-}
-
-/* ─────────────────────────────────────────────
-   ANIMATIONS
-───────────────────────────────────────────── */
-@keyframes pulse-cyan {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
-}
-
-@keyframes fade-in-up {
-  0% { opacity: 0; transform: translateY(16px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes scanline {
-  0% { background-position: 0 0; }
-  100% { background-position: 0 100%; }
-}
-
-@keyframes bar-grow {
-  0% { width: 0%; }
-  100% { width: var(--target-width, 0%); }
-}
-
-.animate-pulse-cyan {
-  animation: pulse-cyan 2s ease-in-out infinite;
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.7s ease-out forwards;
-}
-
-/* ─────────────────────────────────────────────
-   SCANLINE OVERLAY
-───────────────────────────────────────────── */
-.scanline {
-  background: linear-gradient(
-    to bottom,
-    transparent 50%,
-    rgba(0, 245, 255, 0.03) 50%
-  );
-  background-size: 100% 4px;
-}
-
-/* ─────────────────────────────────────────────
-   TIMELINE TRACK
-───────────────────────────────────────────── */
-.timeline-track {
-  background: linear-gradient(90deg, #00f5ff 0%, #ffdb3f 50%, #ffb4ab 100%);
-  height: 4px;
-  border-radius: 2px;
-}
-
-/* ─────────────────────────────────────────────
-   CHART FADES
-───────────────────────────────────────────── */
-.chart-fade {
-  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
-}
-
-/* ─────────────────────────────────────────────
-   SELECTION
-───────────────────────────────────────────── */
-::selection {
-  background: rgba(0, 245, 255, 0.2);
-  color: #e9feff;
-}
-
-/* ─────────────────────────────────────────────
-   HARD EDGE SHADOW (micro-depth)
-───────────────────────────────────────────── */
-.hard-edge {
-  box-shadow: 1px 1px 0px 0px rgba(255, 255, 255, 0.1);
-}
-
-/* ─────────────────────────────────────────────
-   INPUT RECESSED
-───────────────────────────────────────────── */
-.input-recessed {
-  background: #05070a;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
-}
-
-/* ─────────────────────────────────────────────
-   AMBIENT GLOW BLOBS
-───────────────────────────────────────────── */
-.ambient-cyan {
-  position: fixed;
-  top: -160px;
-  left: -160px;
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle, rgba(0, 245, 255, 0.05) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-.ambient-warm {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(255, 219, 63, 0.04) 0%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
+  @apply bg-text-muted;
 }
