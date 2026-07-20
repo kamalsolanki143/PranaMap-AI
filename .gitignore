@@ -1,37 +1,96 @@
-# Dependencies
+# ─── Dependencies ────────────────────────────────────────────────────
 node_modules/
 .npm
 
-# Build outputs
+# ─── Frontend Build ──────────────────────────────────────────────────
 frontend/.next/
 frontend/out/
 frontend/build/
 frontend/.turbo/
 
-# Environment files
+# ─── Python ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+*.egg-info/
+*.egg
+dist/
+build/
+.eggs/
+
+# ─── ML Artifacts (large binary files — don't commit) ────────────────
+ml/models/*.pkl
+ml/models/*.joblib
+ml/models/*.h5
+ml/models/*.pt
+ml/models/*.onnx
+model_artifacts/
+
+# ─── Synthetic/Generated Datasets (reproducible via script) ──────────
+ml/datasets/*.csv
+ml/datasets/*.parquet
+ml/datasets/*.feather
+
+# ─── SHAP Outputs ────────────────────────────────────────────────────
+ml/outputs/
+ml/shap_cache/
+
+# ─── Data Pipeline Cache ─────────────────────────────────────────────
+data_pipeline/**/*.json
+data_pipeline/**/*.csv
+.cache/
+
+# ─── Geospatial Data (large files — download via script) ─────────────
+geospatial/**/*.shp
+geospatial/**/*.dbf
+geospatial/**/*.shx
+geospatial/**/*.prj
+geospatial/**/*.geojson
+geospatial/**/*.tif
+geospatial/**/*.tiff
+
+# ─── Environment files ───────────────────────────────────────────────
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
 
-# OS files
+# ─── OS files ────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 *.DS_Store
 
-# Editor
+# ─── Editor / IDE ────────────────────────────────────────────────────
 .vscode/
 .idea/
 *.swp
 *.swo
+*.sublime-workspace
 
-# Logs
+# ─── Logs ────────────────────────────────────────────────────────────
 logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Type coverage
+# ─── Docker ──────────────────────────────────────────────────────────
+.docker/
+
+# ─── Jupyter Notebooks ───────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ─── Type coverage ───────────────────────────────────────────────────
 *.tsbuildinfo
+
+# ─── Testing ─────────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
