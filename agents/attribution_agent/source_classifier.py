@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 import logging
+from pathlib import Path
 from typing import Any
 
 import numpy as np
 
 logger = logging.getLogger(__name__)
+
+# Default model path for SHAP-based attribution
+_DEFAULT_MODEL_PATH = Path(__file__).resolve().parents[2] / "ml" / "models" / "xgboost_24h.pkl"
 
 POLLUTION_SOURCES = {
     "vehicular": {"road_density", "traffic_pop_interaction", "wind_u"},
@@ -133,3 +137,51 @@ class SourceClassifier:
             evidence.append("No strong single-source indicators; mixed attribution.")
 
         return evidence
+
+    def classify_hybrid(
+        self,
+        record: dict[str, Any],
+        model_path: str | Path | None = None,
+    ) -> dict[str, Any]:
+        """Hybrid classification using SHAP when model is available.
+
+        Attempts SHAP-based attribution as primary method. Falls back
+        to rule-based classify() if the model file is missing or SHAP
+        computation fails.
+
+        Args:
+            record: Merged data record with environmental features.
+            model_path: Path to pickled model. Defaults to
+                ml/models/xgboost_24h.pkl.
+
+        Returns:
+            Dict with dominant_source, source_breakdown, evidence, and method.
+        """
+        from agents.attribution_agent.shap_attribution import SHAPAttributor
+
+        resolved_path = Path(model_path) if model_path else _DEFAULT_MODEL_PATH
+
+        # Attempt SHAP-based attribution
+        try:
+            if not resolved_path.exists():
+                raise FileNotFoundError(f"Model not found: {resolved_path}")
+
+            attributor = SHAPAttributor(model_path=resolved_path)
+            result = attributor.attribute(record)
+            result["method"] = "shap"
+            logger.info(
+                "SHAP attribution: dominant_source=%s", result["dominant_source"]
+            )
+            return result
+
+        except (FileNotFoundError, RuntimeError, ImportError) as e:
+            logger.warning(
+                "SHAP attribution unavailable (%s); falling back to rule-based.",
+                e,
+            )
+
+        # Fallback to rule-based classification
+        result = self.classify(record)
+        result["method"] = "rule_based"
+        result["shap_available"] = False
+        return result
