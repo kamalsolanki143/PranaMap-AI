@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Map, Activity, Bell, Settings, Layers, Search, Filter } from 'lucide-react';
+import { LayoutDashboard, Map, Activity, Bell, Settings, Search, Filter } from 'lucide-react';
 import Link from 'next/link';
 
 export default function NavigationSidebar() {

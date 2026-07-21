@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 
 const agents = [
@@ -319,8 +320,8 @@ export default function LandingPage() {
         </div>
         <div className="max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-4 md:gap-0">
           {flowSteps.map((step, i) => (
-            <>
-              <div key={step.label} className="flex-1 text-center group">
+            <React.Fragment key={step.label}>
+              <div className="flex-1 text-center group">
                 <div
                   className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 transition-all duration-500 group-hover:glow-cyan"
                   style={{
@@ -335,9 +336,9 @@ export default function LandingPage() {
                 <p style={{ fontSize: "10px", color: "rgba(185,202,202,0.5)" }}>{step.sub}</p>
               </div>
               {i < flowSteps.length - 1 && (
-                <div key={`sep-${i}`} className="hidden md:block w-12 h-px" style={{ background: "rgba(255,255,255,0.15)" }} />
+                <div className="hidden md:block w-12 h-px" style={{ background: "rgba(255,255,255,0.15)" }} />
               )}
-            </>
+            </React.Fragment>
           ))}
         </div>
       </section>

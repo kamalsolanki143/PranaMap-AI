@@ -2,6 +2,7 @@
 import React, { useMemo } from 'react';
 import Map, { Source, Layer, NavigationControl, Marker } from 'react-map-gl/maplibre';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import type { FeatureCollection, Feature, Polygon, GeoJsonProperties } from 'geojson';
 import { useAppStore } from '@/store/useAppStore';
 import { MOCK_WARDS, MOCK_HOTSPOTS } from '@/lib/mockData';
 
@@ -24,7 +25,7 @@ export default function BaseMap() {
   const { activeLayers, selectedWard, setSelectedWard } = useAppStore();
 
   // Create mock GeoJSON for Wards from centroids for demo purposes
-  const wardGeoJson = useMemo(() => {
+  const wardGeoJson = useMemo((): FeatureCollection<Polygon, GeoJsonProperties> => {
     return {
       type: 'FeatureCollection',
       features: MOCK_WARDS.map(ward => ({
@@ -69,7 +70,7 @@ export default function BaseMap() {
 
         {/* Wards Layer (Heatmap representation) */}
         {activeLayers.includes('heatmap') && (
-          <Source id="wards" type="geojson" data={wardGeoJson as any}>
+          <Source id="wards" type="geojson" data={wardGeoJson}>
             <Layer 
               id="wards-fill" 
               type="fill" 
@@ -96,6 +97,7 @@ export default function BaseMap() {
         {selectedWard && (
           <Source id="selected-ward" type="geojson" data={{
             type: 'Feature',
+            properties: {},
             geometry: {
               type: 'Polygon',
               coordinates: [[
@@ -106,7 +108,7 @@ export default function BaseMap() {
                 [selectedWard.centroid[0] - 0.02, selectedWard.centroid[1] - 0.02]
               ]]
             }
-          } as any}>
+          } as Feature<Polygon>}>
              <Layer id="selected-ward-line" type="line" paint={{'line-color': '#06B6D4', 'line-width': 3}} />
           </Source>
         )}
