@@ -1,9 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import forecast, attribution, enforcement, advisory, dashboard, weather, satellite, health
+from app.api import forecast, attribution, enforcement, advisory, dashboard, weather, satellite, health, demo
 from app.core.config import settings
-from app.middleware.cors import cors_middleware_config
 
 app = FastAPI(
     title="PranaMap AI Backend",
@@ -13,10 +12,14 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    **cors_middleware_config,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(health.router, prefix="/api/v1", tags=["health"])
+app.include_router(demo.router, prefix="/api/v1", tags=["demo"])
 app.include_router(forecast.router, prefix="/api/v1", tags=["forecast"])
 app.include_router(attribution.router, prefix="/api/v1", tags=["attribution"])
 app.include_router(enforcement.router, prefix="/api/v1", tags=["enforcement"])
