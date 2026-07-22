@@ -99,7 +99,7 @@ export default function NavigationSidebar({ onCloseDrawer }: NavigationSidebarPr
       {/* Footer */}
       <div className="p-4 border-t border-border space-y-1">
         {user && (
-          <div className="flex items-center gap-3 px-3 py-2 rounded-md mb-2 bg-surfaceHover/50">
+          <div className="flex items-center gap-3 px-3 py-2 rounded-md mb-2" style={{ backgroundColor: 'rgb(var(--surface-hover) / 0.5)' }}>
             <div className="w-7 h-7 rounded-full flex items-center justify-center bg-accent-cyan/15 border border-accent-cyan/30 text-accent-cyan text-xs font-bold">
               {user.name.slice(0, 2).toUpperCase()}
             </div>

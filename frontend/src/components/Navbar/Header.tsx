@@ -34,7 +34,7 @@ export default function Header({ onRefresh }: HeaderProps) {
   }
 
   return (
-    <header className="h-16 border-b border-border bg-surface/80 backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 shrink-0 z-10 relative pl-14 lg:pl-6 transition-colors">
+    <header className="h-16 border-b border-border backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 shrink-0 z-10 relative pl-14 lg:pl-6 transition-colors" style={{ backgroundColor: 'rgb(var(--surface) / 0.8)' }}>
       {/* Location Context */}
       <div className="flex items-center gap-3 sm:gap-4">
         <div className="flex items-center gap-2 text-text-primary bg-surfaceHover px-2.5 py-1.5 rounded-md border border-border">
@@ -57,7 +57,7 @@ export default function Header({ onRefresh }: HeaderProps) {
         </div>
 
         {/* Quick Language Selector */}
-        <div className="flex items-center gap-1 bg-surfaceHover/80 border border-border p-1 rounded-md text-xs">
+        <div className="flex items-center gap-1 border border-border p-1 rounded-md text-xs" style={{ backgroundColor: 'rgb(var(--surface-hover) / 0.8)' }}>
           <Globe size={14} className="text-text-muted ml-1 hidden sm:inline" />
           {(['en', 'hi', 'mr'] as Language[]).map(lang => (
             <button
@@ -77,7 +77,8 @@ export default function Header({ onRefresh }: HeaderProps) {
         {/* Theme Toggle Button */}
         <button
           onClick={toggleTheme}
-          className="p-2 text-text-secondary hover:text-text-primary bg-surfaceHover/80 border border-border rounded-md transition-colors"
+          className="p-2 text-text-secondary hover:text-text-primary border border-border rounded-md transition-colors"
+          style={{ backgroundColor: 'rgb(var(--surface-hover) / 0.8)' }}
           title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
           aria-label="Toggle theme"
         >

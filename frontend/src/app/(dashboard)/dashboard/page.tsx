@@ -49,7 +49,7 @@ export default function DashboardPage() {
         <AlertBanner />
 
         {/* Command Center System Intelligence Status Bar */}
-        <div className="panel p-3 sm:p-4 bg-surface/90 flex items-center justify-between flex-wrap gap-3 text-xs border-l-4 border-l-accent-cyan shadow-panel">
+        <div className="panel p-3 sm:p-4 flex items-center justify-between flex-wrap gap-3 text-xs border-l-4 border-l-accent-cyan shadow-panel" style={{ backgroundColor: 'rgb(var(--surface) / 0.9)' }}>
           <div className="flex items-center gap-4 flex-wrap">
             <div className="flex items-center gap-1.5 font-mono text-text-secondary">
               <Clock size={14} className="text-accent-cyan" />
@@ -96,7 +96,7 @@ export default function DashboardPage() {
         {/* Map + Intelligence Panel */}
         <div className="flex flex-col lg:flex-row gap-6 min-h-[500px] lg:h-[600px] xl:h-[680px]">
           <div className="flex-1 min-w-0 panel overflow-hidden flex flex-col relative group h-[380px] sm:h-[450px] lg:h-full">
-            <div className="panel-header absolute top-0 w-full z-20 bg-surface/80 backdrop-blur-md border-b-0">
+            <div className="panel-header absolute top-0 w-full z-20 backdrop-blur-md border-b-0" style={{ backgroundColor: 'rgb(var(--surface) / 0.8)' }}>
               <div>
                 <h2 className="text-text-primary">{t('dashboard.subtitle', 'Live Geospatial Intelligence')}</h2>
                 <p className="text-xs text-text-muted normal-case font-normal mt-0.5">{t('dashboard.mapSub', 'High-resolution PM2.5 & PM10 dispersion')}</p>

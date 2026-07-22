@@ -73,7 +73,7 @@ export default function EnforcementPage() {
           <div className="overflow-x-auto w-full">
             <table className="w-full text-left border-collapse min-w-[650px]">
               <thead>
-                <tr className="border-b border-border bg-surfaceHover/50 text-xs font-semibold text-text-muted uppercase tracking-wider">
+                <tr className="border-b border-border text-xs font-semibold text-text-muted uppercase tracking-wider" style={{ backgroundColor: 'rgb(var(--surface-hover) / 0.5)' }}>
                   <th className="p-3 sm:p-4">{t('enforcement.col.priority', 'Priority')}</th>
                   <th className="p-3 sm:p-4">{t('enforcement.col.ward', 'Ward')}</th>
                   <th className="p-3 sm:p-4">{t('enforcement.col.aqi', 'Current AQI')}</th>
@@ -87,7 +87,7 @@ export default function EnforcementPage() {
                 {data.wards.map(ward => {
                   const firstAction = ward.actions && ward.actions.length > 0 ? ward.actions[0].label : 'Deploy Team';
                   return (
-                    <tr key={ward.id} className="hover:bg-surfaceHover/30 transition-colors text-xs sm:text-sm">
+                    <tr key={ward.id} className="transition-colors text-xs sm:text-sm" style={{ cursor: 'default' }} onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgb(var(--surface-hover) / 0.3)'} onMouseLeave={e => e.currentTarget.style.backgroundColor = ''}>
                       <td className="p-3 sm:p-4">
                         <span className={`px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[10px] sm:text-xs font-bold border uppercase tracking-wide ${priorityColor[ward.priority] || ''}`}>
                           {ward.priority}

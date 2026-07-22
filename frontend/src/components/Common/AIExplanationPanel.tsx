@@ -34,7 +34,7 @@ export default function AIExplanationPanel({
   ];
 
   return (
-    <div className={`panel p-4 sm:p-5 space-y-4 border-l-4 border-l-accent-cyan bg-surface/90 shadow-panel transition-all`}>
+    <div className={`panel p-4 sm:p-5 space-y-4 border-l-4 border-l-accent-cyan shadow-panel transition-all`} style={{ backgroundColor: 'rgb(var(--surface) / 0.9)' }}>
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-border">
         <div className="flex items-center gap-2 text-accent-cyan">
@@ -56,7 +56,7 @@ export default function AIExplanationPanel({
           <span>Wind Direction: <strong className="text-text-primary font-semibold">{windDirection}</strong></span>
         </div>
 
-        <div className="p-3 bg-surfaceHover/50 rounded-lg border border-border">
+        <div className="p-3 rounded-lg border border-border" style={{ backgroundColor: 'rgb(var(--surface-hover) / 0.5)' }}>
           <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-normal">
             <strong className="text-text-primary font-semibold">Reason: </strong>
             {reasonText}
@@ -82,7 +82,7 @@ export default function AIExplanationPanel({
                       {item.pct}%
                     </span>
                   </div>
-                  <div className="h-2 w-full bg-surfaceHover rounded-full overflow-hidden border border-border/40">
+                  <div className="h-2 w-full bg-surfaceHover rounded-full overflow-hidden" style={{ border: '1px solid rgb(var(--border) / 0.4)' }}>
                     <div
                       className="h-full rounded-full transition-all duration-1000 ease-out"
                       style={{

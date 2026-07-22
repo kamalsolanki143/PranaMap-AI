@@ -156,7 +156,7 @@ export default function AdvisoryPage() {
                   </span>
                 </div>
 
-                <div className="p-4 bg-surfaceHover/50 border border-border rounded-lg border-l-4 border-l-accent-cyan">
+                <div className="p-4 border border-border rounded-lg border-l-4 border-l-accent-cyan" style={{ backgroundColor: 'rgb(var(--surface-hover) / 0.5)' }}>
                   <p className="text-xs sm:text-sm text-text-primary leading-relaxed">{adv.ai_message}</p>
                 </div>
 

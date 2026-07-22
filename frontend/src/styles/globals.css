@@ -52,7 +52,9 @@
   }
 
   .glass-panel {
-    @apply bg-surface/80 backdrop-blur-md border border-border/50 rounded-xl shadow-panel transition-colors duration-200;
+    @apply backdrop-blur-md rounded-xl shadow-panel transition-colors duration-200;
+    background-color: rgb(var(--surface) / 0.8);
+    border: 1px solid rgb(var(--border) / 0.5);
   }
 
   .glass-card {

@@ -18,7 +18,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Mobile / Tablet sidebar drawer toggle */}
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
-          className="lg:hidden fixed top-3 left-3 z-[60] p-2 bg-surface/90 backdrop-blur border border-border rounded-lg shadow-panel text-text-primary hover:bg-surfaceHover transition-colors"
+          className="lg:hidden fixed top-3 left-3 z-[60] p-2 backdrop-blur border border-border rounded-lg shadow-panel text-text-primary hover:bg-surfaceHover transition-colors"
+          style={{ backgroundColor: 'rgb(var(--surface) / 0.9)' }}
           aria-label={sidebarOpen ? 'Close navigation' : 'Open navigation'}
         >
           {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
