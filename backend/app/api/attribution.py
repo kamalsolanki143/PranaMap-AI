@@ -1,11 +1,11 @@
 from fastapi import APIRouter
-
-from app.schemas.attribution import AttributionResponse
+from app.api.demo import attribution_demo
 
 router = APIRouter()
 
 
-@router.get("/attribution/{ward_id}", response_model=AttributionResponse)
-async def get_attribution(ward_id: int):
-    """Get source attribution breakdown for a specific ward."""
-    return AttributionResponse(ward_id=ward_id, sources=[], top_contributor=None)
+@router.get("/attribution/{station_id}")
+async def get_attribution(station_id: str):
+    """Get source attribution breakdown for a specific station/ward."""
+    return await attribution_demo(station=station_id)
+

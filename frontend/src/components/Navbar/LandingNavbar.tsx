@@ -40,11 +40,11 @@ export default function LandingNavbar() {
   return (
     <>
       <nav
-        className="fixed top-0 w-full z-50 flex justify-between items-center px-8 h-20"
+        className="fixed top-0 w-full z-50 flex justify-between items-center px-4 md:px-8 h-20"
         role="navigation"
         aria-label="Main navigation"
         style={{
-          background: "rgba(16,20,25,0.8)",
+          background: "rgba(16,20,25,0.85)",
           backdropFilter: "blur(20px)",
           WebkitBackdropFilter: "blur(20px)",
           borderBottom: "1px solid rgba(255,255,255,0.08)",
@@ -52,12 +52,12 @@ export default function LandingNavbar() {
       >
         <div className="flex items-center gap-3">
           <div
-            className="w-9 h-9 rounded flex items-center justify-center"
+            className="w-9 h-9 rounded flex items-center justify-center shrink-0"
             style={{ background: "rgba(0,245,255,0.12)", border: "1px solid rgba(0,245,255,0.25)" }}
           >
             <span className="material-symbols-outlined text-lg" style={{ color: "#00f5ff", fontVariationSettings: "'FILL' 1" }}>eco</span>
           </div>
-          <span className="font-bold tracking-tight" style={{ color: "#00f5ff", fontSize: "20px", textShadow: "0 0 12px rgba(0,245,255,0.4)" }}>PranaMap AI</span>
+          <span className="font-bold tracking-tight text-base sm:text-lg" style={{ color: "#00f5ff", textShadow: "0 0 12px rgba(0,245,255,0.4)" }}>PranaMap AI</span>
         </div>
 
         {/* Desktop nav */}
@@ -80,7 +80,7 @@ export default function LandingNavbar() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 text-white"
+          className="md:hidden p-2 text-white flex items-center justify-center"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Toggle mobile menu"
         >
@@ -98,7 +98,7 @@ export default function LandingNavbar() {
 
       {/* Mobile menu */}
       {mobileMenuOpen && (
-        <div className="fixed top-20 left-0 right-0 z-40 md:hidden p-4" style={{ background: "rgba(16,20,25,0.95)", backdropFilter: "blur(20px)" }}>
+        <div className="fixed top-20 left-0 right-0 z-40 md:hidden p-4 border-b border-white/10" style={{ background: "rgba(16,20,25,0.95)", backdropFilter: "blur(20px)" }}>
           <div className="flex flex-col gap-4">
             {navItems.map((item) => (
               <button
@@ -119,3 +119,4 @@ export default function LandingNavbar() {
     </>
   );
 }
+

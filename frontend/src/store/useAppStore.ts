@@ -19,7 +19,7 @@ export const useAppStore = create<AppState>((set) => ({
   selectedWard: null,
   activeLayers: ['heatmap', 'hotspots'],
   theme: 'dark',
-  apiMode: 'mock',
+  apiMode: 'live',
   language: 'en',
   
   setSelectedWard: (ward) => set({ selectedWard: ward }),

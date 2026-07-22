@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { useTheme } from '@/theme/ThemeContext';
 
 const DEFAULT_DATA = [
   { time: '00:00', aqi: 150 },
@@ -17,8 +18,15 @@ interface ForecastChartProps {
 }
 
 export default function ForecastChart({ data }: ForecastChartProps) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const chartData = data || DEFAULT_DATA;
   const peak = Math.max(...chartData.map(d => d.aqi));
+
+  const strokeAxis = isDark ? '#475569' : '#94a3b8';
+  const tooltipBg = isDark ? '#121820' : '#ffffff';
+  const tooltipBorder = isDark ? '#202a37' : '#e2e8f0';
+  const tooltipText = isDark ? '#f1f5f9' : '#0f172a';
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -29,18 +37,19 @@ export default function ForecastChart({ data }: ForecastChartProps) {
       <div className="flex-1 w-full min-h-[150px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
-            <XAxis dataKey="time" stroke="#475569" fontSize={11} tickLine={false} axisLine={false} />
-            <YAxis stroke="#475569" fontSize={11} tickLine={false} axisLine={false} domain={['dataMin - 20', 'dataMax + 20']} />
+            <XAxis dataKey="time" stroke={strokeAxis} fontSize={11} tickLine={false} axisLine={false} />
+            <YAxis stroke={strokeAxis} fontSize={11} tickLine={false} axisLine={false} domain={['dataMin - 20', 'dataMax + 20']} />
             <Tooltip
-              contentStyle={{ backgroundColor: '#11141A', borderColor: '#262B36', borderRadius: '8px', color: '#E2E8F0', boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.5)' }}
+              contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '8px', color: tooltipText, boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.2)' }}
               itemStyle={{ color: '#F97316', fontWeight: 'bold' }}
-              labelStyle={{ color: '#94A3B8', marginBottom: '4px' }}
+              labelStyle={{ color: isDark ? '#94a3b8' : '#475569', marginBottom: '4px' }}
             />
             <ReferenceLine y={150} stroke="#EF4444" strokeDasharray="3 3" opacity={0.5} />
-            <Line type="monotone" dataKey="aqi" stroke="#F97316" strokeWidth={3} dot={{ r: 4, fill: '#11141A', strokeWidth: 2 }} activeDot={{ r: 6, strokeWidth: 0, fill: '#F97316' }} />
+            <Line type="monotone" dataKey="aqi" stroke="#F97316" strokeWidth={3} dot={{ r: 4, fill: tooltipBg, strokeWidth: 2 }} activeDot={{ r: 6, strokeWidth: 0, fill: '#F97316' }} />
           </LineChart>
         </ResponsiveContainer>
       </div>
     </div>
   );
 }
+

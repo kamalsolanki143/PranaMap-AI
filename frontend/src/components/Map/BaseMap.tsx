@@ -49,9 +49,9 @@ export default function BaseMap() {
     <div className="w-full h-full relative">
       <Map
         initialViewState={{
-          longitude: 72.8777,
-          latitude: 19.0760,
-          zoom: 10
+          longitude: 77.2090,
+          latitude: 28.6139,
+          zoom: 11
         }}
         mapStyle={DARK_MATTER_STYLE}
         interactiveLayerIds={['wards-fill']}

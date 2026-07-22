@@ -1,14 +1,37 @@
+from datetime import datetime
+from typing import Optional
 from fastapi import APIRouter, Query
+from pydantic import BaseModel
 
-from app.schemas.enforcement import EnforcementPriority
+from app.api.demo import enforcement_demo
 
 router = APIRouter()
 
 
-@router.get("/enforcement/priorities", response_model=list[EnforcementPriority])
-async def get_enforcement_priorities(
-    limit: int = Query(10, ge=1, le=50),
-    severity: str = Query("high", regex="^(low|medium|high|critical)$"),
-):
+class EnforcementActionRequest(BaseModel):
+    target_id: str
+    ward: str
+    action_label: str
+    department: Optional[str] = "Enforcement Wing"
+
+
+@router.get("/enforcement/priorities")
+async def get_enforcement_priorities():
     """Get prioritized list of enforcement hotspots."""
-    return []
+    return await enforcement_demo()
+
+
+@router.post("/enforcement/action")
+async def trigger_enforcement_action(request: EnforcementActionRequest):
+    """Deploy enforcement action team or issue stop-work notice."""
+    return {
+        "success": True,
+        "target_id": request.target_id,
+        "ward": request.ward,
+        "action": request.action_label,
+        "department": request.department,
+        "status": "DISPATCHED",
+        "timestamp": datetime.now().strftime("%H:%M:%S IST"),
+        "message": f"Action '{request.action_label}' successfully dispatched to {request.department} for {request.ward}.",
+    }
+

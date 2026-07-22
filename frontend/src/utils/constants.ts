@@ -8,4 +8,15 @@ export const AQI_LEVELS = [
 ] as const;
 
 export const DEFAULT_CENTER = { latitude: 28.6139, longitude: 77.209, zoom: 10 };
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+
+export const getApiBaseUrl = (): string => {
+  let envUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  envUrl = envUrl.replace(/\/+$/, '');
+  if (!envUrl.endsWith('/api/v1')) {
+    envUrl = `${envUrl}/api/v1`;
+  }
+  return envUrl;
+};
+
+export const API_BASE_URL = getApiBaseUrl();
+

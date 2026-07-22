@@ -4,30 +4,41 @@ import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { LayoutDashboard, Map, Activity, Bell, Search, Settings, LogOut, Filter } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useTranslation } from '@/i18n/LanguageContext';
 
-const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Command Center' },
-  { href: '/forecast', icon: Activity, label: 'Forecasting' },
-  { href: '/attribution', icon: Map, label: 'Attribution' },
-  { href: '/enforcement', icon: Bell, label: 'Enforcement' },
-  { href: '/advisory', icon: Search, label: 'Advisories' },
-];
+interface NavigationSidebarProps {
+  onCloseDrawer?: () => void;
+}
 
-export default function NavigationSidebar() {
+export default function NavigationSidebar({ onCloseDrawer }: NavigationSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { logout, user } = useAuthStore();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { href: '/dashboard', icon: LayoutDashboard, label: t('nav.commandCenter', 'Command Center') },
+    { href: '/forecast', icon: Activity, label: t('nav.forecasting', 'Forecasting') },
+    { href: '/attribution', icon: Map, label: t('nav.attribution', 'Attribution') },
+    { href: '/enforcement', icon: Bell, label: t('nav.enforcement', 'Enforcement') },
+    { href: '/advisory', icon: Search, label: t('nav.advisories', 'Advisories') },
+  ];
 
   function handleSignOut() {
     logout();
+    if (onCloseDrawer) onCloseDrawer();
     router.push('/');
+  }
+
+  function handleNavClick() {
+    if (onCloseDrawer) onCloseDrawer();
   }
 
   return (
     <aside className="w-64 h-full bg-surface border-r border-border flex flex-col shrink-0" role="navigation" aria-label="Dashboard navigation">
       {/* Brand */}
       <div className="h-16 flex items-center px-6 border-b border-border">
-        <Link href="/dashboard" className="flex items-center gap-3">
+        <Link href="/dashboard" onClick={handleNavClick} className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg bg-accent-cyan flex items-center justify-center shadow-glow">
             <Activity className="w-5 h-5 text-surface font-bold" />
           </div>
@@ -38,7 +49,7 @@ export default function NavigationSidebar() {
       {/* Main Navigation */}
       <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-8">
         <div className="space-y-2">
-          <p className="px-2 text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">Intelligence</p>
+          <p className="px-2 text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">{t('nav.section.intelligence', 'Intelligence')}</p>
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             const Icon = item.icon;
@@ -46,6 +57,7 @@ export default function NavigationSidebar() {
               <Link
                 key={item.href}
                 href={item.href}
+                onClick={handleNavClick}
                 aria-current={isActive ? 'page' : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
                   isActive
@@ -64,7 +76,7 @@ export default function NavigationSidebar() {
         {/* Ward Filters */}
         <div className="space-y-3">
           <p className="px-2 text-xs font-semibold text-text-muted uppercase tracking-wider flex items-center justify-between">
-            <span>Ward Filters</span>
+            <span>{t('nav.section.wardFilters', 'Ward Filters')}</span>
             <Filter size={14} className="text-text-muted" />
           </p>
           <div className="flex flex-col gap-1 px-2">
@@ -87,7 +99,7 @@ export default function NavigationSidebar() {
       {/* Footer */}
       <div className="p-4 border-t border-border space-y-1">
         {user && (
-          <div className="flex items-center gap-3 px-3 py-2 rounded-md mb-2">
+          <div className="flex items-center gap-3 px-3 py-2 rounded-md mb-2 bg-surfaceHover/50">
             <div className="w-7 h-7 rounded-full flex items-center justify-center bg-accent-cyan/15 border border-accent-cyan/30 text-accent-cyan text-xs font-bold">
               {user.name.slice(0, 2).toUpperCase()}
             </div>
@@ -99,13 +111,14 @@ export default function NavigationSidebar() {
         )}
         <Link
           href="/settings"
+          onClick={handleNavClick}
           aria-current={pathname === '/settings' ? 'page' : undefined}
           className={`flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors ${
             pathname === '/settings' ? 'text-accent-cyan bg-accent-cyan/10' : 'text-text-secondary hover:text-text-primary hover:bg-surfaceHover'
           }`}
         >
           <Settings size={18} />
-          <span>Settings</span>
+          <span>{t('nav.settings', 'Settings')}</span>
         </Link>
         <button
           onClick={handleSignOut}
@@ -113,9 +126,10 @@ export default function NavigationSidebar() {
           aria-label="Sign out"
         >
           <LogOut size={18} />
-          <span>Sign Out</span>
+          <span>{t('nav.signOut', 'Sign Out')}</span>
         </button>
       </div>
     </aside>
   );
 }
+

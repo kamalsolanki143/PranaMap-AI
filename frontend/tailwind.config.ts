@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  darkMode: 'class',
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,14 +10,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0b0f15",
-        surface: "#121820",
-        surfaceHover: "#1a222d",
-        border: "#202a37",
+        background: "var(--background)",
+        surface: "var(--surface)",
+        surfaceHover: "var(--surface-hover)",
+        border: "var(--border)",
         text: {
-          primary: "#f1f5f9",
-          secondary: "#94a3b8",
-          muted: "#475569",
+          primary: "var(--text-primary)",
+          secondary: "var(--text-secondary)",
+          muted: "var(--text-muted)",
         },
         aqi: {
           good: "#10b981",       // Muted Green
@@ -36,7 +37,7 @@ const config: Config = {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
-        'panel': '0 8px 30px rgba(0, 0, 0, 0.4)',
+        'panel': '0 8px 30px var(--shadow-panel-color)',
         'glow': '0 0 15px rgba(6, 182, 212, 0.2)',
       }
     },
@@ -45,3 +46,4 @@ const config: Config = {
 };
 
 export default config;
+

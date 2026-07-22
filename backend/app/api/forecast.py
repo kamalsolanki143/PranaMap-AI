@@ -1,24 +1,21 @@
 from fastapi import APIRouter, Query
-from typing import Optional
-
-from app.schemas.forecast import ForecastResponse, ForecastSummary
+from app.api.demo import forecast_demo
 
 router = APIRouter()
 
 
-@router.get("/forecast", response_model=list[ForecastSummary])
+@router.get("/forecast")
 async def get_forecasts(
-    limit: int = Query(10, ge=1, le=50),
-    hours_ahead: int = Query(24, ge=1, le=72),
+    ward: str = Query("Dwarka Ward 34"),
 ):
-    """Get AQI forecasts for all wards."""
-    return []
+    """Get AQI forecasts for all wards or specified ward."""
+    return await forecast_demo(ward=ward)
 
 
-@router.get("/forecast/{ward_id}", response_model=ForecastResponse)
+@router.get("/forecast/{ward_id}")
 async def get_forecast_by_ward(
-    ward_id: int,
-    hours_ahead: int = Query(24, ge=1, le=72),
+    ward_id: str,
 ):
     """Get detailed AQI forecast for a specific ward."""
-    return ForecastResponse(ward_id=ward_id, forecasts=[])
+    return await forecast_demo(ward=ward_id)
+

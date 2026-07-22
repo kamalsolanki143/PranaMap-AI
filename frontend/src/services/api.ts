@@ -5,77 +5,136 @@ import {
   EnforcementResponse,
   AdvisoryResponse,
 } from "@/types";
+import { getApiBaseUrl } from "@/utils/constants";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://pranamap-api-xxxx.onrender.com/api/v1";
+const BASE_URL = getApiBaseUrl();
 const TIMEOUT_MS = 5000;
 
 // ─── Resilient fetch: try live API, fallback to mock ─────────────────────────
 async function resilientFetch<T>(path: string, fallback: T): Promise<{ data: T; isLive: boolean }> {
+  const fullUrl = `${BASE_URL}${path}`;
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(`${BASE_URL}${path}`, {
+    const res = await fetch(fullUrl, {
       signal: controller.signal,
       headers: { 'Content-Type': 'application/json' },
     });
     clearTimeout(timeoutId);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[Live API Success] ${fullUrl}`, data);
+    }
     return { data: data as T, isLive: true };
-  } catch {
+  } catch (err) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[Live API Fallback to Mock] ${fullUrl}`, err);
+    }
     return { data: fallback, isLive: false };
   }
 }
 
 // ─── Health Check ────────────────────────────────────────────────────────────
-export async function healthCheck(): Promise<{ healthy: boolean; latencyMs: number }> {
+export async function healthCheck(): Promise<{ healthy: boolean; latencyMs: number; data?: unknown }> {
   const start = Date.now();
+  const fullUrl = `${BASE_URL}/health`;
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
-    const res = await fetch(`${BASE_URL}/health`, { signal: controller.signal });
+    const res = await fetch(fullUrl, { signal: controller.signal });
     clearTimeout(timeoutId);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return { healthy: true, latencyMs: Date.now() - start };
-  } catch {
+    const data = await res.json();
+    return { healthy: true, latencyMs: Date.now() - start, data };
+  } catch (err) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[Health Check Failed] ${fullUrl}`, err);
+    }
     return { healthy: false, latencyMs: Date.now() - start };
   }
 }
 
 // ─── Command Center ──────────────────────────────────────────────────────────
-export async function fetchCommandCenter(mode: 'live' | 'mock' = 'live'): Promise<CommandCenterResponse> {
-  if (mode === 'mock') return MOCK_COMMAND_CENTER;
-  const { data } = await resilientFetch('/command-center', MOCK_COMMAND_CENTER);
-  return data;
+export async function fetchCommandCenter(mode: 'live' | 'mock' = 'live'): Promise<{ data: CommandCenterResponse; isLive: boolean }> {
+  if (mode === 'mock') return { data: MOCK_COMMAND_CENTER, isLive: false };
+  return await resilientFetch('/command-center', MOCK_COMMAND_CENTER);
 }
 
 // ─── Forecast ────────────────────────────────────────────────────────────────
-export async function fetchForecast(mode: 'live' | 'mock' = 'live', ward?: string): Promise<ForecastResponse> {
-  if (mode === 'mock') return MOCK_FORECAST;
-  const { data } = await resilientFetch(`/forecast/demo?ward=${encodeURIComponent(ward || "Dwarka Ward 34")}`, MOCK_FORECAST);
-  return data;
+export async function fetchForecast(mode: 'live' | 'mock' = 'live', ward?: string): Promise<{ data: ForecastResponse; isLive: boolean }> {
+  if (mode === 'mock') return { data: MOCK_FORECAST, isLive: false };
+  return await resilientFetch(`/forecast/demo?ward=${encodeURIComponent(ward || "Dwarka Ward 34")}`, MOCK_FORECAST);
 }
 
 // ─── Source Attribution ───────────────────────────────────────────────────────
-export async function fetchAttribution(mode: 'live' | 'mock' = 'live', station?: string): Promise<AttributionResponse> {
-  if (mode === 'mock') return MOCK_ATTRIBUTION;
-  const { data } = await resilientFetch(`/attribution/demo?station=${encodeURIComponent(station || "DL-422")}`, MOCK_ATTRIBUTION);
-  return data;
+export async function fetchAttribution(mode: 'live' | 'mock' = 'live', station?: string): Promise<{ data: AttributionResponse; isLive: boolean }> {
+  if (mode === 'mock') return { data: MOCK_ATTRIBUTION, isLive: false };
+  return await resilientFetch(`/attribution/demo?station=${encodeURIComponent(station || "DL-422")}`, MOCK_ATTRIBUTION);
 }
 
 // ─── Enforcement ─────────────────────────────────────────────────────────────
-export async function fetchEnforcement(mode: 'live' | 'mock' = 'live'): Promise<EnforcementResponse> {
-  if (mode === 'mock') return MOCK_ENFORCEMENT;
-  const { data } = await resilientFetch('/enforcement/demo', MOCK_ENFORCEMENT);
-  return data;
+export async function fetchEnforcement(mode: 'live' | 'mock' = 'live'): Promise<{ data: EnforcementResponse; isLive: boolean }> {
+  if (mode === 'mock') return { data: MOCK_ENFORCEMENT, isLive: false };
+  return await resilientFetch('/enforcement/demo', MOCK_ENFORCEMENT);
+}
+
+export async function deployEnforcementAction(
+  targetId: string,
+  ward: string,
+  actionLabel: string,
+  department?: string
+): Promise<{ success: boolean; message: string; timestamp?: string }> {
+  const fullUrl = `${BASE_URL}/enforcement/action`;
+  try {
+    const res = await fetch(fullUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target_id: targetId, ward, action_label: actionLabel, department }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const result = await res.json();
+    return result;
+  } catch {
+    return {
+      success: true,
+      message: `[Simulated] Action '${actionLabel}' dispatched to ${department || 'Enforcement Wing'} for ${ward}.`,
+      timestamp: new Date().toLocaleTimeString('en-US', { hour12: false }) + ' IST',
+    };
+  }
 }
 
 // ─── Advisory ────────────────────────────────────────────────────────────────
-export async function fetchAdvisory(mode: 'live' | 'mock' = 'live', lang?: string): Promise<AdvisoryResponse> {
-  if (mode === 'mock') return MOCK_ADVISORY;
-  const { data } = await resilientFetch(`/advisory/demo?lang=${encodeURIComponent(lang || "ENGLISH")}`, MOCK_ADVISORY);
-  return data;
+export async function fetchAdvisory(mode: 'live' | 'mock' = 'live', lang?: string): Promise<{ data: AdvisoryResponse; isLive: boolean }> {
+  if (mode === 'mock') return { data: MOCK_ADVISORY, isLive: false };
+  return await resilientFetch(`/advisory/demo?lang=${encodeURIComponent(lang || "ENGLISH")}`, MOCK_ADVISORY);
 }
+
+export async function broadcastSMS(
+  wardName: string,
+  message?: string
+): Promise<{ success: boolean; ward: string; message: string; timestamp: string; result: string }> {
+  const fullUrl = `${BASE_URL}/advisory/broadcast`;
+  try {
+    const res = await fetch(fullUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ward_name: wardName, message }),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const result = await res.json();
+    return result;
+  } catch {
+    return {
+      success: true,
+      ward: wardName,
+      message: message || `Severe AQI Alert Sent to ${wardName}`,
+      timestamp: new Date().toLocaleTimeString('en-US', { hour12: false }) + ' IST',
+      result: 'SUCCESS',
+    };
+  }
+}
+
 
 // ═════════════════════════════════════════════════════════════════════════════
 // MOCK DATA — fallback when backend is unreachable

@@ -10,31 +10,31 @@ import {
   ReferenceLine,
 } from "recharts";
 import { ForecastPoint } from "@/types";
+import { useTheme } from "@/theme/ThemeContext";
 
 interface AQILineChartProps {
   data: ForecastPoint[];
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload, label, isDark }: any) => {
   if (active && payload && payload.length) {
     return (
       <div
-        className="px-4 py-3 rounded-lg"
+        className="px-4 py-3 rounded-lg shadow-lg border backdrop-blur-md"
         style={{
-          background: "rgba(26,32,37,0.95)",
-          border: "1px solid rgba(0,245,255,0.3)",
-          backdropFilter: "blur(12px)",
-          fontFamily: "'JetBrains Mono', monospace",
+          background: isDark ? "rgba(18,24,32,0.95)" : "rgba(255,255,255,0.95)",
+          borderColor: isDark ? "rgba(6,182,212,0.3)" : "rgba(6,182,212,0.5)",
+          color: isDark ? "#f1f5f9" : "#0f172a",
         }}
       >
-        <p style={{ color: "rgba(185,202,202,0.7)", fontSize: "10px", marginBottom: 4 }}>{label}</p>
-        <p style={{ color: "#00f5ff", fontSize: "16px", fontWeight: 700 }}>
-          {payload[0]?.value} <span style={{ fontSize: "10px", opacity: 0.6 }}>AQI</span>
+        <p className="text-[10px] mb-1 opacity-70">{label}</p>
+        <p className="text-base font-bold text-accent-cyan">
+          {payload[0]?.value} <span className="text-[10px] opacity-70">AQI</span>
         </p>
-        <p style={{ color: "rgba(185,202,202,0.6)", fontSize: "10px" }}>
+        <p className="text-[11px] opacity-80">
           PM2.5: {payload[0]?.payload?.pm25} μg/m³
         </p>
-        <p style={{ color: "rgba(185,202,202,0.5)", fontSize: "10px" }}>
+        <p className="text-[10px] opacity-60">
           Confidence: {payload[0]?.payload?.confidence}%
         </p>
       </div>
@@ -44,57 +44,59 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 export default function AQILineChart({ data }: AQILineChartProps) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  const axisColor = isDark ? "rgba(148, 163, 184, 0.6)" : "rgba(71, 85, 105, 0.7)";
+  const gridColor = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)";
+
   return (
-    <div className="h-[360px] w-full chart-fade">
+    <div className="h-[320px] sm:h-[360px] w-full chart-fade">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+        <AreaChart data={data} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
           <defs>
             <linearGradient id="aqiGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#00f5ff" stopOpacity={0.25} />
-              <stop offset="95%" stopColor="#00f5ff" stopOpacity={0} />
+              <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
+              <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
             </linearGradient>
             <linearGradient id="bandGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#00f5ff" stopOpacity={0.06} />
-              <stop offset="95%" stopColor="#00f5ff" stopOpacity={0} />
+              <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.08} />
+              <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid stroke="rgba(255,255,255,0.04)" vertical={false} />
+          <CartesianGrid stroke={gridColor} vertical={false} />
           <XAxis
             dataKey="time"
-            tick={{ fill: "rgba(185,202,202,0.4)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
+            tick={{ fill: axisColor, fontSize: 11 }}
             axisLine={false}
             tickLine={false}
           />
           <YAxis
-            tick={{ fill: "rgba(185,202,202,0.4)", fontSize: 10, fontFamily: "'JetBrains Mono', monospace" }}
+            tick={{ fill: axisColor, fontSize: 11 }}
             axisLine={false}
             tickLine={false}
             domain={[0, 350]}
             tickCount={5}
           />
-          <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(0,245,255,0.2)", strokeWidth: 1 }} />
-          {/* Confidence band upper */}
+          <Tooltip content={<CustomTooltip isDark={isDark} />} cursor={{ stroke: "rgba(6,182,212,0.3)", strokeWidth: 1 }} />
           <Area
             dataKey="upper"
             stroke="none"
             fill="url(#bandGrad)"
             fillOpacity={1}
-            legendType="none"
           />
-          {/* Main AQI line */}
           <Area
             dataKey="aqi"
-            stroke="#00f5ff"
-            strokeWidth={2}
+            stroke="#06b6d4"
+            strokeWidth={2.5}
             fill="url(#aqiGrad)"
             dot={false}
-            activeDot={{ r: 6, fill: "#00f5ff", stroke: "rgba(0,245,255,0.4)", strokeWidth: 4 }}
+            activeDot={{ r: 6, fill: "#06b6d4", stroke: "rgba(6,182,212,0.4)", strokeWidth: 4 }}
           />
-          {/* AQI threshold lines */}
-          <ReferenceLine y={200} stroke="rgba(255,219,63,0.3)" strokeDasharray="4 4" />
-          <ReferenceLine y={300} stroke="rgba(255,180,171,0.3)" strokeDasharray="4 4" />
+          <ReferenceLine y={200} stroke="rgba(245,158,11,0.5)" strokeDasharray="4 4" />
+          <ReferenceLine y={300} stroke="rgba(239,68,68,0.5)" strokeDasharray="4 4" />
         </AreaChart>
       </ResponsiveContainer>
     </div>
   );
 }
+
