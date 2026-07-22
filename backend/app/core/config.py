@@ -17,7 +17,13 @@ class Settings(BaseSettings):
     WEATHER_API_KEY: Optional[str] = None
     SATELLITE_API_URL: Optional[str] = None
 
-    CORS_ORIGINS: list[str] = ["http://localhost:3000"]
+    CORS_ORIGINS: list[str] = [
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "https://prana-map-ai.vercel.app",
+        "https://pranamap-ai.vercel.app",
+        "https://prana-map-ai-*.vercel.app",
+    ]
 
     model_config = {"env_file": ".env", "extra": "ignore"}
 
