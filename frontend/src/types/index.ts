@@ -179,6 +179,8 @@ export interface AdvisoryItem {
   app_status: string;
 }
 
+export type AdvisoryCardData = AdvisoryItem;
+
 export interface AdvisoryLogEntry {
   type: string;
   ward: string;
