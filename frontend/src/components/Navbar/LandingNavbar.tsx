@@ -1,21 +1,41 @@
 'use client';
+
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { Activity, Menu, X, ArrowRight, ShieldCheck, LogIn } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 const navItems = [
-  { label: "Platform", href: "platform" },
-  { label: "Solutions", href: "solutions" },
-  { label: "Cities", href: "cities" },
-  { label: "Advisory", href: "advisory" },
+  { label: 'Overview', href: 'overview' },
+  { label: 'Process', href: 'process' },
+  { label: 'Resolution', href: 'resolution' },
+  { label: 'India Network', href: 'network' },
+  { label: 'Data Sources', href: 'sources' },
+  { label: '3D Airshed', href: 'airshed-3d' },
+  { label: 'Provenance', href: 'provenance' },
 ];
 
 export default function LandingNavbar() {
-  const [activeSection, setActiveSection] = useState("platform");
+  const { isAuthenticated, user } = useAuth();
+  const [activeSection, setActiveSection] = useState('overview');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  // Track which section is in view using IntersectionObserver
   useEffect(() => {
-    const sections = navItems.map(item => document.getElementById(item.href)).filter(Boolean) as HTMLElement[];
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    const sections = navItems
+      .map((item) => document.getElementById(item.href))
+      .filter(Boolean) as HTMLElement[];
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -25,93 +45,151 @@ export default function LandingNavbar() {
           }
         }
       },
-      { rootMargin: '-30% 0px -60% 0px', threshold: 0 }
+      { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
     );
 
-    sections.forEach(section => observer.observe(section));
-    return () => observer.disconnect();
+    sections.forEach((section) => observer.observe(section));
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+    };
   }, []);
 
   function scrollTo(id: string) {
     setActiveSection(id);
+    setMobileMenuOpen(false);
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   }
 
   return (
     <>
       <nav
-        className="fixed top-0 w-full z-50 flex justify-between items-center px-4 md:px-8 h-20"
+        className={`fixed top-0 w-full z-50 flex justify-between items-center px-4 sm:px-6 lg:px-10 h-16 border-b transition-all duration-200 ${
+          scrolled
+            ? 'bg-surface/95 backdrop-blur-md border-border shadow-subtle'
+            : 'bg-surface border-border'
+        }`}
         role="navigation"
-        aria-label="Main navigation"
-        style={{
-          background: "rgba(16,20,25,0.85)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          borderBottom: "1px solid rgba(255,255,255,0.08)",
-        }}
+        aria-label="Main landing navigation"
       >
-        <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded flex items-center justify-center shrink-0"
-            style={{ background: "rgba(0,245,255,0.12)", border: "1px solid rgba(0,245,255,0.25)" }}
-          >
-            <span className="material-symbols-outlined text-lg" style={{ color: "#00f5ff", fontVariationSettings: "'FILL' 1" }}>eco</span>
+        {/* Brand identity */}
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-forestSecondary/10 border border-forestSecondary/20 flex items-center justify-center text-forestSecondary">
+            <Activity className="w-4 h-4" />
           </div>
-          <span className="font-bold tracking-tight text-base sm:text-lg" style={{ color: "#00f5ff", textShadow: "0 0 12px rgba(0,245,255,0.4)" }}>PranaMap AI</span>
-        </div>
+          <div className="flex flex-col">
+            <span className="font-bold text-sm tracking-tight text-text-primary flex items-center gap-1.5">
+              PRANAMAP AI
+            </span>
+            <span className="text-[10px] text-text-muted leading-none hidden sm:inline font-mono">
+              Environmental Intelligence
+            </span>
+          </div>
+        </Link>
 
-        {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
+        {/* Desktop Nav Items */}
+        <div className="hidden lg:flex items-center gap-1 px-3 py-1 rounded-full bg-surfaceAlt border border-border text-xs font-medium text-text-secondary">
           {navItems.map((item) => (
             <button
-              key={item.label}
+              key={item.href}
+              type="button"
               onClick={() => scrollTo(item.href)}
-              className="font-inter text-sm transition-colors hover:text-[#00f5ff] bg-transparent border-none cursor-pointer"
-              style={{
-                color: activeSection === item.href ? "#00f5ff" : "rgba(185,202,202,0.7)",
-                borderBottom: activeSection === item.href ? "2px solid #00f5ff" : "2px solid transparent",
-                paddingBottom: "4px",
-              }}
+              className={`px-3 py-1.5 rounded-full transition-colors cursor-pointer ${
+                activeSection === item.href
+                  ? 'bg-forestSecondary text-white font-semibold shadow-2xs'
+                  : 'hover:text-text-primary hover:bg-surface'
+              }`}
             >
               {item.label}
             </button>
           ))}
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          className="md:hidden p-2 text-white flex items-center justify-center"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          aria-label="Toggle mobile menu"
-        >
-          <span className="material-symbols-outlined">{mobileMenuOpen ? 'close' : 'menu'}</span>
-        </button>
+        {/* Right CTA / Auth Buttons */}
+        <div className="hidden sm:flex items-center gap-2.5">
+          <Link
+            href="/data-provenance"
+            className="text-xs font-medium text-text-secondary hover:text-text-primary px-3 py-1.5 rounded-lg border border-border hover:bg-surfaceHover transition-colors flex items-center gap-1.5"
+          >
+            <ShieldCheck size={14} className="text-forestSecondary" />
+            <span>Data Provenance</span>
+          </Link>
 
-        <Link
-          href="/login"
-          className="hidden md:inline-flex font-bold uppercase text-xs px-6 py-3 rounded transition-all hover:brightness-110 active:scale-95"
-          style={{ background: "#00f5ff", color: "#003739", letterSpacing: "0.06em", boxShadow: "0 0 15px rgba(0,245,255,0.3)" }}
+          {isAuthenticated ? (
+            <Link
+              href="/dashboard"
+              className="text-xs font-semibold text-white bg-forestSecondary hover:bg-forestPrimary px-3.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 shadow-subtle"
+            >
+              <span>Command Center</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          ) : (
+            <div className="flex items-center gap-2">
+              <Link
+                href="/login"
+                className="text-xs font-medium text-text-primary hover:text-forestSecondary px-3 py-1.5 rounded-lg transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/login"
+                className="text-xs font-semibold text-white bg-forestSecondary hover:bg-forestPrimary px-3.5 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 shadow-subtle"
+              >
+                <span>Launch Platform</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Mobile Hamburger Toggle */}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="lg:hidden p-2 text-text-secondary hover:text-text-primary rounded-lg border border-border cursor-pointer"
+          aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
         >
-          Launch Command Center
-        </Link>
+          {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="fixed top-20 left-0 right-0 z-40 md:hidden p-4 border-b border-white/10" style={{ background: "rgba(16,20,25,0.95)", backdropFilter: "blur(20px)" }}>
-          <div className="flex flex-col gap-4">
+        <div className="fixed inset-0 top-16 z-40 bg-surface/98 backdrop-blur-md border-b border-border flex flex-col p-6 space-y-4 lg:hidden">
+          <div className="space-y-1">
             {navItems.map((item) => (
               <button
-                key={item.label}
-                onClick={() => { scrollTo(item.href); setMobileMenuOpen(false); }}
-                className="text-left text-sm py-2 hover:text-[#00f5ff] bg-transparent border-none cursor-pointer"
-                style={{ color: activeSection === item.href ? "#00f5ff" : "rgba(255,255,255,0.7)" }}
+                key={item.href}
+                type="button"
+                onClick={() => scrollTo(item.href)}
+                className={`w-full text-left px-4 py-2.5 rounded-lg text-sm font-medium ${
+                  activeSection === item.href
+                    ? 'bg-forestSecondary text-white font-semibold'
+                    : 'text-text-primary hover:bg-surfaceAlt'
+                }`}
               >
                 {item.label}
               </button>
             ))}
-            <Link href="/login" className="mt-2 text-center font-bold uppercase text-xs px-6 py-3 rounded" style={{ background: "#00f5ff", color: "#003739" }}>
-              Launch Command Center
+          </div>
+
+          <div className="pt-4 border-t border-border space-y-2">
+            <Link
+              href="/data-provenance"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg border border-border text-sm font-medium text-text-primary"
+            >
+              <ShieldCheck size={16} className="text-forestSecondary" />
+              <span>Data Provenance & Truth Tiers</span>
+            </Link>
+
+            <Link
+              href={isAuthenticated ? '/dashboard' : '/login'}
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-lg bg-forestSecondary text-white text-sm font-semibold shadow-subtle"
+            >
+              <span>{isAuthenticated ? 'Go to Command Center' : 'Sign In to Workspace'}</span>
+              <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </div>
@@ -119,4 +197,3 @@ export default function LandingNavbar() {
     </>
   );
 }
-

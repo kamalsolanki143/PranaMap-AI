@@ -1,313 +1,221 @@
 <div align="center">
 
 # 🫁 PranaMap AI
-### **AI-Powered Urban Air Quality Intervention Intelligence Platform**
+### **Environmental Intelligence & Decision Support Platform for Indian Cities**
 
-*Proactive Atmospheric Stagnation Forecasting, Multi-Sensor Source Attribution, Explainable Enforcement Planning, and Automated Multilingual Health Advisories for Indian Megacities.*
+*Google Cloud & Google AI Hackathon Track: Clean Air & Climate Resilience*
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.0-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![Cloud Firestore](https://img.shields.io/badge/Cloud_Firestore-Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-[View Live Dashboard](#-demo) • [System Architecture](#-system-architecture) • [API Documentation](#-key-features) • [Installation Guide](#-installation)
+[Live Dashboard](http://localhost:3000) • [System Architecture](docs/architecture.md) • [Demo Script](docs/demo_script.md) • [Data Pipeline](docs/data_pipeline.md) • [AI & ML Architecture](docs/ai_system.md) • [Firestore Guide](docs/firebase.md)
 
 ---
 
 </div>
 
-## 📌 Problem Statement
+## 📌 Executive Overview
 
-Urban air pollution in megacities like Delhi NCR is an ongoing public health crisis. During winter inversion and stagnation events, AQI levels routinely cross 400+ (Hazardous), leading to severe respiratory illnesses and catastrophic economic disruptions.
+Urban air pollution in Indian cities is a recurring, severe environmental health and climate resilience crisis. During winter atmospheric inversion events, particulate concentrations ($\text{PM}_{2.5}$ and $\text{PM}_{10}$) routinely cross 400+ AQI (Severe), causing immense respiratory distress, school closures, and economic losses across the Indo-Gangetic plain and industrial belts.
 
-### **The Key Decision-Making Challenges:**
-1. **Reactive Interventions**: Authorities deploy dust sprinklers and traffic restrictions *after* AQI spikes to hazardous levels, missing the vital pre-stagnation window.
-2. **Attribution Ambiguity**: Without real-time chemical mass balance and satellite corroboration, policymakers struggle to isolate the impact of vehicular emissions vs. construction dust vs. agricultural stubble burning.
-3. **Actionability Deficit**: Raw AQI sensors provide numbers, but fail to generate prioritized enforcement routes for ground teams or targeted health warnings for vulnerable citizen cohorts.
+### The Four Operational Questions for City Authorities
 
-**PranaMap AI** bridges this gap by transforming raw atmospheric data into proactive, explainable, and multi-agency operational intelligence.
+PranaMap AI equips municipal authorities and state pollution control boards with data-driven answers to four fundamental questions:
 
----
-
-##💡 The Solution
-
-PranaMap AI is an end-to-end urban intelligence platform designed for municipal corporations, environmental task forces, and city administration:
-
-- **72-Hour Predictive Stagnation Forecasting**: Deep learning models forecast PM2.5/PM10 spikes before boundary layer collapse occurs.
-- **Explainable Source Attribution (XAI)**: SHAP-backed attribution breaks down vehicular, biomass, industrial, and fugitive dust contributions with satellite-corroborated evidence.
-- **Enforcement Pipeline Planner**: Priority-ranked mission dispatches with officer assignments, ward coordinates, and projected AQI impact percentages.
-- **Automated Multilingual Citizen Advisories**: Generates ward-specific health guidance in **English**, **Hindi (हिंदी)**, and **Marathi (मराठी)** with automated SMS broadcast simulations.
+1. **WHERE is air quality deteriorating?**
+   - Continuous ground sensor aggregation across wards and automated critical zone ranking (e.g., *Anand Vihar*, *Dwarka Sector 8*).
+2. **WHY is it deteriorating?**
+   - Multi-modal source attribution breaking down Traffic, Construction, Biomass, and Industrial contributions coupled with physical evidence (wind corridors, traffic congestion levels, satellite AOD).
+3. **WHAT is likely to happen next?**
+   - Calibrated 72-hour predictive forecasting with diurnal curve decomposition and peak hazard window identification (e.g., *16:00–20:00 IST*).
+4. **WHAT action should authorities and citizens take?**
+   - Prioritized operational interventions assigned to municipal response teams, scenario impact simulations, and Google Gemini-powered multilingual citizen advisories in English, Hindi, and Marathi.
 
 ---
 
-## ✨ Key Features
+## 🔄 Core Intelligence Loop
 
-| Feature | Description |
+```
+OBSERVE ───► DETECT ───► PREDICT ───► EXPLAIN ───► RECOMMEND ───► COMMUNICATE ───► MEASURE IMPACT
+ (CPCB /      (Hotspot     (72h XGBoost/  (SHAP /       (Operational     (Google Gemini     (What-If Box
+Open-Meteo)   Ranking)      Ensemble)     Evidence)    Interventions)    EN / HI / MR)      Simulation)
+```
+
+---
+
+## ✨ Key Capabilities & Product Features
+
+| Module | Purpose & Capabilities |
 | :--- | :--- |
-| 🛡️ **AI Command Center** | Real-time geospatial heatmap of Delhi NCR wards with live status indicators, system health metrics, and hotspot tracking. |
-| 📈 **Air Quality Forecasting** | 72-hour predictive trendline with confidence interval bands and peak stagnation alerts. |
-| 🔍 **Explainable AI (XAI)** | *"Why did AI make this prediction?"* panel breaking down wind vectors, satellite data, and source impact percentages. |
-| 🚨 **Enforcement Planner** | Priority-ranked intervention pipeline (`CRITICAL`, `HIGH`, `MEDIUM`) with direct officer dispatch actions. |
-| 📢 **Multilingual Health Advisories** | Instant language switching (`EN`, `HI`, `MR`) across UI labels and AI-generated citizen advisories. |
-| 📄 **Government PDF Exporter** | One-click export of official government-formatted health advisory PDF reports (`Advisory_RK_Puram_2026.pdf`). |
-| 📱 **Broadcast SMS Demo** | Interactive confirmation modal dialog and simulated SMS dispatch to registered ward citizens. |
-| 🌗 **Dark / Light Theme Engine** | Full theme toggle system with `localStorage` persistence and dynamic Recharts chart color adaptation. |
-| 🔄 **Demo Mode & Live API Mode** | Seamless toggle between offline deterministic demo data and FastAPI backend service. |
-| 📱 **Fully Responsive UI** | Desktop fixed sidebar, tablet collapsible drawer, mobile overlay, and touch-optimized data tables. |
+| **Command Center** | Geospatial cockpit with MapLibre rendering, interactive hotspot selection, live situation briefs, and priority zone rankings. |
+| **Air Quality Analysis** | Multi-pollutant speciation ($\text{PM}_{2.5}$, $\text{PM}_{10}$, $\text{NO}_2$, $\text{SO}_2$, $\text{CO}$, $\text{O}_3$) benchmarked against India NAAQS standards. |
+| **72-Hour Forecast Engine** | Calibrated time-series forecast with expanding confidence bands, peak window calculation, and transparent feature contribution factors. |
+| **Source Attribution (XAI)** | Evidence-driven percentage breakdown across Traffic, Construction, Biomass, and Industry grounded in wind vectors and satellite data. |
+| **Intervention Priorities** | Actionable municipal pipeline assigned to generic operational teams (`Traffic Control Team`, `Municipal Dust Control Team`, `Environmental Inspection Team`) with full lifecycle tracking (`Recommended` → `Reviewed` → `Approved` → `Dispatched` → `Completed`). |
+| **Impact Simulator** | "What-If" scenario simulator estimating localized AQI reductions under combined interventions using documented attenuation assumptions. |
+| **Citizen Advisories** | Vernacular public health guidance in **English**, **Hindi (हिंदी)**, and **Marathi (मराठी)** generated using Google Gemini with certified health precautions. |
+| **Multi-City Pan-India Network** | Natively engineered for 9 major Indian metropolitan zones: Delhi NCR, Mumbai, Ahmedabad, Jaipur, Lucknow, Kolkata, Bengaluru, Hyderabad, and Chennai. |
+| **Data Source Transparency** | Complete audit of telemetry lineage across CPCB CAAQMS, Open-Meteo, Copernicus Sentinel-5P, NASA FIRMS, Google Gemini, and Cloud Firestore. |
 
 ---
 
-## 🏗️ System Architecture
+## 🏛️ System Architecture
 
-```mermaid
-flowchart TD
-    subgraph Client ["Frontend Layer (Next.js 14 & TailwindCSS)"]
-        UI[Command Center Dashboard]
-        i18n[Multilingual i18n Engine]
-        Theme[Theme Provider]
-        PDF[PDF Export Utility]
-    end
-
-    subgraph API ["API Gateway Layer (FastAPI)"]
-        Router[/api/v1 Endpoints]
-        HealthCheck[Health & Latency Check]
-        BroadcastRoute[/advisory/broadcast]
-        ActionRoute[/enforcement/action]
-    end
-
-    subgraph Intelligence ["AI & Analytics Engine"]
-        ForecastEngine[72h Stagnation Forecaster]
-        XAIEngine[Explainable AI Attribution]
-        AdvisoryGen[LangChain & Gemini Advisory Generator]
-    end
-
-    subgraph Data ["Data & Storage Layer"]
-        PostGIS[(PostGIS Spatial DB)]
-        MockEngine[Offline Demo Engine]
-    end
-
-    UI --> Router
-    i18n --> UI
-    Theme --> UI
-    PDF --> UI
-
-    Router --> HealthCheck
-    Router --> ForecastEngine
-    Router --> XAIEngine
-    Router --> AdvisoryGen
-
-    ForecastEngine --> PostGIS
-    XAIEngine --> PostGIS
-    AdvisoryGen --> PostGIS
-    Router -. Fallback .-> MockEngine
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 PRESENTATION LAYER                                     │
+│     Next.js 14 App Router · React 18 · TypeScript · MapLibre GL · Recharts · Tailwind   │
+│  ┌────────────────────┐ ┌────────────────────┐ ┌───────────────────┐ ┌───────────────┐ │
+│  │   Command Center   │ │  Forecast Engine   │ │ Source Attribution│ │ Interventions │ │
+│  └────────────────────┘ └────────────────────┘ └───────────────────┘ └───────────────┘ │
+│  ┌────────────────────┐ ┌────────────────────┐ ┌───────────────────┐ ┌───────────────┐ │
+│  │  Citizen Advisory  │ │   Cities Network   │ │   Data Sources    │ │Impact Simulator││
+│  └────────────────────┘ └────────────────────┘ └───────────────────┘ └───────────────┘ │
+└──────────────────────────────────────────┬─────────────────────────────────────────────┘
+                                           │ Typed REST API (/api/v1)
+┌──────────────────────────────────────────▼─────────────────────────────────────────────┐
+│                                APPLICATION SERVICES LAYER                              │
+│                    FastAPI · Pydantic v2 · AsyncIO · Python 3.12                       │
+│  ┌──────────────────────────────────────────────────────────────────────────────────┐  │
+│  │                            MULTI-AGENT ORCHESTRATOR                              │  │
+│  │  1. Ingestion Agent  ──► 2. Forecast Agent      ──► 3. Attribution Agent        │  │
+│  │  4. Intervention Agent──► 5. Advisory Agent (GenAI)──► 6. Impact Simulation Agent│  │
+│  └──────────────────────────────────────────────────────────────────────────────────┘  │
+└───────────────────────┬────────────────────────────────────────┬───────────────────────┘
+                        │                                        │
+┌───────────────────────▼──────────────┐  ┌──────────────────────▼───────────────────────┐
+│       AI & MACHINE LEARNING          │  │       PERSISTENCE & TELEMETRY LAYER          │
+│ • Google Gemini (Reasoning & NLP)    │  │ • Google Cloud Firestore (Collections)       │
+│ • Atmospheric Diurnal Regression     │  │ • CPCB CAAQMS Ground Sensor Network (27 stn) │
+│ • Empirical Receptor Apportionment   │  │ • Open-Meteo / ECMWF Boundary Layer Model    │
+│ • Empirical Linear Box Dispersion Sim│  │ • Copernicus Sentinel-5P Satellite Troposphere│
+└──────────────────────────────────────┘  └──────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🔄 AI Workflow
+## 🤖 Google Technology Integration
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant Sensors as Satellite & Air Sensors
-    participant Backend as FastAPI Backend
-    participant ML as XGBoost & Deep Learning
-    participant XAI as Explainable AI (SHAP)
-    participant Gemini as Google Gemini / LLM
-    participant Frontend as Next.js Dashboard
-    participant Citizen as Citizen SMS / App
+### 1. Google Gemini
+- **Official SDK**: Utilizes the official `google-genai` SDK on the backend.
+- **Zero Frontend Secret Exposure**: All API keys remain isolated in the server environment.
+- **Structured Grounding**: Injects verified sensor telemetry (AQI, particulate speciation, wind corridors) into Gemini prompts and validates outputs using Pydantic schemas.
+- **Vernacular Precision**: Generates natural, idiomatically accurate Hindi and Marathi advisories without mechanical translation artifacts.
 
-    Sensors->>Backend: Ingest PM2.5, PM10 & Wind Vectors
-    Backend->>ML: Run 72-Hour Predictive Pipeline
-    ML-->>Backend: Yield Predicted AQI & Stagnation Window
-    Backend->>XAI: Analyze Feature Attribution (Traffic, Dust, Biomass)
-    XAI-->>Backend: Yield Source Impact Percentages
-    Backend->>Gemini: Prompt Ward-Specific Advisory (EN/HI/MR)
-    Gemini-->>Backend: Return Localized Health Guidance
-    Backend->>Frontend: Serve /api/v1/dashboard & /advisory JSON
-    Frontend->>Citizen: Dispatch SMS Broadcast & Government PDF Report
-```
+### 2. Google Cloud Firestore
+- **Application Data Layer**: Manages persistent collections for `cities`, `air_quality`, `weather`, `hotspots`, `forecasts`, `attributions`, `interventions`, `advisories`, and `simulation_runs`.
+- **Resilient Fallback**: Out-of-the-box in-memory document store ensures immediate execution locally and in offline judging environments.
+
+### 3. Google Cloud Run Ready
+- Containerized Docker deployment optimized for serverless execution in Google Cloud Mumbai (`asia-south1`).
 
 ---
 
-## 🛠️ Tech Stack
+## 🚀 Quick Start Guide
 
-| Domain | Technologies |
-| :--- | :--- |
-| **Frontend Framework** | Next.js 14 (App Router), React 18, TypeScript |
-| **Styling & Theme** | Tailwind CSS, Lucide React, CSS Custom Variables |
-| **Data Visualization** | Recharts, MapLibre GL, React Map GL |
-| **Backend Framework** | FastAPI (Python 3.11), Uvicorn, Pydantic |
-| **AI / Agentic Workflow** | LangChain, LangGraph, Google Gemini API |
-| **Machine Learning** | XGBoost, LightGBM, SHAP, Scikit-Learn |
-| **Spatial Database** | PostgreSQL, PostGIS, GeoPandas |
-| **State & Fetching** | Zustand, Axios, React Query |
-| **Deployment** | Vercel (Frontend), Render / Docker (Backend) |
-
----
-
-## 📁 Folder Structure
-
-```
-PranaMap-AI/
-├── backend/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── advisory.py         # Advisory endpoints & SMS broadcast
-│   │   │   ├── attribution.py      # Source attribution API
-│   │   │   ├── dashboard.py        # Command center telemetry
-│   │   │   ├── enforcement.py      # Action dispatch endpoints
-│   │   │   ├── forecast.py         # 72-hour forecasting API
-│   │   │   └── health.py           # Backend health check
-│   │   ├── core/                   # Configuration & CORS settings
-│   │   ├── services/               # ML & AI inference services
-│   │   └── main.py                 # FastAPI application entry point
-│   ├── requirements.txt            # Python dependencies
-│   └── Dockerfile
-│
-├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── (dashboard)/        # Command Center, Forecast, Advisory, Settings
-│   │   │   └── (marketing)/        # Landing page
-│   │   ├── components/
-│   │   │   ├── Advisory/           # BroadcastModal & advisory cards
-│   │   │   ├── Alerts/             # Critical alert banners
-│   │   │   ├── Charts/             # AQILineChart, ForecastChart, SourceBarChart
-│   │   │   ├── Common/             # AIExplanationPanel, KPICard, Toast
-│   │   │   ├── Map/                # BaseMap, AQIMap (MapLibre GL)
-│   │   │   ├── Navbar/             # Header & LandingNavbar
-│   │   │   └── Sidebar/            # NavigationSidebar drawer
-│   │   ├── i18n/                   # Multilingual translations (EN, HI, MR)
-│   │   ├── theme/                  # ThemeContext & Light/Dark engine
-│   │   ├── store/                  # Zustand state management
-│   │   ├── services/               # Axios API client
-│   │   └── utils/                  # pdfExport & constants
-│   ├── tailwind.config.ts
-│   └── package.json
-│
-├── docs/                           # Architecture & API documentation
-├── docker-compose.yml
-└── README.md
-```
-
----
-
-## ⚙️ Installation & Setup
-
-### **Prerequisites**
-- Node.js `v18.x` or higher
-- Python `v3.10` or higher
+### Prerequisites
+- Node.js >= 18.x
+- Python >= 3.10
 - Git
 
-### **1. Clone the Repository**
+### 1. Clone & Setup Repository
 ```bash
 git clone https://github.com/kamalsolanki143/PranaMap-AI.git
 cd PranaMap-AI
+git checkout feature/pranamap-platform-redesign
+
+# Configure environment variables
+cp .env.example .env
 ```
 
-### **2. Backend Setup (FastAPI)**
+### 2. Start Backend API Server
 ```bash
-# Navigate to backend directory
 cd backend
+python -m venv .venv
+# On Windows:
+.venv\Scripts\activate
+# On Linux/macOS:
+source .venv/bin/activate
 
-# Create a virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
-
-# Start FastAPI development server
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
-*Backend running at:* `http://localhost:8000`  
-*Swagger Documentation:* `http://localhost:8000/docs`
+The FastAPI interactive documentation is available at: `http://localhost:8000/docs`
 
-### **3. Frontend Setup (Next.js)**
+### 3. Start Frontend Dashboard
 ```bash
-# Open a new terminal and navigate to frontend directory
 cd frontend
-
-# Install dependencies
 npm install
-
-# Start Next.js development server
 npm run dev
 ```
-*Frontend running at:* `http://localhost:3000`
+Open your browser at: `http://localhost:3000`
 
 ---
 
-## 🔐 Environment Variables
+## 🧪 Testing & Verification
 
-Create `.env.local` inside `frontend/` directory:
+### Run Backend Unit & API Tests
+```bash
+# In repository root
+backend\.venv\Scripts\python -m pytest tests/backend/test_api.py -v
+```
+*Result: 12 tests covering `/health`, `/cities`, `/dashboard`, `/forecast`, `/attribution`, `/interventions`, `/simulations`, `/advisories`, `/data-sources`, and `/orchestrate`.*
 
-```env
-# API Base URL (FastAPI)
-NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
+### Run ML Training & Feature Engineering Tests
+```bash
+backend\.venv\Scripts\python -m pytest tests/ml/test_training.py -v
+```
+*Result: 13 tests covering feature engineering, cyclical encoding, lag features, rolling statistics, model persistence, and time-series validation.*
 
-# Enable/Disable Live API mode by default
-NEXT_PUBLIC_API_MODE=live
+### Run Frontend Static Production Build
+```bash
+cd frontend
+npm run build
+```
+*Result: All 18 routes statically compiled with 0 TypeScript/lint errors.*
+
+---
+
+## 📂 Repository Structure
+
+```
+PranaMap-AI/
+├── backend/                  # FastAPI Application Service
+│   ├── app/
+│   │   ├── api/              # RESTful API routers (v1)
+│   │   ├── core/             # Configuration & environment settings
+│   │   ├── database/         # Models & database sessions
+│   │   └── services/         # Gemini, Firestore, Forecast, Attribution, Ingestion
+│   ├── Dockerfile            # Container definition for Google Cloud Run
+│   └── requirements.txt      # Python dependencies
+├── frontend/                 # Next.js 14 App Router UI
+│   ├── src/
+│   │   ├── app/              # Routes: dashboard, forecast, attribution, interventions, advisory, cities
+│   │   ├── components/       # Reusable GovTech UI tokens, maps, and charts
+│   │   ├── services/         # Resilient API service client
+│   │   ├── store/            # Lightweight Zustand global state
+│   │   └── styles/           # Modern GovTech design tokens (globals.css)
+│   ├── package.json
+│   └── tailwind.config.ts
+├── docs/                     # Comprehensive Architecture & Strategy Docs
+│   ├── architecture.md       # Full architectural blueprint
+│   ├── data_pipeline.md      # Telemetry ingestion & normalization
+│   ├── ai_system.md          # Gemini, forecasting, and XAI models
+│   ├── firebase.md           # Cloud Firestore collections & schema
+│   ├── deployment.md         # Local and Google Cloud Run instructions
+│   ├── demo_script.md        # 3-5 minute live hackathon pitch script
+│   └── product_strategy.md   # Market need, GovTech vision, and impact
+├── ml/                       # Machine Learning, inference, and SHAP pipelines
+├── scripts/                  # Model training orchestrators
+└── tests/                    # Backend API and ML test suites
 ```
 
-Create `.env` inside `backend/` directory:
-
-```env
-# Core API Settings
-API_V1_STR=/api/v1
-PROJECT_NAME=PranaMap AI
-
-# AI Models & Keys
-GEMINI_API_KEY=your_gemini_api_key_here
-```
-
 ---
 
-## 🖼️ Application Screenshots
-
-| Page | Preview |
-| :--- | :--- |
-| **Landing Page** | ![Landing Page](https://via.placeholder.com/800x450/0b0f15/00f5ff?text=PranaMap+AI+Landing+Page) |
-| **Command Center** | ![Command Center](https://via.placeholder.com/800x450/0b0f15/00f5ff?text=Command+Center+Dashboard) |
-| **Predictive Forecast** | ![Predictive Forecast](https://via.placeholder.com/800x450/0b0f15/00f5ff?text=72-Hour+Predictive+Forecast) |
-| **Source Attribution** | ![Source Attribution](https://via.placeholder.com/800x450/0b0f15/00f5ff?text=Source+Attribution+%26+XAI) |
-| **Enforcement Planner** | ![Enforcement Planner](https://via.placeholder.com/800x450/0b0f15/00f5ff?text=Enforcement+Intervention+Pipeline) |
-| **Citizen Advisories** | ![Citizen Advisories](https://via.placeholder.com/800x450/0b0f15/00f5ff?text=Multilingual+Advisories+%26+PDF+Export) |
-| **System Settings** | ![System Settings](https://via.placeholder.com/800x450/0b0f15/00f5ff?text=System+Configuration+%26+Theme+Toggle) |
-
----
-
-## 🎥 Live Demonstration
-
-[![PranaMap AI Demo Video](https://via.placeholder.com/1200x600/0b0f15/00f5ff?text=▶+Watch+PranaMap+AI+Hackathon+Demo)](https://youtube.com/)
-
----
-
-## 👥 Contributors
-
-- **Kamal Solanki** — Lead Full Stack & Product Engineer ([@kamalsolanki143](https://github.com/kamalsolanki143))
-
----
-
-## 🚀 Future Scope
-
-- **IoT Sensor Node Integration**: Direct MQTT streaming from low-cost CPCB-calibrated physical sensors.
-- **Automated Anti-Smog Gun IoT Triggering**: Direct SCADA integration to automatically activate mist sprayers when ward AQI crosses 350.
-- **Hyperlocal Satellite Synthetic Aperture Radar (SAR)**: High-resolution thermal anomaly mapping for stubble fires.
-
----
-
-## 📜 License
-
-Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information.
-
----
-
-## 🙏 Acknowledgements
-
-- [Google Gemini API](https://ai.google.dev/) for AI natural language advisory generation.
-- [FastAPI](https://fastapi.tiangolo.com/) & [Next.js](https://nextjs.org/) for high-performance full-stack architecture.
-- [LangChain](https://www.langchain.com/) & [LangGraph](https://www.langchain.com/langgraph) for multi-agent reasoning.
+## 📄 License
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

@@ -1,12 +1,17 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { MapPin, RefreshCw, Wind, AlertTriangle, Sun, Moon, Globe } from 'lucide-react';
+
+import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { RefreshCw, Globe, User, LogOut, Settings, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useToast } from '@/components/Common/Toast';
 import { healthCheck } from '@/services/api';
 import { useAppStore } from '@/store/useAppStore';
-import { useTheme } from '@/theme/ThemeContext';
 import { useTranslation } from '@/i18n/LanguageContext';
 import { Language } from '@/i18n/translations';
+import { useAuth } from '@/context/AuthContext';
+import CitySelector from '@/components/Common/CitySelector';
+import StatusBadge from '@/components/Common/StatusBadge';
 
 interface HeaderProps {
   onRefresh?: () => void;
@@ -14,95 +19,207 @@ interface HeaderProps {
 }
 
 export default function Header({ onRefresh }: HeaderProps) {
+  const router = useRouter();
   const { showToast } = useToast();
-  const { apiMode } = useAppStore();
-  const { theme, toggleTheme } = useTheme();
+  const { dataStatus, setDataStatus } = useAppStore();
   const { language, setLanguage, t } = useTranslation();
-  const [isBackendHealthy, setIsBackendHealthy] = useState<boolean | null>(null);
+  const { user, signOut } = useAuth();
 
+  const [currentTime, setCurrentTime] = useState<string>('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  // Close profile dropdown on outside click
   useEffect(() => {
-    healthCheck().then(res => setIsBackendHealthy(res.healthy));
+    function handleClickOutside(e: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setProfileOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  function handleRefresh() {
-    showToast(t('common.refresh', 'Refreshing live air quality data...'), 'info');
-    if (onRefresh) {
-      onRefresh();
-    } else {
-      window.location.reload();
+  useEffect(() => {
+    function updateClock() {
+      const now = new Date();
+      setCurrentTime(
+        now.toLocaleTimeString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+        }) + ' IST'
+      );
+    }
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    healthCheck().then((res) => {
+      if (res.healthy) {
+        setDataStatus('LIVE');
+      } else {
+        setDataStatus('CACHED');
+      }
+    });
+  }, [setDataStatus]);
+
+  async function handleRefresh() {
+    setIsRefreshing(true);
+    showToast(t('common.refresh', 'Refreshing environmental sensor telemetry...'), 'info');
+    try {
+      if (onRefresh) {
+        await onRefresh();
+      }
+    } finally {
+      setTimeout(() => setIsRefreshing(false), 600);
     }
   }
 
+  async function handleSignOut() {
+    try {
+      await signOut();
+      router.push('/login');
+    } catch (err) {
+      showToast('Error signing out', 'error');
+    }
+  }
+
+  // User display metadata
+  const displayName = user?.displayName || user?.email?.split('@')[0] || 'Officer';
+  const displayEmail = user?.email || 'officer@pranamap.gov.in';
+  const providerId = user?.providerData[0]?.providerId === 'google.com' ? 'Google' : 'Email/Password';
+  const initial = displayName.charAt(0).toUpperCase();
+
   return (
-    <header className="h-16 border-b border-border backdrop-blur-sm flex items-center justify-between px-4 sm:px-6 shrink-0 z-10 relative pl-14 lg:pl-6 transition-colors" style={{ backgroundColor: 'rgb(var(--surface) / 0.8)' }}>
-      {/* Location Context */}
-      <div className="flex items-center gap-3 sm:gap-4">
-        <div className="flex items-center gap-2 text-text-primary bg-surfaceHover px-2.5 py-1.5 rounded-md border border-border">
-          <MapPin size={16} className="text-accent-cyan shrink-0" />
-          <span className="font-semibold text-xs sm:text-sm hidden sm:inline">{t('header.region', 'Delhi NCR Region')}</span>
-          <span className="font-semibold text-xs sm:hidden">{t('header.regionShort', 'Delhi')}</span>
-        </div>
-        <div className="flex items-center gap-2 text-text-secondary text-xs sm:text-sm hidden xl:flex">
-          <Wind size={16} />
-          <span>NW 12 km/h</span>
-        </div>
+    <header className="h-14 border-b border-border bg-surface flex items-center justify-between px-3 sm:px-5 shrink-0 z-10 relative pl-14 lg:pl-5 transition-colors">
+      {/* City Selector & Jurisdictional Scope */}
+      <div className="flex items-center gap-3">
+        <CitySelector />
+        {currentTime && (
+          <span className="text-xs text-text-muted font-mono hidden md:inline border-l border-border pl-3">
+            {currentTime}
+          </span>
+        )}
       </div>
 
-      {/* Right side */}
-      <div className="flex items-center gap-2 sm:gap-4">
-        {/* Critical Alert Badge */}
-        <div className="flex items-center gap-1.5 text-xs sm:text-sm bg-aqi-veryUnhealthy/10 border border-aqi-veryUnhealthy/30 px-2.5 py-1.5 rounded-md text-aqi-veryUnhealthy animate-pulse hidden md:flex">
-          <AlertTriangle size={15} />
-          <span className="font-medium">{t('header.criticalAlert', '2 Wards Critical')}</span>
-        </div>
+      {/* Right controls */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Real-time Data Freshness Badge */}
+        <StatusBadge status={dataStatus} />
 
-        {/* Quick Language Selector */}
-        <div className="flex items-center gap-1 border border-border p-1 rounded-md text-xs" style={{ backgroundColor: 'rgb(var(--surface-hover) / 0.8)' }}>
-          <Globe size={14} className="text-text-muted ml-1 hidden sm:inline" />
-          {(['en', 'hi', 'mr'] as Language[]).map(lang => (
+        {/* Multilingual Selector */}
+        <div className="flex items-center gap-0.5 border border-border p-0.5 rounded-md text-xs bg-surfaceAlt">
+          <Globe size={13} className="text-text-muted ml-1.5 hidden sm:inline" />
+          {([
+            { code: 'en', label: 'EN' },
+            { code: 'hi', label: 'हिं' },
+            { code: 'mr', label: 'मरा' },
+          ] as { code: Language; label: string }[]).map(({ code, label }) => (
             <button
-              key={lang}
-              onClick={() => setLanguage(lang)}
-              className={`px-2 py-1 rounded text-[11px] font-bold uppercase transition-all ${
-                language === lang
-                  ? 'bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30 shadow-xs'
+              key={code}
+              type="button"
+              onClick={() => setLanguage(code)}
+              className={`px-2 py-1 rounded text-[11px] font-semibold transition-all cursor-pointer ${
+                language === code
+                  ? 'bg-forestSecondary text-white shadow-2xs'
                   : 'text-text-secondary hover:text-text-primary'
               }`}
+              title={`Switch language to ${code}`}
             >
-              {lang}
+              {label}
             </button>
           ))}
         </div>
 
-        {/* Theme Toggle Button */}
+        {/* Refresh button */}
         <button
-          onClick={toggleTheme}
-          className="p-2 text-text-secondary hover:text-text-primary border border-border rounded-md transition-colors"
-          style={{ backgroundColor: 'rgb(var(--surface-hover) / 0.8)' }}
-          title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
-          aria-label="Toggle theme"
+          type="button"
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          className="p-1.5 text-text-secondary hover:text-text-primary border border-border rounded-md hover:bg-surfaceHover transition-colors cursor-pointer"
+          title="Refresh environmental telemetry"
+          aria-label="Refresh telemetry"
         >
-          {theme === 'dark' ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} className="text-indigo-600" />}
+          <RefreshCw size={15} className={isRefreshing ? 'animate-spin text-forestSecondary' : ''} />
         </button>
 
-        {/* Connection & Refresh */}
-        <div className="flex items-center gap-2 sm:gap-3 border-l border-border pl-3 sm:pl-4">
-          <div className="flex items-center gap-1.5">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className={`animate-ping absolute inline-flex h-full w-full rounded-full ${isBackendHealthy ? 'bg-aqi-good' : 'bg-aqi-sensitive'} opacity-75`} />
-              <span className={`relative inline-flex rounded-full h-2.5 w-2.5 ${isBackendHealthy ? 'bg-aqi-good' : 'bg-aqi-sensitive'}`} />
+        {/* User Profile Menu */}
+        <div className="relative" ref={profileRef}>
+          <button
+            type="button"
+            onClick={() => setProfileOpen(!profileOpen)}
+            className="flex items-center gap-2 pl-2 pr-2 py-1 rounded-lg border border-border hover:bg-surfaceHover transition-colors cursor-pointer"
+            aria-label="User profile options"
+          >
+            {user?.photoURL ? (
+              <img
+                src={user.photoURL}
+                alt={displayName}
+                className="w-6 h-6 rounded-full object-cover border border-forestSecondary/30"
+              />
+            ) : (
+              <div className="w-6 h-6 rounded-full bg-forestSecondary/15 text-forestSecondary font-bold text-xs flex items-center justify-center border border-forestSecondary/30">
+                {initial}
+              </div>
+            )}
+            <span className="text-xs font-semibold text-text-primary max-w-[100px] truncate hidden sm:inline">
+              {displayName}
             </span>
-            <span className="text-[11px] text-text-secondary uppercase tracking-wider font-semibold hidden md:inline">
-              {apiMode === 'live' ? (isBackendHealthy ? t('common.live', 'Live API') : t('common.fallback', 'Fallback')) : t('common.mock', 'Mock Engine')}
-            </span>
-          </div>
-          <button onClick={handleRefresh} className="text-text-muted hover:text-text-primary transition-colors p-1" aria-label="Refresh data" title={t('common.refresh', 'Refresh Data')}>
-            <RefreshCw size={16} />
+            <ChevronDown size={13} className="text-text-muted" />
           </button>
+
+          {/* Profile Dropdown */}
+          {profileOpen && (
+            <div className="absolute right-0 mt-2 w-64 bg-surface border border-border rounded-xl shadow-card p-2 z-50 animate-in fade-in zoom-in-95 duration-100">
+              <div className="p-3 border-b border-border mb-1">
+                <p className="text-xs font-bold text-text-primary truncate">{displayName}</p>
+                <p className="text-[11px] text-text-muted truncate font-mono">{displayEmail}</p>
+                <div className="mt-2 flex items-center gap-1.5">
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-surfaceAlt border border-border text-forestSecondary font-semibold">
+                    {providerId} Auth
+                  </span>
+                  <span className="text-[10px] text-text-muted font-mono">Verified</span>
+                </div>
+              </div>
+
+              <Link
+                href="/settings"
+                onClick={() => setProfileOpen(false)}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-text-secondary hover:text-text-primary hover:bg-surfaceHover transition-colors"
+              >
+                <Settings size={14} />
+                <span>Profile & Settings</span>
+              </Link>
+
+              <Link
+                href="/data-provenance"
+                onClick={() => setProfileOpen(false)}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-text-secondary hover:text-text-primary hover:bg-surfaceHover transition-colors"
+              >
+                <ShieldCheck size={14} />
+                <span>Data Provenance & Truth Tiers</span>
+              </Link>
+
+              <div className="border-t border-border my-1" />
+
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-criticalTone hover:bg-red-50 transition-colors cursor-pointer"
+              >
+                <LogOut size={14} />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>
   );
 }
-
-

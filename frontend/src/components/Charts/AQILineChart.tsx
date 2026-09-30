@@ -1,42 +1,49 @@
-"use client";
+'use client';
+import React from 'react';
 import {
   ResponsiveContainer,
   AreaChart,
   Area,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ReferenceLine,
-} from "recharts";
-import { ForecastPoint } from "@/types";
-import { useTheme } from "@/theme/ThemeContext";
+} from 'recharts';
 
-interface AQILineChartProps {
-  data: ForecastPoint[];
+export interface ExtendedForecastPoint {
+  time: string;
+  aqi: number;
+  pm25: number;
+  lower: number;
+  upper: number;
+  isHistorical?: boolean;
 }
 
-const CustomTooltip = ({ active, payload, label, isDark }: any) => {
+interface AQILineChartProps {
+  data: ExtendedForecastPoint[];
+  peakWindow?: string;
+}
+
+const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
+    const d = payload[0]?.payload;
     return (
-      <div
-        className="px-4 py-3 rounded-lg shadow-lg border backdrop-blur-md"
-        style={{
-          background: isDark ? "rgba(18,24,32,0.95)" : "rgba(255,255,255,0.95)",
-          borderColor: isDark ? "rgba(6,182,212,0.3)" : "rgba(6,182,212,0.5)",
-          color: isDark ? "#f1f5f9" : "#0f172a",
-        }}
-      >
-        <p className="text-[10px] mb-1 opacity-70">{label}</p>
-        <p className="text-base font-bold text-accent-cyan">
-          {payload[0]?.value} <span className="text-[10px] opacity-70">AQI</span>
+      <div className="px-3.5 py-2.5 rounded-lg shadow-md border border-border bg-white/95 backdrop-blur-xs text-xs text-text-primary">
+        <p className="text-[10px] font-semibold text-text-muted mb-1 uppercase tracking-wider">{label} {d?.isHistorical ? '(Observed)' : '(Predicted)'}</p>
+        <div className="flex items-baseline gap-1.5">
+          <span className="text-lg font-bold text-brand-forest tabular-nums">{d?.aqi}</span>
+          <span className="text-[11px] text-text-muted">AQI</span>
+        </div>
+        <p className="text-[11px] text-text-secondary mt-0.5">
+          PM2.5: <strong className="text-text-primary">{d?.pm25} μg/m³</strong>
         </p>
-        <p className="text-[11px] opacity-80">
-          PM2.5: {payload[0]?.payload?.pm25} μg/m³
-        </p>
-        <p className="text-[10px] opacity-60">
-          Confidence: {payload[0]?.payload?.confidence}%
-        </p>
+        {d?.lower !== undefined && d?.upper !== undefined && !d?.isHistorical && (
+          <p className="text-[10px] text-text-muted mt-1 border-t border-border pt-1">
+            Modelled Uncertainty Range: <span className="font-mono text-text-secondary">{d.lower} – {d.upper}</span>
+          </p>
+        )}
       </div>
     );
   }
@@ -44,59 +51,74 @@ const CustomTooltip = ({ active, payload, label, isDark }: any) => {
 };
 
 export default function AQILineChart({ data }: AQILineChartProps) {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  const axisColor = isDark ? "rgba(148, 163, 184, 0.6)" : "rgba(71, 85, 105, 0.7)";
-  const gridColor = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.06)";
+  const axisColor = '#64748b';
+  const gridColor = '#e2e8f0';
 
   return (
-    <div className="h-[320px] sm:h-[360px] w-full chart-fade">
+    <div className="h-[340px] sm:h-[380px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
+        <AreaChart data={data} margin={{ top: 15, right: 20, left: -5, bottom: 5 }}>
           <defs>
-            <linearGradient id="aqiGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
-              <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
+            <linearGradient id="aqiAreaGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#166534" stopOpacity={0.2} />
+              <stop offset="95%" stopColor="#166534" stopOpacity={0.0} />
             </linearGradient>
-            <linearGradient id="bandGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.08} />
-              <stop offset="95%" stopColor="#06b6d4" stopOpacity={0} />
+            <linearGradient id="confidenceEnvelopeGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#94a3b8" stopOpacity={0.18} />
+              <stop offset="95%" stopColor="#94a3b8" stopOpacity={0.03} />
             </linearGradient>
           </defs>
-          <CartesianGrid stroke={gridColor} vertical={false} />
+
+          <CartesianGrid stroke={gridColor} strokeDasharray="3 3" vertical={false} />
+
           <XAxis
             dataKey="time"
             tick={{ fill: axisColor, fontSize: 11 }}
-            axisLine={false}
+            axisLine={{ stroke: gridColor }}
             tickLine={false}
           />
           <YAxis
             tick={{ fill: axisColor, fontSize: 11 }}
-            axisLine={false}
+            axisLine={{ stroke: gridColor }}
             tickLine={false}
-            domain={[0, 350]}
-            tickCount={5}
+            domain={[0, 'dataMax + 40']}
+            tickCount={6}
           />
-          <Tooltip content={<CustomTooltip isDark={isDark} />} cursor={{ stroke: "rgba(6,182,212,0.3)", strokeWidth: 1 }} />
+
+          <Tooltip content={<CustomTooltip />} />
+
+          {/* Regulatory Threshold Lines */}
+          <ReferenceLine y={200} stroke="#d97706" strokeDasharray="3 3" label={{ value: 'Poor (200)', position: 'insideTopLeft', fill: '#b45309', fontSize: 10 }} />
+          <ReferenceLine y={300} stroke="#dc2626" strokeDasharray="3 3" label={{ value: 'Very Poor (300)', position: 'insideTopLeft', fill: '#b91c1c', fontSize: 10 }} />
+          <ReferenceLine y={400} stroke="#991b1b" strokeDasharray="3 3" label={{ value: 'Severe (400)', position: 'insideTopLeft', fill: '#7f1d1d', fontSize: 10 }} />
+
+          {/* Upper Envelope for Confidence Band */}
           <Area
+            type="monotone"
             dataKey="upper"
             stroke="none"
-            fill="url(#bandGrad)"
-            fillOpacity={1}
+            fill="url(#confidenceEnvelopeGrad)"
           />
+
+          {/* Lower Envelope Mask */}
           <Area
-            dataKey="aqi"
-            stroke="#06b6d4"
-            strokeWidth={2.5}
-            fill="url(#aqiGrad)"
-            dot={false}
-            activeDot={{ r: 6, fill: "#06b6d4", stroke: "rgba(6,182,212,0.4)", strokeWidth: 4 }}
+            type="monotone"
+            dataKey="lower"
+            stroke="none"
+            fill="#ffffff"
           />
-          <ReferenceLine y={200} stroke="rgba(245,158,11,0.5)" strokeDasharray="4 4" />
-          <ReferenceLine y={300} stroke="rgba(239,68,68,0.5)" strokeDasharray="4 4" />
+
+          {/* Main AQI Prediction Trajectory */}
+          <Area
+            type="monotone"
+            dataKey="aqi"
+            stroke="#166534"
+            strokeWidth={2.5}
+            fill="url(#aqiAreaGrad)"
+            activeDot={{ r: 5, fill: '#166534', stroke: '#ffffff', strokeWidth: 2 }}
+          />
         </AreaChart>
       </ResponsiveContainer>
     </div>
   );
 }
-

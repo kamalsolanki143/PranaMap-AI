@@ -8,7 +8,7 @@ const DynamicMap = dynamic(() => import('./BaseMap'), {
   loading: () => (
     <div className="w-full h-full bg-surface flex items-center justify-center">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-4 border-border border-t-accent-cyan rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-border border-t-brand-forest rounded-full animate-spin" />
         <p className="text-text-secondary text-sm animate-pulse">Loading Geospatial Intelligence...</p>
       </div>
     </div>

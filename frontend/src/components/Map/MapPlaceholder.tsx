@@ -10,11 +10,11 @@ export default function MapPlaceholder() {
     <div className="w-full h-full bg-surface border border-border rounded-lg flex flex-col items-center justify-center relative overflow-hidden">
       {/* Animated grid background */}
       <div
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-40"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(6,182,212,0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(6,182,212,0.1) 1px, transparent 1px)
+            linear-gradient(rgba(22,101,52,0.06) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(22,101,52,0.06) 1px, transparent 1px)
           `,
           backgroundSize: '40px 40px',
         }}
@@ -22,8 +22,8 @@ export default function MapPlaceholder() {
 
       {/* Pulsing center indicator */}
       <div className="relative z-10 flex flex-col items-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center animate-pulse">
-          <span className="material-symbols-outlined text-2xl text-accent-cyan">map</span>
+        <div className="w-16 h-16 rounded-full bg-brand-forest/10 border border-brand-forest/20 flex items-center justify-center animate-pulse">
+          <span className="material-symbols-outlined text-2xl text-brand-forest">map</span>
         </div>
         <div className="text-center">
           <p className="text-sm font-semibold text-text-primary">Loading Geospatial Data</p>

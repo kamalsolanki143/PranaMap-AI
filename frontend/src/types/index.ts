@@ -17,6 +17,11 @@ export interface Hotspot {
   coordinates: [number, number];
   intensity: number; // 0-100
   status: 'active' | 'mitigated' | 'monitoring';
+  aqi?: number;
+  source?: string;
+  truthTier?: 'OBSERVED' | 'MODELLED' | 'LIVE' | 'CACHED' | 'SIMULATION';
+  timestamp?: string;
+  reason?: string;
 }
 
 export interface ForecastData {
@@ -196,4 +201,79 @@ export interface AdvisoryResponse {
   delivery_rate: number;
   advisories: AdvisoryItem[];
   log: AdvisoryLogEntry[];
+}
+
+// ─── Extended Environmental Intelligence Models ───────────────────────────────
+
+export type DataStatus = 'LIVE' | 'CACHED' | 'MODELLED' | 'SIMULATION' | 'DEMO' | 'UNAVAILABLE';
+
+export interface CityConfig {
+  id: string;
+  name: string;
+  state: string;
+  coordinates: [number, number]; // [longitude, latitude]
+  zoom: number;
+  population: string;
+  activeStations: number;
+  avgAqi: number;
+  status: 'active' | 'monitoring';
+  dominantPollutant: string;
+}
+
+export interface DataSourceItem {
+  id: string;
+  name: string;
+  provider: string;
+  type: 'Ground Sensor' | 'Satellite' | 'Meteorology' | 'AI / GenAI' | 'Cloud Database';
+  last_updated: string;
+  status: DataStatus;
+  coverage: string;
+  documentation_url: string;
+  update_frequency: string;
+  description: string;
+}
+
+export type InterventionStatus = 'Recommended' | 'Reviewed' | 'Approved' | 'Dispatched' | 'Completed';
+
+export interface InterventionItem {
+  id: string;
+  city_id: string;
+  zone: string;
+  risk_level: 'Critical' | 'High' | 'Moderate' | 'Low';
+  driver: string;
+  recommended_action: string;
+  expected_impact: string;
+  estimated_reduction_range: [number, number];
+  assigned_team: 'Traffic Control Team' | 'Environmental Inspection Team' | 'Municipal Dust Control Team' | 'Air Quality Taskforce';
+  status: InterventionStatus;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface SimulationResult {
+  city_id: string;
+  baseline_aqi: number;
+  selected_interventions: string[];
+  projected_aqi: number;
+  delta_aqi: number;
+  impact_level: string;
+  assumptions: string[];
+  methodology: string;
+  simulated_at: string;
+}
+
+export interface MultilingualAdvisory {
+  city_id: string;
+  ward_id: string;
+  ward_name: string;
+  current_aqi: number;
+  status_label: string;
+  audience: 'Schools' | 'Elderly' | 'Hospitals' | 'General Public';
+  message_en: string;
+  message_hi: string;
+  message_mr: string;
+  actions: string[];
+  model_used: string;
+  generated_at: string;
+  is_fallback: boolean;
 }

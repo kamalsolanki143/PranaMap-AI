@@ -1,135 +1,178 @@
 'use client';
+
 import React from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, Map, Activity, Bell, Search, Settings, LogOut, Filter } from 'lucide-react';
-import { useAuthStore } from '@/store/useAuthStore';
+import {
+  LayoutDashboard,
+  BarChart3,
+  TrendingUp,
+  PieChart,
+  ShieldAlert,
+  Megaphone,
+  Globe2,
+  Database,
+  Settings,
+  LogOut,
+  Activity,
+  ShieldCheck,
+  ChevronRight,
+} from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 import { useTranslation } from '@/i18n/LanguageContext';
+import { useAppStore } from '@/store/useAppStore';
 
 interface NavigationSidebarProps {
   onCloseDrawer?: () => void;
 }
 
+interface NavItem {
+  href: string;
+  aliases?: string[];
+  label: string;
+  icon: any;
+  badge?: string;
+}
+
 export default function NavigationSidebar({ onCloseDrawer }: NavigationSidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { logout, user } = useAuthStore();
+  const { signOut, user } = useAuth();
   const { t } = useTranslation();
+  const { selectedCity } = useAppStore();
 
-  const navItems = [
-    { href: '/dashboard', icon: LayoutDashboard, label: t('nav.commandCenter', 'Command Center') },
-    { href: '/forecast', icon: Activity, label: t('nav.forecasting', 'Forecasting') },
-    { href: '/attribution', icon: Map, label: t('nav.attribution', 'Attribution') },
-    { href: '/enforcement', icon: Bell, label: t('nav.enforcement', 'Enforcement') },
-    { href: '/advisory', icon: Search, label: t('nav.advisories', 'Advisories') },
+  const navItems: NavItem[] = [
+    { href: '/dashboard', aliases: ['/command-center'], label: 'Overview', icon: LayoutDashboard },
+    { href: '/analytics', aliases: ['/air-quality'], label: 'Air Quality', icon: BarChart3 },
+    { href: '/forecast', label: 'Forecast', icon: TrendingUp },
+    { href: '/attribution', label: 'Sources', icon: PieChart },
+    { href: '/enforcement', aliases: ['/interventions'], label: 'Interventions', icon: ShieldAlert },
+    { href: '/advisory', aliases: ['/advisories'], label: 'Advisories', icon: Megaphone },
+    { href: '/cities', label: 'India Network', icon: Globe2, badge: '9 Cities' },
+    { href: '/data-sources', label: 'Data Sources', icon: Database },
+    { href: '/data-provenance', label: 'Data Provenance', icon: ShieldCheck, badge: 'Truth Tiers' },
+    { href: '/settings', label: 'Settings', icon: Settings },
   ];
 
-  function handleSignOut() {
-    logout();
-    if (onCloseDrawer) onCloseDrawer();
-    router.push('/');
+  async function handleSignOut() {
+    try {
+      await signOut();
+      if (onCloseDrawer) onCloseDrawer();
+      router.push('/login');
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
   }
 
   function handleNavClick() {
     if (onCloseDrawer) onCloseDrawer();
   }
 
+  function isItemActive(item: NavItem): boolean {
+    if (pathname === item.href) return true;
+    if (item.aliases?.includes(pathname)) return true;
+    if (item.href !== '/dashboard' && pathname?.startsWith(item.href)) return true;
+    return false;
+  }
+
   return (
-    <aside className="w-64 h-full bg-surface border-r border-border flex flex-col shrink-0" role="navigation" aria-label="Dashboard navigation">
-      {/* Brand */}
-      <div className="h-16 flex items-center px-6 border-b border-border">
-        <Link href="/dashboard" onClick={handleNavClick} className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-accent-cyan flex items-center justify-center shadow-glow">
-            <Activity className="w-5 h-5 text-surface font-bold" />
+    <aside
+      className="w-64 h-full bg-surface border-r border-border flex flex-col shrink-0 select-none"
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      {/* Brand & Platform Identity */}
+      <div className="h-16 flex items-center justify-between px-5 border-b border-border bg-stone-50">
+        <Link href="/dashboard" onClick={handleNavClick} className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-forestSecondary/10 border border-forestSecondary/20 flex items-center justify-center text-forestSecondary">
+            <Activity className="w-4 h-4" />
           </div>
-          <span className="font-bold tracking-wider text-lg text-text-primary">PranaMap<span className="text-accent-cyan">AI</span></span>
+          <div>
+            <span className="font-bold text-sm tracking-tight text-text-primary flex items-center gap-1.5">
+              PRANAMAP AI
+            </span>
+            <span className="text-[10px] text-text-muted font-mono uppercase tracking-wider block">
+              GovTech Intelligence
+            </span>
+          </div>
         </Link>
       </div>
 
-      {/* Main Navigation */}
-      <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-8">
-        <div className="space-y-2">
-          <p className="px-2 text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">{t('nav.section.intelligence', 'Intelligence')}</p>
-          {navItems.map((item) => {
-            const isActive = pathname === item.href;
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={handleNavClick}
-                aria-current={isActive ? 'page' : undefined}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${
-                  isActive
-                    ? 'bg-accent-cyan/10 text-accent-cyan border border-accent-cyan/20'
-                    : 'text-text-secondary hover:bg-surfaceHover hover:text-text-primary'
-                }`}
-              >
-                <Icon size={18} />
-                <span className="font-medium text-sm">{item.label}</span>
-                {isActive && <div className="ml-auto w-1.5 h-1.5 rounded-full bg-accent-cyan shadow-glow" />}
-              </Link>
-            );
-          })}
-        </div>
+      {/* Selected Scope Indicator */}
+      <div className="px-4 py-2.5 bg-surfaceAlt border-b border-border flex items-center justify-between text-xs">
+        <span className="text-text-muted font-medium">Active Airshed</span>
+        <span className="font-semibold text-text-primary flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-forestSecondary" />
+          {selectedCity?.name || 'Delhi NCR'}
+        </span>
+      </div>
 
-        {/* Ward Filters */}
-        <div className="space-y-3">
-          <p className="px-2 text-xs font-semibold text-text-muted uppercase tracking-wider flex items-center justify-between">
-            <span>{t('nav.section.wardFilters', 'Ward Filters')}</span>
-            <Filter size={14} className="text-text-muted" />
-          </p>
-          <div className="flex flex-col gap-1 px-2">
-            <div className="flex items-center gap-2 py-1.5 text-sm text-text-secondary hover:text-text-primary cursor-pointer transition-colors group">
-              <div className="w-2 h-2 rounded-full bg-aqi-veryUnhealthy group-hover:shadow-[0_0_8px_rgba(190,18,60,0.6)] transition-shadow" />
-              <span>Ward A (South)</span>
-            </div>
-            <div className="flex items-center gap-2 py-1.5 text-sm text-text-secondary hover:text-text-primary cursor-pointer transition-colors group">
-              <div className="w-2 h-2 rounded-full bg-aqi-unhealthy group-hover:shadow-[0_0_8px_rgba(239,68,68,0.6)] transition-shadow" />
-              <span>Ward C (Central)</span>
-            </div>
-            <div className="flex items-center gap-2 py-1.5 text-sm text-text-secondary hover:text-text-primary cursor-pointer transition-colors group">
-              <div className="w-2 h-2 rounded-full bg-aqi-moderate group-hover:shadow-[0_0_8px_rgba(245,158,11,0.6)] transition-shadow" />
-              <span>Ward D (West)</span>
-            </div>
-          </div>
-        </div>
+      {/* Navigation List */}
+      <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">
+        {navItems.map((item) => {
+          const active = isItemActive(item);
+          const Icon = item.icon;
+
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={handleNavClick}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all ${
+                active
+                  ? 'bg-forestSecondary text-white shadow-2xs font-semibold'
+                  : 'text-text-secondary hover:text-text-primary hover:bg-surfaceHover'
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <Icon size={16} className={active ? 'text-white' : 'text-text-muted'} />
+                <span>{item.label}</span>
+              </div>
+
+              {item.badge && (
+                <span
+                  className={`text-[10px] font-mono px-1.5 py-0.2 rounded ${
+                    active
+                      ? 'bg-white/20 text-white'
+                      : 'bg-surfaceAlt text-text-muted border border-border'
+                  }`}
+                >
+                  {item.badge}
+                </span>
+              )}
+            </Link>
+          );
+        })}
       </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-border space-y-1">
-        {user && (
-          <div className="flex items-center gap-3 px-3 py-2 rounded-md mb-2" style={{ backgroundColor: 'rgb(var(--surface-hover) / 0.5)' }}>
-            <div className="w-7 h-7 rounded-full flex items-center justify-center bg-accent-cyan/15 border border-accent-cyan/30 text-accent-cyan text-xs font-bold">
-              {user.name.slice(0, 2).toUpperCase()}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-text-primary truncate">{user.name}</p>
-              <p className="text-[10px] text-text-muted truncate">{user.email}</p>
-            </div>
+      {/* Footer Profile & Sign Out */}
+      <div className="p-3 border-t border-border bg-stone-50/50">
+        <div className="flex items-center justify-between px-2 py-1 mb-2">
+          <div className="truncate pr-2">
+            <span className="block text-xs font-semibold text-text-primary truncate">
+              {user?.displayName || user?.email?.split('@')[0] || 'Officer'}
+            </span>
+            <span className="block text-[10px] text-text-muted font-mono truncate">
+              {user?.email || 'officer@pranamap.gov.in'}
+            </span>
           </div>
-        )}
-        <Link
-          href="/settings"
-          onClick={handleNavClick}
-          aria-current={pathname === '/settings' ? 'page' : undefined}
-          className={`flex items-center gap-3 px-3 py-2 text-sm rounded-md transition-colors ${
-            pathname === '/settings' ? 'text-accent-cyan bg-accent-cyan/10' : 'text-text-secondary hover:text-text-primary hover:bg-surfaceHover'
-          }`}
-        >
-          <Settings size={18} />
-          <span>{t('nav.settings', 'Settings')}</span>
-        </Link>
-        <button
-          onClick={handleSignOut}
-          className="flex items-center gap-3 px-3 py-2 text-sm text-text-secondary hover:text-red-400 hover:bg-red-500/10 rounded-md transition-colors w-full"
-          aria-label="Sign out"
-        >
-          <LogOut size={18} />
-          <span>{t('nav.signOut', 'Sign Out')}</span>
-        </button>
+
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="p-1.5 text-text-muted hover:text-criticalTone hover:bg-red-50 rounded-md transition-colors cursor-pointer"
+            title="Sign out of workspace"
+            aria-label="Sign out"
+          >
+            <LogOut size={15} />
+          </button>
+        </div>
+
+        <div className="px-2 pt-1 border-t border-border/60 flex items-center justify-between text-[10px] text-text-muted font-mono">
+          <span>CPCB CAAQMS v2.4</span>
+          <span className="text-forestSecondary font-semibold">Verified</span>
+        </div>
       </div>
     </aside>
   );
 }
-

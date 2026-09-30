@@ -110,7 +110,7 @@ def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
     df["pm25_pm10_ratio"] = df["pm25"] / df["pm10"].replace(0, np.nan)
     df["no2_o3_ratio"] = df["no2"] / df["o3"].replace(0, np.nan)
 
-    df = df.fillna(method="ffill").fillna(0)
+    df = df.ffill().fillna(0)
 
     logger.info(f"  Features engineered. Shape: {df.shape}")
     return df

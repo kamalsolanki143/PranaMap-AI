@@ -18,14 +18,14 @@ const severityColors = {
   unhealthy: 'text-aqi-unhealthy bg-aqi-unhealthy/10 border-aqi-unhealthy/20',
   veryUnhealthy: 'text-aqi-veryUnhealthy bg-aqi-veryUnhealthy/10 border-aqi-veryUnhealthy/20',
   hazardous: 'text-aqi-hazardous bg-aqi-hazardous/10 border-aqi-hazardous/20',
-  neutral: 'text-accent-cyan bg-accent-cyan/10 border-accent-cyan/20',
+  neutral: 'text-brand-forest bg-brand-forest/10 border-brand-forest/20',
 };
 
 export default function KPICard({ title, value, unit, trend, trendValue, icon: Icon, severity = 'neutral' }: KPICardProps) {
   const colorClass = severityColors[severity];
 
   return (
-    <div className="panel flex flex-col p-5 group hover:shadow-glow transition-all duration-300">
+    <div className="panel flex flex-col p-5 group hover:shadow-md transition-all duration-300">
       <div className="flex items-start justify-between mb-2">
         <h3 className="text-sm font-semibold text-text-secondary uppercase tracking-wider">{title}</h3>
         {Icon && (

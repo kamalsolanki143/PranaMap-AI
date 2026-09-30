@@ -4,25 +4,26 @@
 
 @layer base {
   :root {
-    --background: 248 250 252;
-    --surface: 255 255 255;
-    --surface-hover: 241 245 249;
-    --border: 226 232 240;
-    --text-primary: 15 23 42;
-    --text-secondary: 71 85 105;
-    --text-muted: 148 163 184;
-    --shadow-panel-color: rgba(15, 23, 42, 0.08);
-  }
-
-  .dark {
-    --background: 11 15 21;
-    --surface: 18 24 32;
-    --surface-hover: 26 34 45;
-    --border: 32 42 55;
-    --text-primary: 241 245 249;
-    --text-secondary: 148 163 184;
-    --text-muted: 71 85 105;
-    --shadow-panel-color: rgba(0, 0, 0, 0.4);
+    /* PranaMap AI Light Environmental GovTech Design System */
+    --background: 247 248 244;       /* #F7F8F4 Warm Primary Background */
+    --background-subtle: 250 250 247;/* #FAFAF7 Secondary Background */
+    --surface: 255 255 255;          /* #FFFFFF Pure Clean Surface */
+    --surface-alt: 238 241 234;      /* #EEF1EA Soft Surface / Natural Mist */
+    --surface-hover: 242 245 239;    /* #F2F5EF Restrained Hover */
+    --border: 221 228 219;           /* #DDE4DB Subtle Natural Border */
+    --border-strong: 198 207 195;    /* #C6CFC3 Visible Contour Border */
+    --text-primary: 23 32 26;        /* #17201A Deep Forest Charcoal */
+    --text-secondary: 102 115 106;   /* #66736A Muted Text */
+    --text-muted: 130 142 134;       /* #828E86 Accessible Caption */
+    --brand-dark: 20 83 45;          /* #14532D Primary Forest */
+    --brand: 22 101 52;              /* #166534 Secondary Forest */
+    --brand-light: 79 143 98;        /* #4F8F62 Natural Green */
+    --atmo-blue: 59 130 160;         /* #3B82A0 Atmospheric Blue */
+    --earth: 182 106 69;             /* #B66A45 Terracotta */
+    --amber: 216 155 43;             /* #D89B2B Amber */
+    --critical: 201 75 75;           /* #C94B4B Critical */
+    --shadow-panel-color: rgba(23, 32, 26, 0.05);
+    --shadow-subtle: 0 1px 3px 0 rgba(23, 32, 26, 0.05), 0 1px 2px -1px rgba(23, 32, 26, 0.03);
   }
 
   html {
@@ -34,49 +35,47 @@
   body {
     background-color: rgb(var(--background));
     color: rgb(var(--text-primary));
-    transition: background-color 0.2s ease, color 0.2s ease;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
   }
 
   *:focus-visible {
-    @apply outline-none ring-2 ring-accent-cyan ring-offset-2 ring-offset-background;
+    outline: 2px solid #166534;
+    outline-offset: 2px;
   }
 }
 
 @layer components {
+  /* GovTech clean panel */
   .panel {
-    @apply bg-surface border border-border rounded-xl shadow-panel transition-colors duration-200;
+    @apply bg-surface border border-border rounded-xl shadow-subtle transition-all duration-150;
   }
 
   .panel-header {
-    @apply px-4 py-3 border-b border-border text-sm font-semibold tracking-wide text-text-primary uppercase flex items-center justify-between transition-colors duration-200;
+    @apply px-4 py-3 border-b border-border text-xs font-semibold tracking-wider text-text-secondary uppercase flex items-center justify-between;
   }
 
-  .glass-panel {
-    @apply backdrop-blur-md rounded-xl shadow-panel transition-colors duration-200;
-    background-color: rgb(var(--surface) / 0.8);
-    border: 1px solid rgb(var(--border) / 0.5);
+  .panel-subtle {
+    @apply bg-surfaceAlt border border-border/80 rounded-xl;
   }
 
-  .glass-card {
+  /* Clean GovTech card */
+  .surface-card {
     background: rgb(var(--surface));
     border: 1px solid rgb(var(--border));
-    backdrop-filter: blur(12px);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgba(23, 32, 26, 0.05);
   }
 
-  .glow-cyan {
-    box-shadow: 0 0 20px rgba(0, 245, 255, 0.15);
-  }
-
-  .shadow-glow {
-    box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
-  }
-
+  /* Tabular numbers for clean numeric display */
   .tabular-nums {
     font-variant-numeric: tabular-nums;
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Clean & minimal GovTech */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -87,17 +86,17 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-border rounded-full;
+  background-color: rgb(var(--border));
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-text-muted;
+  background-color: rgb(var(--border-strong));
 }
 
-/* Print styles for PDF export */
+/* Print styles for PDF briefing */
 @media print {
   .no-print {
     display: none !important;
   }
 }
-

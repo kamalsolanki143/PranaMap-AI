@@ -6,13 +6,16 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node scripts/verify-data-pipeline.mjs && node scripts/verify-intelligence-audit.mjs && node scripts/verify-firebase-auth.mjs && node scripts/verify-runtime-auth.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.50.0",
+    "@types/three": "^0.186.0",
     "axios": "^1.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
+    "firebase": "^12.19.0",
     "framer-motion": "^11.3.0",
     "lucide-react": "^0.400.0",
     "maplibre-gl": "^4.6.0",
@@ -23,6 +26,7 @@
     "recharts": "^2.12.0",
     "tailwind-merge": "^3.6.0",
     "tailwindcss": "^3.4.0",
+    "three": "^0.186.1",
     "zustand": "^4.5.0"
   },
   "devDependencies": {
