@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts';
-import { useTheme } from '@/theme/ThemeContext';
 
 const DEFAULT_DATA = [
   { time: '00:00', aqi: 150 },
@@ -18,15 +17,13 @@ interface ForecastChartProps {
 }
 
 export default function ForecastChart({ data }: ForecastChartProps) {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
   const chartData = data || DEFAULT_DATA;
   const peak = Math.max(...chartData.map(d => d.aqi));
 
-  const strokeAxis = isDark ? '#475569' : '#94a3b8';
-  const tooltipBg = isDark ? '#121820' : '#ffffff';
-  const tooltipBorder = isDark ? '#202a37' : '#e2e8f0';
-  const tooltipText = isDark ? '#f1f5f9' : '#0f172a';
+  const strokeAxis = '#64748b';
+  const tooltipBg = '#ffffff';
+  const tooltipBorder = '#e2e8f0';
+  const tooltipText = '#0f172a';
 
   return (
     <div className="w-full h-full flex flex-col">
@@ -40,9 +37,9 @@ export default function ForecastChart({ data }: ForecastChartProps) {
             <XAxis dataKey="time" stroke={strokeAxis} fontSize={11} tickLine={false} axisLine={false} />
             <YAxis stroke={strokeAxis} fontSize={11} tickLine={false} axisLine={false} domain={['dataMin - 20', 'dataMax + 20']} />
             <Tooltip
-              contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '8px', color: tooltipText, boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.2)' }}
+              contentStyle={{ backgroundColor: tooltipBg, borderColor: tooltipBorder, borderRadius: '8px', color: tooltipText, boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.1)' }}
               itemStyle={{ color: '#F97316', fontWeight: 'bold' }}
-              labelStyle={{ color: isDark ? '#94a3b8' : '#475569', marginBottom: '4px' }}
+              labelStyle={{ color: '#475569', marginBottom: '4px' }}
             />
             <ReferenceLine y={150} stroke="#EF4444" strokeDasharray="3 3" opacity={0.5} />
             <Line type="monotone" dataKey="aqi" stroke="#F97316" strokeWidth={3} dot={{ r: 4, fill: tooltipBg, strokeWidth: 2 }} activeDot={{ r: 6, strokeWidth: 0, fill: '#F97316' }} />

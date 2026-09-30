@@ -34,29 +34,29 @@ export default function AIExplanationPanel({
   ];
 
   return (
-    <div className={`panel p-4 sm:p-5 space-y-4 border-l-4 border-l-accent-cyan shadow-panel transition-all`} style={{ backgroundColor: 'rgb(var(--surface) / 0.9)' }}>
+    <div className={`panel p-4 sm:p-5 space-y-4 border-l-4 border-l-brand-forest shadow-xs transition-all bg-surface`}>
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-2 pb-3 border-b border-border">
-        <div className="flex items-center gap-2 text-accent-cyan">
+        <div className="flex items-center gap-2 text-brand-forest">
           <Cpu size={18} className="animate-pulse" />
           <h3 className="text-sm font-bold text-text-primary tracking-tight">
             Why did AI make this prediction?
           </h3>
         </div>
-        <div className="flex items-center gap-1.5 bg-accent-cyan/10 border border-accent-cyan/20 px-2.5 py-1 rounded-full text-xs font-semibold text-accent-cyan">
+        <div className="flex items-center gap-1.5 bg-brand-forest/10 border border-brand-forest/20 px-2.5 py-1 rounded-full text-xs font-semibold text-brand-forest font-mono">
           <CheckCircle2 size={13} />
-          <span>AI Confidence: {confidence}%</span>
+          <span>Multi-Sensor Verification</span>
         </div>
       </div>
 
       {/* Wind Info & Key Reason */}
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-xs text-text-secondary bg-surfaceHover px-3 py-2 rounded-lg border border-border">
-          <Wind size={14} className="text-accent-cyan shrink-0" />
+          <Wind size={14} className="text-atmo-blue shrink-0" />
           <span>Wind Direction: <strong className="text-text-primary font-semibold">{windDirection}</strong></span>
         </div>
 
-        <div className="p-3 rounded-lg border border-border" style={{ backgroundColor: 'rgb(var(--surface-hover) / 0.5)' }}>
+        <div className="p-3 rounded-lg border border-border bg-stone-50">
           <p className="text-xs sm:text-sm text-text-secondary leading-relaxed font-normal">
             <strong className="text-text-primary font-semibold">Reason: </strong>
             {reasonText}
@@ -82,13 +82,12 @@ export default function AIExplanationPanel({
                       {item.pct}%
                     </span>
                   </div>
-                  <div className="h-2 w-full bg-surfaceHover rounded-full overflow-hidden" style={{ border: '1px solid rgb(var(--border) / 0.4)' }}>
+                  <div className="h-2 w-full bg-surfaceHover rounded-full overflow-hidden border border-border">
                     <div
                       className="h-full rounded-full transition-all duration-1000 ease-out"
                       style={{
                         width: `${item.pct}%`,
                         backgroundColor: item.color,
-                        boxShadow: `0 0 8px ${item.color}60`,
                       }}
                     />
                   </div>

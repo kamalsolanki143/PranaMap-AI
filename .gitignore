@@ -7,6 +7,8 @@ frontend/.next/
 frontend/out/
 frontend/build/
 frontend/.turbo/
+.env*
+*.env
 
 # ─── Python ──────────────────────────────────────────────────────────
 __pycache__/

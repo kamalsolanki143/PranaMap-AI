@@ -51,10 +51,10 @@ export default function AIInsightBanner({
           style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
         >
           <span
-            className="font-mono"
-            style={{ fontSize: "10px", color: "rgba(185,202,202,0.5)", fontFamily: "'JetBrains Mono', monospace" }}
+            className="font-mono text-stone-500"
+            style={{ fontSize: "10px", fontFamily: "'JetBrains Mono', monospace" }}
           >
-            CONFIDENCE: {confidence}%
+            STATUS: MODELLED SYNTHESIS
           </span>
           {onAction && (
             <button

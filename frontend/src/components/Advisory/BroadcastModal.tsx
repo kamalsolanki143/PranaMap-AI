@@ -22,14 +22,14 @@ export default function BroadcastModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn">
       <div className="bg-surface border border-border rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-6 relative overflow-hidden transition-colors">
-        {/* Glow accent line */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-accent-cyan via-accent-teal to-aqi-veryUnhealthy" />
+        {/* Top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-brand-forest via-atmo-blue to-earth-terracotta" />
 
         {/* Close Button */}
         <button
           onClick={onClose}
           disabled={isBroadcasting}
-          className="absolute top-4 right-4 text-text-muted hover:text-text-primary p-1 rounded-lg transition-colors"
+          className="absolute top-4 right-4 text-text-muted hover:text-text-primary p-1 rounded-lg transition-colors cursor-pointer"
           aria-label="Close modal"
         >
           <X size={18} />
@@ -37,23 +37,23 @@ export default function BroadcastModal({
 
         {/* Header Icon */}
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-accent-cyan/15 border border-accent-cyan/30 flex items-center justify-center text-accent-cyan shrink-0">
-            <Send size={24} className={isBroadcasting ? 'animate-bounce' : ''} />
+          <div className="w-12 h-12 rounded-xl bg-brand-forest/10 border border-brand-forest/20 flex items-center justify-center text-brand-forest shrink-0">
+            <Send size={22} className={isBroadcasting ? 'animate-bounce' : ''} />
           </div>
           <div>
-            <h3 className="text-lg font-bold text-text-primary tracking-tight">Broadcast Advisory</h3>
-            <p className="text-xs text-text-muted mt-0.5">Delhi NCR Emergency Alert System</p>
+            <h3 className="text-lg font-bold text-text-primary tracking-tight">Broadcast Citizen Advisory</h3>
+            <p className="text-xs text-text-muted mt-0.5">Municipal Environmental Alert System</p>
           </div>
         </div>
 
         {/* Dialog Content */}
         <div className="bg-surfaceHover border border-border p-4 rounded-xl space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-aqi-sensitive uppercase tracking-wider">
+          <div className="flex items-center gap-2 text-xs font-bold text-amber-700 uppercase tracking-wider">
             <AlertTriangle size={14} />
             <span>Target Ward: {wardName}</span>
           </div>
           <p className="text-sm text-text-primary leading-relaxed">
-            Send advisory to all registered citizens in <strong className="text-accent-cyan">{wardName}</strong>?
+            Send advisory to all registered citizens and schools in <strong className="text-brand-forest">{wardName}</strong>?
           </p>
         </div>
 
@@ -62,7 +62,7 @@ export default function BroadcastModal({
           <button
             onClick={onClose}
             disabled={isBroadcasting}
-            className="px-5 py-2.5 rounded-lg border border-border text-text-secondary hover:text-text-primary hover:bg-surfaceHover text-xs font-semibold uppercase tracking-wider transition-all"
+            className="px-4 py-2 rounded-lg border border-border text-text-secondary hover:text-text-primary hover:bg-surfaceHover text-xs font-semibold transition-all cursor-pointer"
           >
             Cancel
           </button>
@@ -70,17 +70,17 @@ export default function BroadcastModal({
           <button
             onClick={onConfirm}
             disabled={isBroadcasting}
-            className="px-6 py-2.5 rounded-lg bg-accent-cyan text-surface font-bold text-xs uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all shadow-glow flex items-center gap-2"
+            className="px-5 py-2 rounded-lg bg-brand-forest hover:bg-brand-forestDark text-white font-semibold text-xs transition-all shadow-xs flex items-center gap-2 cursor-pointer"
           >
             {isBroadcasting ? (
               <>
-                <span className="w-4 h-4 border-2 border-surface border-t-transparent rounded-full animate-spin" />
+                <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                 <span>Broadcasting...</span>
               </>
             ) : (
               <>
                 <Send size={14} />
-                <span>Broadcast</span>
+                <span>Transmit Broadcast</span>
               </>
             )}
           </button>

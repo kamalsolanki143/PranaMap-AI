@@ -41,17 +41,16 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
         {toasts.map(toast => (
           <div
             key={toast.id}
-            className="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-panel border animate-[slideIn_0.3s_ease]"
+            className="pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border animate-[slideIn_0.3s_ease] bg-white/95"
             style={{
-              background: 'rgba(18,24,32,0.95)',
               backdropFilter: 'blur(12px)',
-              borderColor: toast.type === 'success' ? 'rgba(16,185,129,0.3)' : toast.type === 'error' ? 'rgba(239,68,68,0.3)' : 'rgba(6,182,212,0.3)',
+              borderColor: toast.type === 'success' ? '#86efac' : toast.type === 'error' ? '#fca5a5' : '#e2e8f0',
             }}
           >
-            {toast.type === 'success' && <CheckCircle size={18} className="text-aqi-good shrink-0" />}
-            {toast.type === 'error' && <AlertTriangle size={18} className="text-aqi-unhealthy shrink-0" />}
-            {toast.type === 'info' && <CheckCircle size={18} className="text-accent-cyan shrink-0" />}
-            <span className="text-sm text-text-primary">{toast.message}</span>
+            {toast.type === 'success' && <CheckCircle size={18} className="text-emerald-700 shrink-0" />}
+            {toast.type === 'error' && <AlertTriangle size={18} className="text-rose-700 shrink-0" />}
+            {toast.type === 'info' && <CheckCircle size={18} className="text-brand-forest shrink-0" />}
+            <span className="text-sm font-medium text-text-primary">{toast.message}</span>
             <button
               onClick={() => removeToast(toast.id)}
               className="ml-2 text-text-muted hover:text-text-primary shrink-0"

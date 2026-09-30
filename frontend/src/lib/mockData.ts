@@ -11,10 +11,10 @@ export const MOCK_WARDS: Ward[] = [
 ];
 
 export const MOCK_HOTSPOTS: Hotspot[] = [
-  { id: 'H1', name: 'Deonar Dumping Ground', type: 'waste', coordinates: [72.9234, 19.0558], intensity: 95, status: 'active' },
-  { id: 'H2', name: 'Chembur Refinery', type: 'industrial', coordinates: [72.8986, 19.0287], intensity: 88, status: 'active' },
-  { id: 'H3', name: 'WEH Traffic Junction', type: 'traffic', coordinates: [72.8517, 19.1234], intensity: 75, status: 'active' },
-  { id: 'H4', name: 'Metro Line 3 Site', type: 'construction', coordinates: [72.8258, 18.9431], intensity: 60, status: 'monitoring' },
+  { id: 'H1', name: 'Deonar Dumping Ground', type: 'waste', coordinates: [72.9234, 19.0558], intensity: 95, status: 'active', aqi: 295, source: 'Sentinel-5P TROPOMI & Spatial Dispersion', truthTier: 'MODELLED', timestamp: 'Live Synoptic Cycle', reason: 'Municipal waste decomposition and fugitive plumes' },
+  { id: 'H2', name: 'Chembur Refinery', type: 'industrial', coordinates: [72.8986, 19.0287], intensity: 88, status: 'active', aqi: 310, source: 'CPCB / MPCB CAAQMS Station (Chembur)', truthTier: 'OBSERVED', timestamp: 'Live Synoptic Cycle', reason: 'Refinery point emissions and heavy port transit' },
+  { id: 'H3', name: 'WEH Traffic Junction', type: 'traffic', coordinates: [72.8517, 19.1234], intensity: 75, status: 'active', aqi: 245, source: 'Copernicus CAMS Micro-Dispersion', truthTier: 'MODELLED', timestamp: 'Live Synoptic Cycle', reason: 'Highway bottleneck and vehicular congestion' },
+  { id: 'H4', name: 'Metro Line 3 Site', type: 'construction', coordinates: [72.8258, 18.9431], intensity: 60, status: 'monitoring', aqi: 210, source: 'Municipal Registry & Dispersion', truthTier: 'MODELLED', timestamp: 'Live Synoptic Cycle', reason: 'Fugitive civil excavation and unpaved shoulder dust' },
 ];
 
 export const MOCK_FORECAST: ForecastData[] = [
