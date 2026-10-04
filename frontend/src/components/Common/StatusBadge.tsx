@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { DataStatus } from '@/types';
+import { useTranslation } from '@/i18n/LanguageContext';
 
 interface StatusBadgeProps {
   status: DataStatus;
@@ -9,39 +10,41 @@ interface StatusBadgeProps {
 }
 
 export default function StatusBadge({ status, lastUpdated, className = '' }: StatusBadgeProps) {
+  const { t } = useTranslation();
+
   const config = {
     LIVE: {
-      label: 'LIVE',
+      label: t('status.live', 'LIVE'),
       dot: 'bg-emerald-600',
       badge: 'bg-emerald-50 text-emerald-800 border-emerald-300',
       description: 'Connected to real-time runtime API & telemetric feed',
     },
     CACHED: {
-      label: 'CACHED',
+      label: t('status.cached', 'CACHED'),
       dot: 'bg-amber-600',
       badge: 'bg-amber-50 text-amber-800 border-amber-300',
       description: 'Serving verified cached / benchmark reference telemetry',
     },
     MODELLED: {
-      label: 'MODELLED',
+      label: t('status.modelled', 'MODELLED'),
       dot: 'bg-purple-600',
       badge: 'bg-purple-50 text-purple-800 border-purple-300',
       description: 'Generated via physical / statistical boundary-layer model',
     },
     SIMULATION: {
-      label: 'SIMULATION',
+      label: t('status.simulation', 'SIMULATION'),
       dot: 'bg-sky-600',
       badge: 'bg-sky-50 text-sky-800 border-sky-300',
       description: 'Scenario simulation & policy intervention impact',
     },
     DEMO: {
-      label: 'DEMO',
+      label: t('status.mock', 'DEMO'),
       dot: 'bg-stone-500',
       badge: 'bg-stone-100 text-stone-800 border-stone-300',
       description: 'Demo dataset for testing',
     },
     UNAVAILABLE: {
-      label: 'UNAVAILABLE',
+      label: t('common.error', 'UNAVAILABLE'),
       dot: 'bg-rose-600',
       badge: 'bg-rose-50 text-rose-800 border-rose-300',
       description: 'Source currently unavailable in this runtime environment',

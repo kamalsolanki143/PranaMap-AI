@@ -20,8 +20,10 @@ import {
   Check,
   Building,
 } from 'lucide-react';
+import { useTranslation } from '@/i18n/LanguageContext';
 
 export default function LocationHierarchySelector() {
+  const { t } = useTranslation();
   const {
     geographyLevel,
     selectedState,
@@ -137,7 +139,7 @@ export default function LocationHierarchySelector() {
             title="Zoom out to India National Overview"
           >
             <Globe size={13} className="text-brand-earth" />
-            <span>INDIA</span>
+            <span>{t('loc.india', 'INDIA')}</span>
           </button>
 
           <ChevronRight size={13} className="text-text-muted opacity-60" />
@@ -158,7 +160,7 @@ export default function LocationHierarchySelector() {
                   : 'bg-surface/50 text-text-muted border border-dashed border-border'
               }`}
             >
-              <span>{selectedState ? selectedState.name : 'Select State'}</span>
+              <span>{selectedState ? selectedState.name : t('loc.selectState', 'Select State')}</span>
               <span className="text-[10px] opacity-70">▼</span>
             </button>
 
@@ -169,7 +171,7 @@ export default function LocationHierarchySelector() {
                   <Search size={12} className="absolute left-2.5 top-2.5 text-text-muted" />
                   <input
                     type="text"
-                    placeholder="Search state..."
+                    placeholder={t('loc.selectState', 'Search state...')}
                     value={stateFilter}
                     onChange={(e) => setStateFilter(e.target.value)}
                     className="w-full pl-7 pr-3 py-1.5 text-xs bg-background border border-border rounded focus:outline-none focus:border-brand-forest text-text-primary"
@@ -195,7 +197,7 @@ export default function LocationHierarchySelector() {
                         <span className="text-text-muted">{s.code}</span>
                         <span>{s.name}</span>
                       </div>
-                      <span className="text-[10px] text-text-muted">{s.activeStations} stations</span>
+                      <span className="text-[10px] text-text-muted">{s.activeStations} {t('loc.monitoringStation', 'stations')}</span>
                     </button>
                   ))}
                 </div>
@@ -223,7 +225,7 @@ export default function LocationHierarchySelector() {
                       : 'bg-surface/50 text-text-muted border border-dashed border-border'
                   }`}
                 >
-                  <span>{selectedDistrict ? selectedDistrict.name : 'Select District'}</span>
+                  <span>{selectedDistrict ? selectedDistrict.name : t('loc.selectDistrict', 'Select District')}</span>
                   <span className="text-[10px] opacity-70">▼</span>
                 </button>
 
@@ -234,7 +236,7 @@ export default function LocationHierarchySelector() {
                       <Search size={12} className="absolute left-2.5 top-2.5 text-text-muted" />
                       <input
                         type="text"
-                        placeholder="Search district..."
+                        placeholder={t('loc.selectDistrict', 'Search district...')}
                         value={districtFilter}
                         onChange={(e) => setDistrictFilter(e.target.value)}
                         className="w-full pl-7 pr-3 py-1.5 text-xs bg-background border border-border rounded focus:outline-none focus:border-brand-forest text-text-primary"
@@ -257,7 +259,7 @@ export default function LocationHierarchySelector() {
                           }`}
                         >
                           <span>{d.name}</span>
-                          <span className="text-[10px] text-text-muted">{d.locations.length} locations</span>
+                          <span className="text-[10px] text-text-muted">{d.locations.length} {t('loc.location', 'locations')}</span>
                         </button>
                       ))}
                     </div>
@@ -288,7 +290,7 @@ export default function LocationHierarchySelector() {
                   }`}
                 >
                   <MapPin size={12} className={geographyLevel === 'location' ? 'text-white' : 'text-brand-forest'} />
-                  <span>{selectedLocation ? selectedLocation.name : 'Select Location'}</span>
+                  <span>{selectedLocation ? selectedLocation.name : t('loc.selectLocation', 'Select Location')}</span>
                   <span className="text-[10px] opacity-70">▼</span>
                 </button>
 
@@ -299,7 +301,7 @@ export default function LocationHierarchySelector() {
                       <Search size={12} className="absolute left-2.5 top-2.5 text-text-muted" />
                       <input
                         type="text"
-                        placeholder="Search location / town..."
+                        placeholder={t('loc.selectLocation', 'Search location / town...')}
                         value={locationFilter}
                         onChange={(e) => setLocationFilter(e.target.value)}
                         className="w-full pl-7 pr-3 py-1.5 text-xs bg-background border border-border rounded focus:outline-none focus:border-brand-forest text-text-primary"
@@ -346,7 +348,7 @@ export default function LocationHierarchySelector() {
             <Search size={14} className="absolute left-3 text-text-muted" />
             <input
               type="text"
-              placeholder="Search town, district or city (e.g. Raniwara)..."
+              placeholder={t('common.searchPlaceholder', 'Search town, district or city (e.g. Raniwara)...')}
               value={searchQuery}
               onFocus={() => setSearchFocused(true)}
               onChange={(e) => setSearchQuery(e.target.value)}

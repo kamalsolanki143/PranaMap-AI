@@ -223,6 +223,8 @@ export default function SettingsPage() {
                       key={code}
                       type="button"
                       onClick={() => setLanguage(code as Language)}
+                      aria-label={`Switch interface language to ${label}`}
+                      aria-pressed={language === code}
                       className={`py-1.5 px-2 rounded-lg border text-xs font-medium transition-colors cursor-pointer text-center ${
                         language === code
                           ? 'bg-forestSecondary text-white border-forestSecondary font-semibold'

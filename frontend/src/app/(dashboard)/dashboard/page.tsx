@@ -40,6 +40,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslation } from '@/i18n/LanguageContext';
 
 const BaseMap = dynamic(() => import('@/components/Map/BaseMap'), {
   ssr: false,
@@ -54,6 +55,7 @@ const BaseMap = dynamic(() => import('@/components/Map/BaseMap'), {
 });
 
 export default function DashboardPage() {
+  const { t, language } = useTranslation();
   const {
     geographyLevel,
     selectedState,
@@ -218,13 +220,24 @@ export default function DashboardPage() {
                       : '#166534',
                 }}
               >
-                {aqiTruth.reportedCategory}
+                {t(
+                  aqiTruth.reportedAqi > 300
+                    ? 'risk.severe'
+                    : aqiTruth.reportedAqi > 200
+                    ? 'risk.veryPoor'
+                    : aqiTruth.reportedAqi > 100
+                    ? 'risk.moderate'
+                    : aqiTruth.reportedAqi > 50
+                    ? 'risk.satisfactory'
+                    : 'risk.good',
+                  aqiTruth.reportedCategory
+                )}
               </span>
             </div>
 
             {/* Weather Metric */}
             <div className="px-3 py-2 rounded-lg bg-background border border-border">
-              <span className="text-[9px] text-text-muted block uppercase">Temperature</span>
+              <span className="text-[9px] text-text-muted block uppercase">{t('env.temperature', 'Temperature')}</span>
               <span className="text-sm font-bold text-text-primary">
                 {weatherLoading ? '...' : `${weatherData?.temperature}°C`}
               </span>
@@ -232,7 +245,7 @@ export default function DashboardPage() {
 
             {/* Wind Metric */}
             <div className="px-3 py-2 rounded-lg bg-background border border-border">
-              <span className="text-[9px] text-text-muted block uppercase">Ventilation Vector</span>
+              <span className="text-[9px] text-text-muted block uppercase">{t('env.ventilationIndex', 'Ventilation Vector')}</span>
               <span className="text-sm font-bold text-brand-sky flex items-center gap-1">
                 <Wind size={12} />
                 {weatherLoading
@@ -243,7 +256,7 @@ export default function DashboardPage() {
 
             {/* Truth Provenance Badge */}
             <div className="px-3 py-2 rounded-lg bg-background border border-border">
-              <span className="text-[9px] text-text-muted block uppercase">Data Truth Level</span>
+              <span className="text-[9px] text-text-muted block uppercase">{t('status.truthTiers', 'Data Truth Level')}</span>
               <span
                 className={`text-[11px] font-bold px-1.5 py-0.5 rounded inline-block ${
                   aqiTruth.truthLevel === 'OBSERVED'
@@ -252,8 +265,8 @@ export default function DashboardPage() {
                 }`}
               >
                 {aqiTruth.truthLevel === 'OBSERVED'
-                  ? 'DIRECT OBSERVED'
-                  : 'NEAREST VERIFIED'}
+                  ? t('status.observed', 'DIRECT OBSERVED')
+                  : t('loc.nearestStation', 'NEAREST VERIFIED')}
               </span>
             </div>
           </div>
@@ -275,15 +288,28 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between border-b border-border/70 pb-2.5 mb-3 font-mono">
                   <div>
                     <span className="text-[10px] text-brand-sky uppercase font-semibold block tracking-wider">
-                      DECISION SUPPORT BRIEFING
+                      {t('app.subtitle', 'DECISION SUPPORT BRIEFING')}
                     </span>
                     <h2 className="text-xs font-bold text-text-primary uppercase">
-                      SITUATION ASSESSMENT — {locationTitle}
+                      {t('dashboard.title', 'SITUATION ASSESSMENT')} — {locationTitle}
                     </h2>
                   </div>
                   <div className="text-right">
                     <span className="text-sm font-bold font-mono text-text-primary">{aqiTruth.reportedAqi}</span>
-                    <span className="text-[9px] text-text-muted block uppercase font-mono">{aqiTruth.reportedCategory}</span>
+                    <span className="text-[9px] text-text-muted block uppercase font-mono">
+                      {t(
+                        aqiTruth.reportedAqi > 300
+                          ? 'risk.severe'
+                          : aqiTruth.reportedAqi > 200
+                          ? 'risk.veryPoor'
+                          : aqiTruth.reportedAqi > 100
+                          ? 'risk.moderate'
+                          : aqiTruth.reportedAqi > 50
+                          ? 'risk.satisfactory'
+                          : 'risk.good',
+                        aqiTruth.reportedCategory
+                      )}
+                    </span>
                   </div>
                 </div>
 
@@ -291,7 +317,7 @@ export default function DashboardPage() {
                 <div className="mb-3.5">
                   <div className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-text-muted uppercase mb-1">
                     <MapPin size={12} className="text-brand-forest" />
-                    <span>1. WHERE IS THE ENVIRONMENTAL FOCUS?</span>
+                    <span>1. {t('loc.location', 'WHERE IS THE ENVIRONMENTAL FOCUS?')}</span>
                   </div>
                   <p className="text-xs text-text-primary pl-4 border-l-2 border-brand-forest/60">
                     <strong>{locationTitle}</strong> ({parentGeographySubtitle}).
@@ -311,12 +337,21 @@ export default function DashboardPage() {
                 <div className="mb-3.5">
                   <div className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-text-muted uppercase mb-1">
                     <Activity size={12} className="text-amber-600" />
-                    <span>2. WHAT IS THE CURRENT ENVIRONMENTAL STATUS?</span>
+                    <span>2. {t('env.airQuality', 'WHAT IS THE CURRENT ENVIRONMENTAL STATUS?')}</span>
                   </div>
                   <div className="pl-4 border-l-2 border-amber-500/60 text-xs text-text-primary">
                     <span className="font-semibold">
                       AQI is {airQualityData ? airQualityData.aqi : aqiTruth.reportedAqi} (
-                      {airQualityData ? airQualityData.category : aqiTruth.reportedCategory})
+                      {t(
+                        (airQualityData?.aqi || aqiTruth.reportedAqi) > 300
+                          ? 'risk.severe'
+                          : (airQualityData?.aqi || aqiTruth.reportedAqi) > 200
+                          ? 'risk.veryPoor'
+                          : (airQualityData?.aqi || aqiTruth.reportedAqi) > 100
+                          ? 'risk.moderate'
+                          : 'risk.satisfactory',
+                        airQualityData ? airQualityData.category : aqiTruth.reportedCategory
+                      )})
                     </span>
                     <div className="text-[11px] text-text-muted mt-0.5 flex flex-wrap gap-2 font-mono">
                       <span>PM2.5: {airQualityData ? airQualityData.pm25 : aqiTruth.pollutants.pm25} µg/m³</span>
@@ -331,7 +366,7 @@ export default function DashboardPage() {
                 <div className="mb-3.5">
                   <div className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-text-muted uppercase mb-1">
                     <Wind size={12} className="text-sky-600" />
-                    <span>3. WHY IS IT OCCURRING? (OBSERVED DRIVERS)</span>
+                    <span>3. {t('env.pollutionDrivers', 'WHY IS IT OCCURRING? (OBSERVED DRIVERS)')}</span>
                   </div>
                   <p className="text-xs text-text-primary pl-4 border-l-2 border-sky-500/60">
                     {weatherData?.windSpeed && weatherData.windSpeed < 8 ? (
@@ -346,11 +381,15 @@ export default function DashboardPage() {
                 <div className="mb-3.5">
                   <div className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-text-muted uppercase mb-1">
                     <Clock size={12} className="text-rose-600" />
-                    <span>4. WHAT IS LIKELY TO HAPPEN NEXT?</span>
+                    <span>4. {t('env.environmentalOutlook', 'WHAT IS LIKELY TO HAPPEN NEXT?')}</span>
                   </div>
                   <div className="pl-4 border-l-2 border-rose-500/60 text-xs">
                     <div className="font-semibold text-text-primary">
-                      {outlookData?.hindiHeadline || 'मौसम संचरण सामान्य'}
+                      {language === 'mr'
+                        ? (outlookData?.marathiHeadline || outlookData?.hindiHeadline || 'हवेची गुणवत्ता सामान्य राहण्याची शक्यता')
+                        : language === 'hi'
+                        ? (outlookData?.hindiHeadline || 'मौसम संचरण सामान्य')
+                        : (outlookData?.summary || 'Atmospheric conditions stable')}
                     </div>
                     <div className="text-[11px] text-text-muted mt-0.5">
                       {outlookData?.next24Hours}
@@ -362,7 +401,7 @@ export default function DashboardPage() {
                 <div>
                   <div className="flex items-center gap-1.5 text-[11px] font-mono font-semibold text-text-muted uppercase mb-1">
                     <ShieldAlert size={12} className="text-emerald-700" />
-                    <span>5. RECOMMENDED MUNICIPAL RESPONSE</span>
+                    <span>5. {t('env.intervention', 'RECOMMENDED MUNICIPAL RESPONSE')}</span>
                   </div>
                   <p className="text-xs text-text-primary pl-4 border-l-2 border-emerald-600/60">
                     {aqiTruth.reportedAqi > 200
@@ -379,14 +418,14 @@ export default function DashboardPage() {
                   href="/forecast"
                   className="text-brand-forest hover:underline font-semibold flex items-center gap-1"
                 >
-                  <span>Detailed 72h Forecast</span>
+                  <span>{t('forecast.title', 'Detailed 72h Forecast')}</span>
                   <ArrowRight size={12} />
                 </Link>
                 <Link
                   href="/attribution"
                   className="text-text-muted hover:text-text-primary flex items-center gap-1"
                 >
-                  <span>Source Breakdown</span>
+                  <span>{t('attribution.title', 'Source Breakdown')}</span>
                   <ArrowUpRight size={12} />
                 </Link>
               </div>
@@ -404,7 +443,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] font-mono uppercase text-text-muted tracking-wider">
-                  AQI Truth & Provenance
+                  {t('status.truthTiers', 'AQI Truth & Provenance')}
                 </span>
                 <span
                   className={`text-[9px] font-mono uppercase font-bold px-2 py-0.5 rounded ${
@@ -433,7 +472,16 @@ export default function DashboardPage() {
                   {airQualityData ? airQualityData.aqi : aqiTruth.reportedAqi}
                 </span>
                 <span className="text-sm font-semibold font-mono text-text-primary">
-                  {airQualityData ? airQualityData.category : aqiTruth.reportedCategory}
+                  {t(
+                    (airQualityData?.aqi || aqiTruth.reportedAqi) > 300
+                      ? 'risk.severe'
+                      : (airQualityData?.aqi || aqiTruth.reportedAqi) > 200
+                      ? 'risk.veryPoor'
+                      : (airQualityData?.aqi || aqiTruth.reportedAqi) > 100
+                      ? 'risk.moderate'
+                      : 'risk.satisfactory',
+                    airQualityData ? airQualityData.category : aqiTruth.reportedCategory
+                  )}
                 </span>
                 <span className="text-[10px] font-mono text-text-muted ml-auto">
                   Dominant: {airQualityData ? airQualityData.prominentPollutant : 'PM10'}
@@ -449,7 +497,7 @@ export default function DashboardPage() {
                       <span>Unmonitored Settlement ({locationTitle})</span>
                     </span>
                     <span className="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-amber-200/70 text-amber-900 font-bold">
-                      NEAREST VERIFIED
+                      {t('loc.nearestStation', 'NEAREST VERIFIED')}
                     </span>
                   </div>
                   <div className="text-[11px] text-amber-800 leading-tight">
@@ -471,7 +519,7 @@ export default function DashboardPage() {
                       <span>Direct On-Site Station</span>
                     </span>
                     <span className="text-[9px] font-mono uppercase px-1.5 py-0.2 rounded bg-emerald-200/70 text-emerald-900 font-bold">
-                      OBSERVED
+                      {t('status.observed', 'OBSERVED')}
                     </span>
                   </div>
                   <div className="text-[11px] text-emerald-800">
@@ -532,7 +580,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] font-mono uppercase text-text-muted tracking-wider">
-                  Synoptic Meteorology
+                  {t('nav.airQuality', 'Synoptic Meteorology')}
                 </span>
                 <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-sky-100 text-sky-800 font-semibold">
                   {weatherData?.dataStatus || 'LIVE'}
@@ -551,21 +599,21 @@ export default function DashboardPage() {
               {/* Weather Parameters Grid */}
               <div className="grid grid-cols-2 gap-2 text-xs font-mono">
                 <div className="p-2 rounded bg-background border border-border">
-                  <span className="text-[10px] text-text-muted block">Humidity</span>
+                  <span className="text-[10px] text-text-muted block">{t('env.humidity', 'Humidity')}</span>
                   <span className="font-bold text-text-primary">{weatherData?.humidity}%</span>
                 </div>
                 <div className="p-2 rounded bg-background border border-border">
-                  <span className="text-[10px] text-text-muted block">Wind Vector</span>
+                  <span className="text-[10px] text-text-muted block">{t('env.windSpeed', 'Wind Vector')}</span>
                   <span className="font-bold text-brand-sky">
                     {weatherData?.windSpeed} km/h {weatherData?.windDirectionCardinal}
                   </span>
                 </div>
                 <div className="p-2 rounded bg-background border border-border">
-                  <span className="text-[10px] text-text-muted block">Surface Pressure</span>
+                  <span className="text-[10px] text-text-muted block">{t('env.pressure', 'Surface Pressure')}</span>
                   <span className="font-bold text-text-primary">{weatherData?.pressure} hPa</span>
                 </div>
                 <div className="p-2 rounded bg-background border border-border">
-                  <span className="text-[10px] text-text-muted block">Rain Probability</span>
+                  <span className="text-[10px] text-text-muted block">{t('env.precipitation', 'Rain Probability')}</span>
                   <span className="font-bold text-text-primary">{weatherData?.rainProbability}%</span>
                 </div>
               </div>
@@ -582,7 +630,7 @@ export default function DashboardPage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[10px] font-mono uppercase text-brand-forest tracking-wider font-bold">
-                  Environmental Outlook
+                  {t('env.environmentalOutlook', 'Environmental Outlook')}
                 </span>
                 <span
                   className={`text-[9px] font-mono uppercase font-bold px-2 py-0.5 rounded ${
