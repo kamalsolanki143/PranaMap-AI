@@ -23,9 +23,11 @@ import {
   CloudFog,
   ShieldCheck,
 } from 'lucide-react';
+import { useTranslation } from '@/i18n/LanguageContext';
 import Link from 'next/link';
 
 export default function AttributionPage() {
+  const { t } = useTranslation();
   const { selectedCity } = useAppStore();
   const cityData = getCityData(selectedCity.id);
   const [selectedStationId, setSelectedStationId] = useState(cityData.criticalZone.wardId);
@@ -112,7 +114,7 @@ export default function AttributionPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider font-mono">
-                Source Apportionment
+                {t('attribution.sourcesHeader', 'Source Apportionment')}
               </span>
               <span className="text-border">•</span>
               <span className="text-[11px] text-forestSecondary font-medium font-mono">
@@ -120,7 +122,7 @@ export default function AttributionPage() {
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-text-primary tracking-tight mt-0.5">
-              Why is air quality changing?
+              {t('attribution.title', 'Why is air quality changing?')}
             </h1>
             <p className="text-text-secondary text-xs sm:text-sm mt-0.5">
               Source attribution for {cityData.cityName} based on physical proxies and synoptic wind alignment.
@@ -128,7 +130,7 @@ export default function AttributionPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <label className="text-xs text-text-muted font-medium font-mono">Monitoring Station:</label>
+            <label className="text-xs text-text-muted font-medium font-mono">{t('loc.monitoringStation', 'Monitoring Station')}:</label>
             <select
               value={selectedStationId}
               onChange={(e) => setSelectedStationId(e.target.value)}
@@ -153,7 +155,7 @@ export default function AttributionPage() {
             <div className="flex items-center gap-2.5">
               <Info className="w-4 h-4 text-forestSecondary" />
               <span className="text-xs font-bold text-text-primary uppercase tracking-wide">
-                Attribution Methodology & Transparency Disclosure
+                {t('attribution.methodologyNote', 'Attribution Methodology & Transparency Disclosure')}
               </span>
             </div>
             <span className="text-xs text-forestSecondary font-semibold">

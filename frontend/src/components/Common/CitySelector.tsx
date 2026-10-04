@@ -4,6 +4,7 @@ import { MapPin, ChevronDown, Check } from 'lucide-react';
 import { INDIAN_CITIES } from '@/lib/cities';
 import { INDIA_STATES } from '@/lib/indiaGeography';
 import { useAppStore } from '@/store/useAppStore';
+import { useTranslation } from '@/i18n/LanguageContext';
 import { CityConfig } from '@/types';
 
 interface CitySelectorProps {
@@ -12,6 +13,7 @@ interface CitySelectorProps {
 }
 
 export default function CitySelector({ className = '', onCityChange }: CitySelectorProps) {
+  const { t } = useTranslation();
   const {
     selectedCity,
     setSelectedCity,
@@ -100,7 +102,7 @@ export default function CitySelector({ className = '', onCityChange }: CitySelec
           aria-label="Select Indian City"
         >
           <div className="px-2.5 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-text-muted border-b border-border mb-1">
-            National Clean Air Network ({INDIAN_CITIES.length} Cities)
+            {t('nav.indiaNetwork', 'National Clean Air Network')} ({INDIAN_CITIES.length} {t('loc.city', 'Cities')})
           </div>
           {INDIAN_CITIES.map((city) => {
             const isSelected = city.id === selectedCity.id;
@@ -118,12 +120,12 @@ export default function CitySelector({ className = '', onCityChange }: CitySelec
                 <div className="flex items-center gap-2">
                   <div className="min-w-0">
                     <p className="font-medium text-text-primary truncate">{city.name}</p>
-                    <p className="text-[11px] text-text-muted truncate">{city.state} • {city.activeStations} stations</p>
+                    <p className="text-[11px] text-text-muted truncate">{city.state} • {city.activeStations} {t('loc.monitoringStation', 'stations')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <span className={`px-1.5 py-0.5 rounded text-[10px] border font-mono tabular-nums ${getAqiColor(city.avgAqi)}`}>
-                    AQI {city.avgAqi}
+                    {t('env.aqi', 'AQI')} {city.avgAqi}
                   </span>
                   {isSelected && <Check size={14} className="text-brand-forest" />}
                 </div>

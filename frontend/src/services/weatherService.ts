@@ -45,6 +45,8 @@ export interface EnvironmentalOutlook {
   riskTrend: 'improving' | 'stable' | 'deteriorating';
   title: string;
   hindiHeadline: string; // "मौसम / वायु गुणवत्ता बिगड़ने की संभावना"
+  marathiHeadline?: string;
+  summary?: string;
   currentSummary: string;
   next24Hours: string;
   potentialImpact: string;
@@ -254,6 +256,7 @@ export function generateEnvironmentalOutlook(
   let riskTrend: 'improving' | 'stable' | 'deteriorating' = 'stable';
   let title = 'Stable Atmospheric Ventilation';
   let hindiHeadline = 'वायु गुणवत्ता सामान्य रहने की संभावना';
+  let marathiHeadline = 'हवेची गुणवत्ता सामान्य राहण्याची शक्यता';
   let currentSummary = `वर्तमान वायु गुणवत्ता ${currentAqi > 200 ? 'खराब (Poor)' : 'संतोषजनक (Satisfactory)'} स्तर पर है।`;
   let next24Hours = 'आगामी 24 घंटों में सामान्य वायु संचरण (ventilation) बना रहेगा।';
   let potentialImpact = 'प्रदूषक तत्वों का फैलाव सामान्य बना रहेगा।';
@@ -310,6 +313,7 @@ export function generateEnvironmentalOutlook(
     riskTrend = 'improving';
     title = 'Precipitation Scavenging / Particulate Washout Expected';
     hindiHeadline = 'वर्षा से वायु गुणवत्ता में सुधार की संभावना';
+    marathiHeadline = 'पावसामुळे हवेच्या गुणवत्तेत सुधारणा होण्याची शक्यता';
     next24Hours = 'हल्की से मध्यम वर्षा से निलंबित धूल कण (PM10/PM2.5) जमीन पर बैठ जाएंगे (Wet Scavenging)।';
     potentialImpact = 'वायु प्रदूषण में तात्कालिक गिरावट संभव है।';
     ventilationIndex = 'High Dispersion';
@@ -317,6 +321,7 @@ export function generateEnvironmentalOutlook(
     riskTrend = 'deteriorating';
     title = 'Atmospheric Stagnation & Boundary Layer Trapping';
     hindiHeadline = 'मौसम बिगड़ने की चेतावनी: वायु संचरण मंद, प्रदूषण बढ़ने की आशंका';
+    marathiHeadline = 'हवामान बदलाचा इशारा: मंद वारे, प्रदूषण वाढण्याची शक्यता';
     next24Hours = `हवा की गति ${weather.windSpeed} km/h रहने तथा उच्च आर्द्रता/धूल के कारण स्मॉग परत फंसने की आशंका है।`;
     potentialImpact = 'सुबह व शाम के समय प्रदूषक सघन होंगे। संवेदनशील नागरिक सुरक्षात्मक उपाय अपनाएं।';
     ventilationIndex = 'Severe Stagnation';
@@ -324,6 +329,7 @@ export function generateEnvironmentalOutlook(
     riskTrend = 'deteriorating';
     title = 'Weak Planetary Boundary Layer Ventilation';
     hindiHeadline = 'मंद वायु संचरण: प्रदूषण स्तर में वृद्धि संभव';
+    marathiHeadline = 'मंद वाऱ्याचा प्रवाह: प्रदूषण पातळी वाढणे शक्य';
     next24Hours = 'कमजोर हवा के कारण स्थानीय उत्सर्जन (गाड़ियों व निर्माण) का प्राकृतिक निकास धीमा रहेगा।';
     potentialImpact = 'शहरी हॉटस्पॉट पर AQI में सामान्य वृद्धि हो सकती है।';
     ventilationIndex = 'Severe Stagnation';
@@ -333,6 +339,8 @@ export function generateEnvironmentalOutlook(
     riskTrend,
     title,
     hindiHeadline,
+    marathiHeadline,
+    summary: currentSummary,
     currentSummary,
     next24Hours,
     potentialImpact,

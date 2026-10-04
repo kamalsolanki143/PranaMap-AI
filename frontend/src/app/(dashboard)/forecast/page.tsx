@@ -22,8 +22,10 @@ import {
   Eye,
   Sliders,
 } from 'lucide-react';
+import { useTranslation } from '@/i18n/LanguageContext';
 
 export default function ForecastPage() {
+  const { t } = useTranslation();
   const { selectedCity } = useAppStore();
   const cityData = useMemo(() => getCityData(selectedCity.id), [selectedCity.id]);
   const [selectedHorizon, setSelectedHorizon] = useState<'6h' | '12h' | '24h' | '72h'>('72h');
@@ -70,32 +72,32 @@ export default function ForecastPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-semibold text-text-muted uppercase tracking-wider">
-                Atmospheric Forecast Model
+                {t('forecast.atmosphericModel', 'Atmospheric Forecast Model')}
               </span>
               <span className="text-border">•</span>
               <span className="text-[11px] text-forestSecondary font-medium">
-                Synoptic Weather & Diurnal Boundary Coupling
+                {t('forecast.synopticCoupling', 'Synoptic Weather & Diurnal Boundary Coupling')}
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-text-primary tracking-tight mt-0.5">
-              Air Quality Forecast — {cityData.cityName}
+              {t('nav.forecast', 'Air Quality Forecast')} — {cityData.cityName}
             </h1>
             <p className="text-text-secondary text-xs sm:text-sm mt-0.5">
-              Directional modelled outlook based on Open-Meteo synoptic winds and CPCB baseline.
+              {t('forecast.modelledSubtitle', 'Directional modelled outlook based on Open-Meteo synoptic winds and CPCB baseline.')}
             </p>
           </div>
 
           <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
             <div className="panel px-3.5 py-2">
-              <span className="text-[10px] text-text-muted uppercase font-semibold">Current (Observed)</span>
+              <span className="text-[10px] text-text-muted uppercase font-semibold">{t('forecast.currentObserved', 'Current (Observed)')}</span>
               <p className="text-lg font-bold text-text-primary tabular-nums">{currentAqi}</p>
             </div>
             <div className="panel px-3.5 py-2 border-rose-200 bg-rose-50/60 shadow-xs">
-              <span className="text-[10px] text-rose-700 uppercase font-semibold">Expected Peak (Modelled)</span>
+              <span className="text-[10px] text-rose-700 uppercase font-semibold">{t('forecast.expectedPeak', 'Expected Peak (Modelled)')}</span>
               <p className="text-lg font-bold text-rose-700 tabular-nums">{expectedPeak}</p>
             </div>
             <div className="panel px-3.5 py-2">
-              <span className="text-[10px] text-text-muted uppercase font-semibold">Peak Window</span>
+              <span className="text-[10px] text-text-muted uppercase font-semibold">{t('forecast.peakWindowLabel', 'Peak Window')}</span>
               <p className="text-xs font-semibold text-text-primary flex items-center gap-1 mt-1 font-mono">
                 <Clock size={13} className="text-amber-700" />
                 {peakWindow}
@@ -118,10 +120,10 @@ export default function ForecastPage() {
                     : 'text-text-secondary hover:text-text-primary hover:bg-surfaceHover'
                 }`}
               >
-                {horizon === '6h' && '6-Hour Horizon'}
-                {horizon === '12h' && '12-Hour Horizon'}
-                {horizon === '24h' && '24-Hour Horizon'}
-                {horizon === '72h' && '72-Hour Horizon'}
+                {horizon === '6h' && t('forecast.sixHour', '6-Hour Horizon')}
+                {horizon === '12h' && t('forecast.twelveHour', '12-Hour Horizon')}
+                {horizon === '24h' && t('forecast.twentyFourHour', '24-Hour Horizon')}
+                {horizon === '72h' && t('forecast.seventyTwoHour', '72-Hour Horizon')}
               </button>
             ))}
           </div>
@@ -129,11 +131,11 @@ export default function ForecastPage() {
           <div className="flex items-center gap-4 text-xs font-mono">
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-purple-600" />
-              <span className="text-text-secondary">Historical (Observed)</span>
+              <span className="text-text-secondary">{t('forecast.historicalObserved', 'Historical (Observed)')}</span>
             </div>
             <div className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-full bg-forestSecondary" />
-              <span className="text-text-secondary">Directional Modelled Outlook</span>
+              <span className="text-text-secondary">{t('forecast.directionalOutlook', 'Directional Modelled Outlook')}</span>
             </div>
           </div>
         </div>
@@ -145,22 +147,22 @@ export default function ForecastPage() {
             <div className="flex items-center justify-between mb-2">
               <div>
                 <h3 className="font-semibold text-sm text-text-primary">
-                  {selectedHorizon.toUpperCase()} AQI Trajectory & Directional Outlook
+                  {selectedHorizon.toUpperCase()} {t('forecast.trajectoryOutlook', 'AQI Trajectory & Directional Outlook')}
                 </h3>
                 <p className="text-[11px] text-text-muted">
-                  Observed ground measurements (T-6h to Now) transitioning to directional modelled outlook
+                  {t('forecast.chartSubtitle', 'Observed ground measurements (T-6h to Now) transitioning to directional modelled outlook')}
                 </p>
               </div>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-bold">
-                MODELLED OUTLOOK
+                {t('status.modelled', 'MODELLED')}
               </span>
             </div>
 
             <AQILineChart data={forecastPoints} peakWindow={peakWindow} />
 
             <div className="mt-3 pt-3 border-t border-border flex items-center justify-between text-xs text-text-muted flex-wrap gap-2">
-              <span>Model baseline: CPCB CAAQMS hourly ground sensors + Open-Meteo synoptic weather</span>
-              <span className="font-mono text-[11px]">Refreshed: 3-hour synoptic cycle</span>
+              <span>{t('forecast.baselineNote', 'Model baseline: CPCB CAAQMS hourly ground sensors + Open-Meteo synoptic weather')}</span>
+              <span className="font-mono text-[11px]">{t('forecast.refreshedCycle', 'Refreshed: 3-hour synoptic cycle')}</span>
             </div>
           </div>
 
@@ -169,14 +171,14 @@ export default function ForecastPage() {
             {/* Forecast Drivers Card */}
             <div className="panel p-4 space-y-3">
               <span className="text-[10px] font-semibold text-text-muted uppercase tracking-wider">
-                Forecast Drivers (Physical & Meteorological)
+                {t('forecast.driversTitle', 'Forecast Drivers (Physical & Meteorological)')}
               </span>
 
               <div className="space-y-2 text-xs">
                 <div className="p-2.5 rounded bg-surfaceAlt border border-border flex items-center justify-between">
                   <div className="flex items-center gap-2 text-text-primary">
                     <Wind size={14} className="text-atmoBlue" />
-                    <span>Wind Velocity</span>
+                    <span>{t('forecast.windVelocity', 'Wind Velocity')}</span>
                   </div>
                   <span className="font-mono text-text-secondary">7 km/h NNW (Stagnant)</span>
                 </div>
@@ -184,7 +186,7 @@ export default function ForecastPage() {
                 <div className="p-2.5 rounded bg-surfaceAlt border border-border flex items-center justify-between">
                   <div className="flex items-center gap-2 text-text-primary">
                     <Thermometer size={14} className="text-terracotta" />
-                    <span>Temperature</span>
+                    <span>{t('forecast.temperature', 'Temperature')}</span>
                   </div>
                   <span className="font-mono text-text-secondary">31.4°C (Cooling evening)</span>
                 </div>
@@ -192,7 +194,7 @@ export default function ForecastPage() {
                 <div className="p-2.5 rounded bg-surfaceAlt border border-border flex items-center justify-between">
                   <div className="flex items-center gap-2 text-text-primary">
                     <Droplets size={14} className="text-atmoBlue" />
-                    <span>Relative Humidity</span>
+                    <span>{t('forecast.relativeHumidity', 'Relative Humidity')}</span>
                   </div>
                   <span className="font-mono text-text-secondary">68% (Hygroscopic growth)</span>
                 </div>
@@ -200,7 +202,7 @@ export default function ForecastPage() {
                 <div className="p-2.5 rounded bg-surfaceAlt border border-border flex items-center justify-between">
                   <div className="flex items-center gap-2 text-text-primary">
                     <CloudRain size={14} className="text-atmoBlue" />
-                    <span>Rain Probability</span>
+                    <span>{t('forecast.rainProbability', 'Rain Probability')}</span>
                   </div>
                   <span className="font-mono text-text-secondary">5% (No washout)</span>
                 </div>
@@ -208,7 +210,7 @@ export default function ForecastPage() {
                 <div className="p-2.5 rounded bg-surfaceAlt border border-border flex items-center justify-between">
                   <div className="flex items-center gap-2 text-text-primary">
                     <Gauge size={14} className="text-amberTone" />
-                    <span>PM2.5 Baseline</span>
+                    <span>{t('forecast.pm25Baseline', 'PM2.5 Baseline')}</span>
                   </div>
                   <span className="font-mono text-text-secondary">162 µg/m³ (Observed)</span>
                 </div>
@@ -220,16 +222,14 @@ export default function ForecastPage() {
               <div className="flex items-center justify-between">
                 <span className="text-xs font-semibold text-forestSecondary flex items-center gap-1.5 font-mono">
                   <ShieldCheck size={14} />
-                  Directional Modelled Outlook
+                  {t('forecast.directionalOutlook', 'Directional Modelled Outlook')}
                 </span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 font-semibold">
-                  MODELLED
+                  {t('status.modelled', 'MODELLED')}
                 </span>
               </div>
               <p className="text-xs text-text-secondary leading-relaxed">
-                Physical diurnal inversion model integrating nocturnal thermal inversion dynamics,
-                morning/evening traffic volume shifts, and boundary layer mixing height. Model outputs are
-                explicitly distinguished from verified ground observations.
+                {t('forecast.transparencyDesc', 'Physical diurnal inversion model integrating nocturnal thermal inversion dynamics, morning/evening traffic volume shifts, and boundary layer mixing height. Model outputs are explicitly distinguished from verified ground observations.')}
               </p>
             </div>
           </div>

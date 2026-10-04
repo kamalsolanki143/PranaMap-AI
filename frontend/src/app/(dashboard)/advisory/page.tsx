@@ -27,16 +27,24 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 
+import { useTranslation } from '@/i18n/LanguageContext';
+
 type LanguageCode = 'en' | 'hi' | 'mr';
 type AudienceType = 'Schools' | 'Elderly' | 'Hospitals' | 'General Public';
 
 export default function AdvisoryPage() {
+  const { t, language } = useTranslation();
   const { selectedCity } = useAppStore();
   const { showToast } = useToast();
   const cityData = useMemo(() => getCityData(selectedCity.id), [selectedCity.id]);
 
   const [selectedWardId, setSelectedWardId] = useState<string>(cityData.criticalZone.wardId);
-  const [selectedLanguage, setSelectedLanguage] = useState<LanguageCode>('en');
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageCode>(language);
+
+  // Sync selected language with global language
+  React.useEffect(() => {
+    setSelectedLanguage(language);
+  }, [language]);
   const [selectedAudience, setSelectedAudience] = useState<AudienceType>('General Public');
   const [selectedChannels, setSelectedChannels] = useState<{ [key: string]: boolean }>({
     web: true,
@@ -184,10 +192,10 @@ export default function AdvisoryPage() {
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-text-primary tracking-tight mt-0.5">
-              Citizen Health Advisories — {cityData.cityName}
+              {t('advisory.title', 'Citizen Health Advisories')} — {cityData.cityName}
             </h1>
             <p className="text-text-secondary text-xs sm:text-sm mt-0.5">
-              Verified multi-channel, multilingual air quality risk communication grounded in real data.
+              {t('advisory.subtitle', 'Verified multi-channel, multilingual air quality risk communication grounded in real data.')}
             </p>
           </div>
 
@@ -207,7 +215,7 @@ export default function AdvisoryPage() {
               className="flex items-center gap-2 px-3.5 py-2 rounded-lg border border-border bg-surface hover:bg-surfaceHover text-text-primary font-semibold text-xs transition-colors shadow-2xs cursor-pointer"
             >
               <FileText size={14} className="text-forestSecondary" />
-              <span>Export PDF</span>
+              <span>{t('common.exportPdf', 'Export PDF')}</span>
             </button>
           </div>
         </div>
@@ -215,7 +223,7 @@ export default function AdvisoryPage() {
         {/* Audience & Target Selectors */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="panel p-3.5 space-y-1.5 shadow-xs">
-            <span className="text-[10px] text-text-muted uppercase font-semibold font-mono">Jurisdictional Airshed</span>
+            <span className="text-[10px] text-text-muted uppercase font-semibold font-mono">{t('header.activeAirshed', 'Jurisdictional Airshed')}</span>
             <select
               value={selectedWardId}
               onChange={(e) => setSelectedWardId(e.target.value)}
@@ -230,7 +238,7 @@ export default function AdvisoryPage() {
           </div>
 
           <div className="panel p-3.5 space-y-1.5 shadow-xs">
-            <span className="text-[10px] text-text-muted uppercase font-semibold font-mono">Target Demographic</span>
+            <span className="text-[10px] text-text-muted uppercase font-semibold font-mono">{t('advisory.targetAudience', 'Target Audience')}</span>
             <div className="grid grid-cols-2 gap-1.5 text-xs">
               {(['General Public', 'Schools', 'Elderly', 'Hospitals'] as AudienceType[]).map((aud) => (
                 <button
@@ -243,7 +251,10 @@ export default function AdvisoryPage() {
                       : 'text-text-secondary hover:bg-surfaceHover border border-transparent'
                   }`}
                 >
-                  {aud}
+                  {aud === 'General Public' && t('advisory.generalPublic', 'General Public')}
+                  {aud === 'Schools' && t('advisory.schools', 'Schools')}
+                  {aud === 'Elderly' && t('advisory.elderly', 'Elderly')}
+                  {aud === 'Hospitals' && t('advisory.hospitals', 'Hospitals')}
                 </button>
               ))}
             </div>

@@ -114,23 +114,29 @@ export default function Header({ onRefresh }: HeaderProps) {
         <StatusBadge status={dataStatus} />
 
         {/* Multilingual Selector */}
-        <div className="flex items-center gap-0.5 border border-border p-0.5 rounded-md text-xs bg-surfaceAlt">
-          <Globe size={13} className="text-text-muted ml-1.5 hidden sm:inline" />
+        <div
+          className="flex items-center gap-0.5 border border-border p-0.5 rounded-md text-xs bg-surfaceAlt"
+          role="group"
+          aria-label="Language options"
+        >
+          <Globe size={13} className="text-text-muted ml-1.5 hidden sm:inline" aria-hidden="true" />
           {([
-            { code: 'en', label: 'EN' },
-            { code: 'hi', label: 'हिं' },
-            { code: 'mr', label: 'मरा' },
-          ] as { code: Language; label: string }[]).map(({ code, label }) => (
+            { code: 'en', label: 'EN', name: 'English' },
+            { code: 'hi', label: 'हि', name: 'Hindi' },
+            { code: 'mr', label: 'मराठी', name: 'Marathi' },
+          ] as { code: Language; label: string; name: string }[]).map(({ code, label, name }) => (
             <button
               key={code}
               type="button"
               onClick={() => setLanguage(code)}
+              aria-label={`Switch to ${name}`}
+              aria-pressed={language === code}
               className={`px-2 py-1 rounded text-[11px] font-semibold transition-all cursor-pointer ${
                 language === code
                   ? 'bg-forestSecondary text-white shadow-2xs'
                   : 'text-text-secondary hover:text-text-primary'
               }`}
-              title={`Switch language to ${code}`}
+              title={`Switch language to ${name}`}
             >
               {label}
             </button>
@@ -194,7 +200,7 @@ export default function Header({ onRefresh }: HeaderProps) {
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-text-secondary hover:text-text-primary hover:bg-surfaceHover transition-colors"
               >
                 <Settings size={14} />
-                <span>Profile & Settings</span>
+                <span>{t('nav.settings', 'Settings')}</span>
               </Link>
 
               <Link
@@ -203,7 +209,7 @@ export default function Header({ onRefresh }: HeaderProps) {
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-text-secondary hover:text-text-primary hover:bg-surfaceHover transition-colors"
               >
                 <ShieldCheck size={14} />
-                <span>Data Provenance & Truth Tiers</span>
+                <span>{t('nav.dataProvenance', 'Data Provenance')}</span>
               </Link>
 
               <div className="border-t border-border my-1" />
@@ -214,7 +220,7 @@ export default function Header({ onRefresh }: HeaderProps) {
                 className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-criticalTone hover:bg-red-50 transition-colors cursor-pointer"
               >
                 <LogOut size={14} />
-                <span>Sign Out</span>
+                <span>{t('nav.signOut', 'Sign Out')}</span>
               </button>
             </div>
           )}

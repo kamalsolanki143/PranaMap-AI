@@ -29,9 +29,11 @@ interface NavigationSidebarProps {
 interface NavItem {
   href: string;
   aliases?: string[];
-  label: string;
+  labelKey: string;
+  fallback: string;
   icon: any;
   badge?: string;
+  badgeKey?: string;
 }
 
 export default function NavigationSidebar({ onCloseDrawer }: NavigationSidebarProps) {
@@ -42,16 +44,16 @@ export default function NavigationSidebar({ onCloseDrawer }: NavigationSidebarPr
   const { selectedCity } = useAppStore();
 
   const navItems: NavItem[] = [
-    { href: '/dashboard', aliases: ['/command-center'], label: 'Overview', icon: LayoutDashboard },
-    { href: '/analytics', aliases: ['/air-quality'], label: 'Air Quality', icon: BarChart3 },
-    { href: '/forecast', label: 'Forecast', icon: TrendingUp },
-    { href: '/attribution', label: 'Sources', icon: PieChart },
-    { href: '/enforcement', aliases: ['/interventions'], label: 'Interventions', icon: ShieldAlert },
-    { href: '/advisory', aliases: ['/advisories'], label: 'Advisories', icon: Megaphone },
-    { href: '/cities', label: 'India Network', icon: Globe2, badge: '9 Cities' },
-    { href: '/data-sources', label: 'Data Sources', icon: Database },
-    { href: '/data-provenance', label: 'Data Provenance', icon: ShieldCheck, badge: 'Truth Tiers' },
-    { href: '/settings', label: 'Settings', icon: Settings },
+    { href: '/dashboard', aliases: ['/command-center'], labelKey: 'nav.overview', fallback: 'Overview', icon: LayoutDashboard },
+    { href: '/analytics', aliases: ['/air-quality'], labelKey: 'nav.airQuality', fallback: 'Air Quality', icon: BarChart3 },
+    { href: '/forecast', labelKey: 'nav.forecast', fallback: 'Forecast', icon: TrendingUp },
+    { href: '/attribution', labelKey: 'nav.sources', fallback: 'Sources', icon: PieChart },
+    { href: '/enforcement', aliases: ['/interventions'], labelKey: 'nav.interventions', fallback: 'Interventions', icon: ShieldAlert },
+    { href: '/advisory', aliases: ['/advisories'], labelKey: 'nav.advisory', fallback: 'Advisories', icon: Megaphone },
+    { href: '/cities', labelKey: 'nav.indiaNetwork', fallback: 'India Network', icon: Globe2, badge: '9 Cities' },
+    { href: '/data-sources', labelKey: 'nav.dataSources', fallback: 'Data Sources', icon: Database },
+    { href: '/data-provenance', labelKey: 'nav.dataProvenance', fallback: 'Data Provenance', icon: ShieldCheck, badgeKey: 'status.truthTiers' },
+    { href: '/settings', labelKey: 'nav.settings', fallback: 'Settings', icon: Settings },
   ];
 
   async function handleSignOut() {
@@ -100,7 +102,7 @@ export default function NavigationSidebar({ onCloseDrawer }: NavigationSidebarPr
 
       {/* Selected Scope Indicator */}
       <div className="px-4 py-2.5 bg-surfaceAlt border-b border-border flex items-center justify-between text-xs">
-        <span className="text-text-muted font-medium">Active Airshed</span>
+        <span className="text-text-muted font-medium">{t('header.activeAirshed', 'Active Airshed')}</span>
         <span className="font-semibold text-text-primary flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-forestSecondary" />
           {selectedCity?.name || 'Delhi NCR'}
@@ -126,10 +128,10 @@ export default function NavigationSidebar({ onCloseDrawer }: NavigationSidebarPr
             >
               <div className="flex items-center gap-2.5">
                 <Icon size={16} className={active ? 'text-white' : 'text-text-muted'} />
-                <span>{item.label}</span>
+                <span>{t(item.labelKey, item.fallback)}</span>
               </div>
 
-              {item.badge && (
+              {(item.badgeKey || item.badge) && (
                 <span
                   className={`text-[10px] font-mono px-1.5 py-0.2 rounded ${
                     active
@@ -137,7 +139,7 @@ export default function NavigationSidebar({ onCloseDrawer }: NavigationSidebarPr
                       : 'bg-surfaceAlt text-text-muted border border-border'
                   }`}
                 >
-                  {item.badge}
+                  {item.badgeKey ? t(item.badgeKey, item.badge || 'Truth Tiers') : item.badge}
                 </span>
               )}
             </Link>
@@ -161,8 +163,8 @@ export default function NavigationSidebar({ onCloseDrawer }: NavigationSidebarPr
             type="button"
             onClick={handleSignOut}
             className="p-1.5 text-text-muted hover:text-criticalTone hover:bg-red-50 rounded-md transition-colors cursor-pointer"
-            title="Sign out of workspace"
-            aria-label="Sign out"
+            title={t('nav.signOut', 'Sign out of workspace')}
+            aria-label={t('nav.signOut', 'Sign out')}
           >
             <LogOut size={15} />
           </button>
@@ -170,7 +172,7 @@ export default function NavigationSidebar({ onCloseDrawer }: NavigationSidebarPr
 
         <div className="px-2 pt-1 border-t border-border/60 flex items-center justify-between text-[10px] text-text-muted font-mono">
           <span>CPCB CAAQMS v2.4</span>
-          <span className="text-forestSecondary font-semibold">Verified</span>
+          <span className="text-forestSecondary font-semibold">{t('common.verified', 'Verified')}</span>
         </div>
       </div>
     </aside>

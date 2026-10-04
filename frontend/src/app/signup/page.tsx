@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
+import { useTranslation } from '@/i18n/LanguageContext';
+import { Language } from '@/i18n/translations';
 import {
   Activity,
   ShieldCheck,
@@ -20,6 +22,7 @@ import {
 } from 'lucide-react';
 
 export default function SignupPage() {
+  const { t, language, setLanguage } = useTranslation();
   const router = useRouter();
   const { signUp, signInWithGoogle, isAuthenticated } = useAuth();
 
@@ -107,13 +110,35 @@ export default function SignupPage() {
           </div>
         </Link>
 
-        <Link
-          href="/login"
-          className="text-xs font-medium text-text-secondary hover:text-text-primary transition-colors flex items-center gap-1"
-        >
-          <span>Already have an account? Sign in</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
+        <div className="flex items-center gap-4">
+          {/* Language Selector */}
+          <div className="flex items-center gap-1 bg-surfaceAlt p-1 rounded-lg border border-border">
+            {(['en', 'hi', 'mr'] as const).map((lang) => (
+              <button
+                key={lang}
+                type="button"
+                onClick={() => setLanguage(lang)}
+                aria-label={`Switch language to ${lang === 'en' ? 'English' : lang === 'hi' ? 'Hindi' : 'Marathi'}`}
+                aria-pressed={language === lang}
+                className={`px-2 py-1 rounded text-xs font-semibold transition-all cursor-pointer ${
+                  language === lang
+                    ? 'bg-forestSecondary text-white shadow-2xs'
+                    : 'text-text-secondary hover:text-text-primary hover:bg-surfaceHover'
+                }`}
+              >
+                {lang === 'en' ? 'EN' : lang === 'hi' ? 'हि' : 'मराठी'}
+              </button>
+            ))}
+          </div>
+
+          <Link
+            href="/login"
+            className="text-xs font-medium text-text-secondary hover:text-text-primary transition-colors flex items-center gap-1"
+          >
+            <span>{t('auth.haveAccount', 'Already have an account?')} {t('auth.signIn', 'Sign In')}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </header>
 
       {/* Main Form Section */}
@@ -125,7 +150,7 @@ export default function SignupPage() {
               <span>Verified Access Registration</span>
             </div>
             <h1 className="text-2xl font-bold text-text-primary tracking-tight">
-              Create Officer Workspace
+              {t('auth.createAccount', 'Create Officer Workspace')}
             </h1>
             <p className="text-xs text-text-secondary mt-1">
               Join environmental officers, municipal authorities, and atmospheric researchers across India.
@@ -162,7 +187,7 @@ export default function SignupPage() {
             {/* Email */}
             <div>
               <label className="block text-xs font-medium text-text-primary mb-1.5" htmlFor="email">
-                Official Email Address *
+                {t('auth.email', 'Official Email Address')} *
               </label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
@@ -221,7 +246,7 @@ export default function SignupPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-xs font-medium text-text-primary mb-1.5" htmlFor="password">
-                  Password *
+                  {t('auth.password', 'Password')} *
                 </label>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
@@ -246,7 +271,7 @@ export default function SignupPage() {
 
               <div>
                 <label className="block text-xs font-medium text-text-primary mb-1.5" htmlFor="confirmPassword">
-                  Confirm Password *
+                  {t('auth.password', 'Confirm Password')} *
                 </label>
                 <div className="relative">
                   <Lock className="w-4 h-4 text-text-muted absolute left-3 top-1/2 -translate-y-1/2" />
@@ -272,7 +297,7 @@ export default function SignupPage() {
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Create Account</span>
+                  <span>{t('auth.createAccount', 'Create Account')}</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -318,7 +343,7 @@ export default function SignupPage() {
                     d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
                   />
                 </svg>
-                <span>Continue with Google</span>
+                <span>{t('auth.continueGoogle', 'Continue with Google')}</span>
               </>
             )}
           </button>

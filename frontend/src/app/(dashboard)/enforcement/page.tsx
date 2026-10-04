@@ -39,7 +39,10 @@ export interface DecisionSupportItem {
   status: InterventionStatusType;
 }
 
+import { useTranslation } from '@/i18n/LanguageContext';
+
 export default function InterventionPage() {
+  const { t } = useTranslation();
   const { selectedCity } = useAppStore();
   const { showToast } = useToast();
   const cityData = useMemo(() => getCityData(selectedCity.id), [selectedCity.id]);
@@ -141,7 +144,7 @@ export default function InterventionPage() {
               </span>
             </div>
             <h1 className="text-xl sm:text-2xl font-bold text-text-primary tracking-tight mt-0.5">
-              Interventions & Decision Support — {cityData.cityName}
+              {t('enforcement.title', 'Interventions & Decision Support')} — {cityData.cityName}
             </h1>
             <p className="text-text-secondary text-xs sm:text-sm mt-0.5">
               Evidence-based municipal action table and hypothetical scenario impact simulator.
@@ -158,7 +161,7 @@ export default function InterventionPage() {
                   : 'text-text-secondary hover:text-text-primary hover:bg-surfaceHover'
               }`}
             >
-              Decision Table
+              {t('common.actionDispatch', 'Decision Table')}
             </button>
             <button
               type="button"
@@ -169,7 +172,7 @@ export default function InterventionPage() {
                   : 'text-text-secondary hover:text-text-primary hover:bg-surfaceHover'
               }`}
             >
-              Scenario Simulator
+              {t('env.simulation', 'Scenario Simulator')}
             </button>
           </div>
         </div>
